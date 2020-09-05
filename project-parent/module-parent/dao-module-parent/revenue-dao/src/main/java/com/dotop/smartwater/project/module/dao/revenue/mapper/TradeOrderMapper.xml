@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper
+	namespace="com.dotop.smartwater.project.module.dao.revenue.ITradeOrderDao">
+
+	<resultMap id="TradeOrderVo"
+		type="com.dotop.smartwater.project.module.core.water.vo.TradeOrderVo">
+		
+		<!-- 主键 -->
+		<result column="id" jdbcType="VARCHAR" property="id" />
+		<result column="number" jdbcType="VARCHAR" property="number" />
+		<result column="trade_number" jdbcType="VARCHAR" property="tradeNumber" />
+		<result column="trade_name" jdbcType="VARCHAR" property="tradeName" />
+		<result column="user_id" jdbcType="VARCHAR" property="userId" />
+		<result column="user_name" jdbcType="VARCHAR" property="userName" />
+		<result column="user_phone" jdbcType="VARCHAR" property="userPhone" />
+		<result column="amount" jdbcType="VARCHAR" property="amount" />
+		<result column="mode" jdbcType="VARCHAR" property="mode" />
+		<result column="status" jdbcType="VARCHAR" property="status" />
+		<result column="pay_time" jdbcType="VARCHAR" property="payTime" />
+		<result column="type" jdbcType="VARCHAR" property="type" />
+		<result column="enterprise_id" jdbcType="VARCHAR" property="enterpriseid" />
+		<result column="create_by" jdbcType="VARCHAR" property="createBy" />
+		<result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
+		<result column="last_by" jdbcType="VARCHAR" property="lastBy" />
+		<result column="last_date" jdbcType="TIMESTAMP" property="lastDate" />
+	</resultMap>
+
+	<select id="getList" resultMap="TradeOrderVo">
+		SELECT * FROM trade_order 
+		<where>
+		enterprise_id = #{enterpriseid} 
+			<if test="number != null and number != ''">
+				and number like concat('%',#{number},'%')
+			</if>
+			<if test="tradeNumber != null and tradeNumber != ''">
+				and trade_number like concat('%',#{tradeNumber},'%')
+			</if>
+			<if test="userName != null and userName != ''">
+				and user_name like concat('%',#{userName},'%')
+			</if>
+			<if test="userPhone != null and userPhone != ''">
+				and user_phone =#{userPhone}
+			</if>
+			<if test="status != null and status != ''">
+				and `status` =#{status}
+			</if>
+		</where>
+		<if test="limit!=null and offset!=null">
+			order by create_date desc
+			LIMIT #{limit} OFFSET #{offset}
+		</if>
+	</select>
+	
+	<select id="get" resultMap="TradeOrderVo">
+		SELECT * FROM trade_order
+		<where>
+			enterprise_id = #{enterpriseid}
+		 	<if test="number != null and number != ''">
+				and number = #{number}
+			</if>
+			<if test="tradeNumber != null and tradeNumber != ''">
+				and trade_number = #{tradeNumber}
+			</if>
+		 </where>
+	</select>
+
+	<select id="del">
+		delete FROM trade_order
+		<where>
+			enterprise_id = #{enterpriseid}
+			<if test="number != null and number != ''">
+				and number = #{number}
+			</if>
+		</where>
+	</select>
+	
+	
+	<insert id="save">
+        INSERT INTO `trade_order` (`id`,`type`,`number`,trade_number,trade_name,user_id,user_name,user_phone,amount,
+        `status`,enterprise_id,create_by,create_date)
+		VALUES (#{id}, #{type}, #{number}, #{tradeNumber}, #{tradeName}, #{userId}, #{userName}, #{userPhone}, #{amount}
+		, #{status},#{enterpriseid}, #{userBy}, #{curr})
+    </insert>
+	
+	
+	<update id="updatePayStatus">
+		update `trade_order` set `mode`=#{mode} ,`status`=#{status} ,pay_time=#{payTime} ,last_by=#{userBy},last_date=#{curr} 
+		where number = #{number} and enterprise_id = #{enterpriseid} 
+	</update>
+	
+	<update id="update">
+		update `trade_order` set trade_number=#{tradeNumber} ,trade_name=#{tradeName} ,user_id=#{userId} ,user_name=#{userName} ,
+		user_phone=#{userPhone} ,amount=#{amount},`status`=#{status},last_by=#{userBy},
+		<if test="mode != null and mode != ''">
+		   mode = #{mode},
+		</if>
+		<if test="payTime != null and payTime != ''">
+			pay_time = #{payTime},
+		</if>
+		last_date=#{curr}
+		where number = #{number} and enterprise_id = #{enterpriseid} 
+	</update>
+</mapper>

@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.dotop.pipe.api.dao.alarm.IAlarmNoticeRuleDao">
+
+    <resultMap id="AlarmVoMap" type="com.dotop.pipe.core.vo.alarm.AlarmNoticeRuleVo">
+        <result column="id" jdbcType="VARCHAR" property="id"/>
+        <result column="device_code" jdbcType="VARCHAR" property="deviceCode"/>
+        <result column="device_name" jdbcType="VARCHAR" property="deviceName"/>
+        <result column="device_type" jdbcType="VARCHAR" property="deviceType"/>
+        <result column="alarm_num" jdbcType="VARCHAR" property="alarmNum"/>
+        <result column="model_type" jdbcType="INTEGER" property="modelType"/>
+        <result column="notify_type" jdbcType="VARCHAR" property="notifyType"/>
+        <result column="notify_user_type" jdbcType="VARCHAR" property="notifyUserType"/>
+        <result column="notify_user" jdbcType="VARCHAR" property="notifyUser"/>
+        <result column="notify_user_id" jdbcType="VARCHAR" property="notifyUserid"/>
+        <result column="create_date" jdbcType="TIMESTAMP" property="createDate"/>
+    </resultMap>
+
+    <select id="list" resultMap="AlarmVoMap">
+        SELECT id,device_code,device_name,device_type,alarm_num,model_type,notify_type,notify_user,notify_user_id,notify_user_type
+        FROM pls_alarm_notice_rule
+        <where>
+            <if test="enterpriseId != null and enterpriseId != ''">
+               and  enterprise_id = #{enterpriseId}
+            </if>
+            <if test="isDel != null ">
+               and  is_del = #{isDel}
+            </if>
+            <if test="deviceCode != null ">
+                and  device_code like CONCAT('%',#{deviceCode},'%')
+            </if>
+            <if test="deviceName != null ">
+                and  device_name like CONCAT('%',#{deviceName},'%')
+            </if>
+        </where>
+        order by last_date desc
+    </select>
+
+
+    <insert id="add">
+		INSERT INTO	pls_alarm_notice_rule
+		(id,device_code,device_name,device_type,alarm_num,model_type,notify_type,notify_user_type,notify_user,notify_user_id,create_by,create_date,last_by,last_date,is_del,enterprise_id)
+		VALUE
+		(#{id},#{deviceCode},#{deviceName},#{deviceType},#{alarmNum},#{modelType},#{notifyType},#{notifyUserType},#{notifyUser},#{notifyUserId},#{userBy},#{curr},#{userBy},#{curr},#{isDel},#{enterpriseId})
+	</insert>
+
+    <select id="isExist" resultType="java.lang.Boolean">
+        SELECT EXISTS
+        (
+        SELECT id FROM pls_alarm_notice_rule
+        <where>
+            AND is_del=#{isDel}
+            <if test="deviceCode != null and deviceCode != ''">
+                AND device_code=#{deviceCode}
+            </if>
+            <if test="enterpriseId != null and enterpriseId != ''">
+                AND enterprise_id=#{enterpriseId}
+            </if>
+        </where>
+        )
+    </select>
+
+    <update id="edit" parameterType="java.util.Map">
+        UPDATE pls_alarm_notice_rule
+        <trim prefix="set" suffixOverrides=",">
+            <if test="deviceName != null and deviceName != ''">
+                device_name=#{deviceName},
+            </if>
+            <if test="deviceType != null and deviceType != ''">
+                device_type=#{deviceType},
+            </if>
+            <if test="alarmNum != null and alarmNum != ''">
+                alarm_num=#{alarmNum},
+            </if>
+            <if test="modelType != null and modelType != ''">
+                model_type=#{modelType},
+            </if>
+            <if test="notifyType != null and notifyType != ''">
+                notify_type=#{notifyType},
+            </if>
+            <if test="notifyUserType != null and notifyUserType != ''">
+                notify_user_type=#{notifyUserType},
+            </if>
+            <if test="notifyUser != null and notifyUser != ''">
+                notify_user=#{notifyUser},
+            </if>
+            <if test="notifyUserId != null and notifyUserId != ''">
+                notify_user_id=#{notifyUserId},
+            </if>
+            <if test="userBy != null ">
+                last_by=#{userBy},
+            </if>
+            <if test="curr != null">
+                last_date=#{curr},
+            </if>
+        </trim>
+        where enterprise_id = #{enterpriseId} and device_code = #{deviceCode}
+    </update>
+
+
+    <update id="del" >
+        update pls_alarm_notice_rule set is_del = #{isDel}
+        where enterprise_id = #{enterpriseId} and id = #{id}
+    </update>
+
+
+    <select id="logList" resultMap="AlarmVoMap">
+        SELECT id,device_code,device_name,alarm_num,notify_type,notify_user,notify_user_id,notify_user_type,create_date
+        FROM pls_alarm_notice_log
+        <where>
+            <if test="enterpriseId != null and enterpriseId != ''">
+                and  enterprise_id = #{enterpriseId}
+            </if>
+            <if test="isDel != null ">
+                and  is_del = #{isDel}
+            </if>
+            <if test="deviceCode != null ">
+                and  device_code like CONCAT('%',#{deviceCode},'%')
+            </if>
+            <if test="deviceName != null ">
+                and  device_name like CONCAT('%',#{deviceName},'%')
+            </if>
+        </where>
+        order by last_date desc
+    </select>
+
+
+    <insert id="addLog">
+		INSERT INTO	pls_alarm_notice_log
+		(id,device_code,device_name,alarm_num,notify_type,notify_user_type,notify_user,notify_user_id,create_by,create_date,last_by,last_date,is_del,enterprise_id)
+		VALUE
+		(#{id},#{deviceCode},#{deviceName},#{alarmNum},#{notifyType},#{notifyUserType},#{notifyUser},#{notifyUserId},#{userBy},#{curr},#{userBy},#{curr},#{isDel},#{enterpriseId})
+	</insert>
+
+
+
+</mapper>

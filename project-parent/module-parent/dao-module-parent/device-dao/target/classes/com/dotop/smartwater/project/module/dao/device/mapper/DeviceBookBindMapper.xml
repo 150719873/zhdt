@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dotop.smartwater.project.module.dao.device.IDeviceBookBindDao">
+
+    <select id="listDeviceBookBind" resultType="com.dotop.smartwater.project.module.core.water.vo.DeviceBookBindVo">
+        SELECT a.id, a.book_num as bookNum, a.book_user_id as bookUserId, a.bind_time as bindTime, b.name, b.phone, b.worknum as workNum
+        from device_book_bind a left join user b on a.book_user_id = b.userid left join device_book_management c on a.book_num = c.book_num
+        <where>
+        	c.enterpriseid = #{enterpriseid} and a.enterpriseid = #{enterpriseid}
+            <if test="bookNum != null and bookNum != '' ">
+                and a.book_num = #{bookNum,jdbcType=VARCHAR}
+            </if>
+        </where>
+        order by a.bind_time desc
+    </select>
+
+    <delete id="deleteDeviceBookBind">
+        delete from device_book_bind
+        <where>
+        	enterpriseid = #{enterpriseid}
+            <if test="bookNum != null and bookNum != '' ">
+                and book_num = #{bookNum,jdbcType=VARCHAR}
+            </if>
+            <if test="id != null and id != '' ">
+                and id = #{id,jdbcType=VARCHAR}
+            </if>
+            <if test="(id == null or id == '') and (bookNum == null or bookNum == '')">
+                and 1 != 1
+            </if>
+        </where>
+    </delete>
+    
+    <insert id="insertDeviceBookBind">
+	    insert into device_book_bind(id, book_num, book_user_id, bind_time, enterpriseid)
+	    values
+	    <foreach collection="list" item="item" index="index" separator=",">
+            (#{item.id},#{item.bookNum},#{item.bookUserId},#{item.bindTime},#{item.enterpriseid})
+        </foreach>
+  	</insert>
+  
+  	<select id="pageBindOwner" resultType="com.dotop.smartwater.project.module.core.water.vo.DeviceBookBindVo">
+  		select d.name as areaName, b.ownerid as ownerId, b.userno as ownerNo, b.username as name, b.userphone as phone, 
+  		c.devno as deviceNo
+  		from device_book_management a left join `owner` b on a.book_num = b.book_num 
+  		left join `device` c on b.devid = c.devid left join area d on b.communityid = d.id
+  		where a.enterpriseid = #{enterpriseid} and b.enterpriseid = #{enterpriseid} and a.book_num = #{bookNum}
+  	</select>
+  	
+  	<select id="listBindOwner" resultType="com.dotop.smartwater.project.module.core.water.vo.DeviceBookBindVo">
+  		select d.name as areaName, b.ownerid as ownerId, b.userno as ownerNo, b.username as name, b.userphone as phone, 
+  		c.devno as deviceNo, IF(b.book_num = #{bookNum}, true,false) as checked 
+  		from `owner` b left join device_book_management a on a.book_num = b.book_num
+  		left join `device` c on b.devid = c.devid left join `area` d on b.communityid = d.id
+  		where b.enterpriseid = #{enterpriseid} and b.`status` != 0 and d.`name` is not null
+        <if test="nodeIds != null">
+            and b.communityid in
+            <foreach collection="nodeIds" item="communityid" index="index"
+                     open="(" close=")" separator=",">
+                #{communityid}
+            </foreach>
+        </if>
+        <if test="areaId != null and areaId != '' ">
+            and b.communityid = #{areaId,jdbcType=VARCHAR}
+        </if>
+        <if test="ownerNo != null and ownerNo != '' ">
+            and b.userno = #{ownerNo,jdbcType=VARCHAR}
+        </if>
+        <if test="deviceNo != null and deviceNo != '' ">
+            and c.devno = #{deviceNo,jdbcType=VARCHAR}
+        </if>
+        <if test="phone != null and phone != '' ">
+            and b.userphone = #{phone,jdbcType=VARCHAR}
+        </if>
+  	</select>
+  	
+  	<update id="deleteBindOwner">
+  		update `owner` set book_num = null where enterpriseid = #{enterpriseid} and book_num = #{bookNum}
+  	</update>
+  	
+  	<update id="deleteBindOwnerOne">
+  		update `owner` set book_num = null where enterpriseid = #{enterpriseid} and ownerid = #{ownerId}
+  	</update>
+  	
+  	<update id="insertBindOwner">
+  		update `owner` set book_num = #{bookNum} where ownerid in (
+  		<foreach collection="list" item="item" index="index" separator=",">
+            #{item.ownerId}
+        </foreach>
+        )
+  	</update>
+  
+</mapper>

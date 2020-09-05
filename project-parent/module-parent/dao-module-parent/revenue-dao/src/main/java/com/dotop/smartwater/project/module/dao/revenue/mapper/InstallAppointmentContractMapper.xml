@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper
+	namespace="com.dotop.smartwater.project.module.dao.revenue.IInstallAppointmentContractDao">
+
+	<resultMap id="InstallContractVo"
+		type="com.dotop.smartwater.project.module.core.water.vo.InstallContractVo">
+		
+		<!-- 主键 -->
+		<result column="id" jdbcType="VARCHAR" property="id" />
+		<result column="number" jdbcType="VARCHAR" property="number" />
+		<result column="contract_no" jdbcType="VARCHAR" property="contractNo" />
+		<result column="contract_name" jdbcType="VARCHAR" property="contractName" />
+		<result column="contract_username" jdbcType="VARCHAR" property="contractUsername" />
+		<result column="contract_time" jdbcType="TIMESTAMP" property="contractTime" />
+		<result column="type_id" jdbcType="VARCHAR" property="typeId" />
+		<result column="type_name" jdbcType="VARCHAR" property="typeName"/>
+		<result column="amount" jdbcType="VARCHAR" property="amount"/>
+		<result column="model_id" jdbcType="VARCHAR" property="modelId"/>
+		<result column="model_name" jdbcType="VARCHAR" property="modelName"/>
+		<result column="kind_id" jdbcType="VARCHAR" property="kindId"/>
+		<result column="kind_name" jdbcType="VARCHAR" property="kindName"/>
+		<result column="upload_file" jdbcType="VARCHAR" property="uploadFile"/>
+		<result column="enterprise_id" jdbcType="VARCHAR" property="enterpriseid" />
+		<result column="create_by" jdbcType="VARCHAR" property="createBy" />
+		<result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
+		<result column="last_by" jdbcType="VARCHAR" property="lastBy" />
+		<result column="last_date" jdbcType="TIMESTAMP" property="lastDate" />
+	</resultMap>
+
+	<select id="get" resultMap="InstallContractVo">
+		SELECT * FROM install_contract where number = #{number} and enterprise_id = #{enterpriseid} 
+	</select>
+	
+	<insert id="submitContract">
+		 INSERT INTO `install_contract` (id,number,contract_no,contract_name,contract_username,contract_time,sign_status,type_id,type_name,
+		 amount,model_id,model_name,kind_id,kind_name,upload_file,enterprise_id,create_by,create_date)
+		VALUES (#{id}, #{number}, #{contractNo}, #{contractName}, #{contractUsername}, #{contractTime}, #{signStatus}, #{typeId}, #{typeName}
+		, #{amount}, #{modelId}, #{modelName}, #{kindId}, #{kindName}, #{uploadFile}, #{enterpriseid}, #{userBy}, #{curr})
+	</insert>
+	
+	<update id="updateContract">
+		UPDATE `install_contract` SET contract_no=#{contractNo} ,contract_name=#{contractName} ,contract_username=#{contractUsername} ,contract_time=#{contractTime},
+		`sign_status` = #{signStatus} ,type_id=#{typeId} ,type_name=#{typeName} ,amount=#{amount} ,model_id=#{modelId} ,model_name=#{modelName}
+		,kind_id=#{kindId} ,kind_name=#{kindName} ,upload_file=#{uploadFile} ,enterprise_id=#{enterpriseid} ,last_date=#{curr} ,last_by=#{userBy}
+		WHERE enterprise_id = #{enterpriseid} and number=#{number}
+	</update>
+</mapper>

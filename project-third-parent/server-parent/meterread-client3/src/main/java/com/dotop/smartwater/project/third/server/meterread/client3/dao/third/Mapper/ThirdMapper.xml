@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.dotop.smartwater.project.third.server.meterread.client3.dao.third.IThirdDao">
+
+    <resultMap id="BaseResultMap"
+               type="com.dotop.smartwater.project.third.server.meterread.client3.core.third.vo.SbDtVo">
+        <result column="ID" jdbcType="VARCHAR" property="id"/>
+        <result column="MeterId" jdbcType="VARCHAR" property="meterId"/>
+        <result column="UserCode" jdbcType="VARCHAR" property="userCode"/>
+        <result column="ReadDate" jdbcType="TIMESTAMP" property="readDate"/>
+        <result column="ReadNumber" jdbcType="INTEGER" property="readNumber"/>
+        <result column="ValveStatus" jdbcType="VARCHAR" property="valveStatus"/>
+        <result column="ValveFlag" jdbcType="VARCHAR" property="valveFlag"/>
+        <result column="ProcessFlag" jdbcType="VARCHAR" property="processFlag"/>
+        <result column="ClientId" jdbcType="VARCHAR" property="clientId"/>
+    </resultMap>
+
+
+    <select id="getList" resultMap="BaseResultMap">
+        SELECT UserCode, MAX(MeterId), MAX(ReadDate) as ReadDate,MAX(ReadNumber) as ReadNumber FROM sb_sj
+        <where>
+            UserCode in
+            <foreach collection="userCodes" item="userCode" close=")" open="(" separator=",">#{userCode}</foreach>
+        </where>
+        GROUP BY UserCode
+    </select>
+
+    <!--<select id="getList" resultMap="BaseResultMap">-->
+        <!--select * from sb_sj-->
+        <!--<where>-->
+            <!--and MeterId in-->
+            <!--<foreach collection="meterIds" item="meterId" close=")" open="(" separator=",">#{meterId}</foreach>-->
+        <!--</where>-->
+    <!--</select>-->
+
+    <insert id="inserts">
+        insert into sb_sj(MeterId, UserCode, ReadDate, ReadNumber,ValveStatus)
+        values
+        <foreach collection="sbDtBos" item="sbDtBo" separator=",">
+            (#{sbDtBo.meterId},#{sbDtBo.userCode},#{sbDtBo.readDate},#{sbDtBo.readNumber},#{sbDtBo.valveStatus})
+        </foreach>
+    </insert>
+
+    <update id="updates">
+        <foreach collection="sbDtBos" item="sbDtBo">
+            update sb_sj
+            <set>
+                <if test="sbDtBo.meterId != null">
+                    MeterId = #{sbDtBo.meterId},
+                </if>
+                <if test="sbDtBo.readDate != null">
+                    ReadDate =#{sbDtBo.readDate},
+                </if>
+                <if test="sbDtBo.readNumber != null">
+                    ReadNumber=#{sbDtBo.readNumber},
+                </if>
+                <if test="sbDtBo.valveStatus != null and sbDtBo.valveStatus != ''">
+                    ValveStatus = #{sbDtBo.valveStatus},
+                </if>
+                <if test="sbDtBo.processFlag != null and sbDtBo.processFlag != ''">
+                    ProcessFlag =#{sbDtBo.processFlag},
+                </if>
+                <if test="sbDtBo.clientId != null and sbDtBo.clientId != ''">
+                    ClientId = #{sbDtBo.clientId}
+                </if>
+            </set>
+            where
+              UserCode = #{sbDtBo.userCode}
+        </foreach>
+    </update>
+
+    <select id="getSbDtList" resultMap="BaseResultMap">
+        select * from sb_sj
+        <where>
+            <if test="processFlag != null and processFlag != ''">
+                and ProcessFlag = #{processFlag}
+            </if>
+        </where>
+    </select>
+
+
+    <update id="editSbDt">
+        update sb_sj
+        <set>
+            <if test="readDate != null">
+                ReadDate =#{readDate},
+            </if>
+            <if test="readNumber != null">
+                ReadNumber=#{readNumber},
+            </if>
+            <if test="valveStatus != null and valveStatus != ''">
+                ValveStatus = #{valveStatus},
+            </if>
+            <if test="processFlag != null and processFlag != ''">
+                ProcessFlag =#{processFlag},
+            </if>
+            <if test="clientId != null and clientId != ''">
+                ClientId = #{clientId}
+            </if>
+        </set>
+        where MeterId = #{meterId}
+    </update>
+
+</mapper>

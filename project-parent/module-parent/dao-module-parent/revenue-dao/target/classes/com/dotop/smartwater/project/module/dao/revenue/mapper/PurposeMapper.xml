@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dotop.smartwater.project.module.dao.revenue.IPurposeDao">
+  <resultMap id="BaseResultMap" type="com.dotop.smartwater.project.module.core.water.vo.PurposeVo">
+    <id column="id" jdbcType="VARCHAR" property="id" />
+    <result column="enterpriseid" jdbcType="VARCHAR" property="enterpriseid" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="enable" jdbcType="INTEGER" property="enable" />
+    <result column="remark" jdbcType="VARCHAR" property="remark" />
+    <result column="createuser" jdbcType="VARCHAR" property="createuser" />
+    <result column="username" jdbcType="VARCHAR" property="username" />
+    <result column="createtime" jdbcType="TIMESTAMP" property="createtime" />
+  </resultMap>
+
+  <select id="findById" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select id, enterpriseid, name, enable, remark, createuser, username, createtime
+    from purpose
+    where id = #{id,jdbcType=VARCHAR}
+  </select>
+
+  <select id="getPurposeMap" parameterType="java.lang.String" resultType="com.dotop.smartwater.project.module.core.water.vo.PurposeVo">
+    select id, enterpriseid, name, enable, remark, createuser, username, createtime
+    from purpose
+    where enterpriseid = #{enterpriseid,jdbcType=VARCHAR}
+  </select>
+
+  <delete id="delete" parameterType="java.lang.String">
+    delete from purpose
+    where id = #{id,jdbcType=VARCHAR}
+  </delete>
+
+  <insert id="insert">
+    insert into purpose (id, enterpriseid, name, 
+      enable, remark, createuser, 
+      username, createtime)
+    values (#{id,jdbcType=VARCHAR}, #{enterpriseid,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR}, 
+      #{enable,jdbcType=INTEGER}, #{remark,jdbcType=VARCHAR}, #{createuser,jdbcType=VARCHAR}, 
+      #{username,jdbcType=VARCHAR}, #{createtime,jdbcType=TIMESTAMP})
+  </insert>
+
+  <update id="update" >
+    update purpose
+    <set>
+      <if test="enterpriseid != null">
+        enterpriseid = #{enterpriseid,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null">
+        name = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="enable != null">
+        enable = #{enable,jdbcType=INTEGER},
+      </if>
+      <if test="remark != null">
+        remark = #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="createuser != null">
+        createuser = #{createuser,jdbcType=VARCHAR},
+      </if>
+      <if test="username != null">
+        username = #{username,jdbcType=VARCHAR},
+      </if>
+      <if test="createtime != null">
+        createtime = #{createtime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+</mapper>

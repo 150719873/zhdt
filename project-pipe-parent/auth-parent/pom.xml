@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>com.dotop.pipe.auth</groupId>
+    <artifactId>auth-parent</artifactId>
+    <packaging>pom</packaging>
+
+    <name>auth-parent</name>
+    <url>http://maven.apache.org</url>
+
+    <parent>
+        <groupId>com.dotop.pipe</groupId>
+        <artifactId>project-pipe-parent</artifactId>
+        <version>3.0.0-SNAPSHOT</version>
+    </parent>
+
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>com.dotop.smartwater.dependence</groupId>
+            <artifactId>dependence-core</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.dotop.smartwater.dependence</groupId>
+            <artifactId>dependence-lock</artifactId>
+            <scope>provided</scope>
+        </dependency>
+    </dependencies>
+
+    <dependencyManagement>
+    </dependencyManagement>
+
+    <modules>
+        <module>auth-core</module>
+        <module>auth-service</module>
+        <module>auth-cas</module>
+        <module>auth-cache</module>
+        <module>auth-web</module>
+        <module>auth-dao</module>
+    </modules>
+</project>

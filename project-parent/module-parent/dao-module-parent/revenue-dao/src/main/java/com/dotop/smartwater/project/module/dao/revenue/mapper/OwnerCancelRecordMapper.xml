@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper
+        namespace="com.dotop.smartwater.project.module.dao.revenue.IOwnerCancelRecordDao">
+    <resultMap id="OwnerCancelRecordVo"
+               type="com.dotop.smartwater.project.module.core.water.vo.OwnerCancelRecordVo">
+
+        <id property="id" column="id"/>
+        <result property="communityid" column="communityid"/>
+        <result property="ownerid" column="ownerid"/>
+        <result property="operatetime" column="operatetime"/>
+        <result property="operateuser" column="operateuser"/>
+    </resultMap>
+
+    <select id="getList" resultMap="OwnerCancelRecordVo">
+        SELECT record.id AS id,record.operatetime AS operatetime,u.account AS operateuser,
+        c.name AS community,o.username AS username,o.userphone AS userphone,
+        o.useraddr AS useraddr,o.userno AS userno,d.devno AS devno,
+        (
+        CASE d.typeid
+        WHEN 0 THEN '水表'
+        WHEN 1 THEN '燃气表'
+        WHEN 2 THEN '热表'
+        ELSE ''
+        END
+        )as type
+        FROM owner_cancel_record record
+        LEFT JOIN community c ON record.communityid = c.communityid
+        LEFT JOIN owner o ON record.ownerid = o.ownerid
+        LEFT JOIN device d ON d.devid = o.devid
+        LEFT JOIN user u ON record.operateuser = u.userid
+        <where>
+            <if test="communityid != null and communityid != '' ">
+                record.communityid = #{communityid}
+            </if>
+            <if test="username != null and username != '' ">
+                AND  o.username = #{username}
+            </if>
+        </where>
+        ORDER BY record.operatetime DESC
+    </select>
+
+</mapper>

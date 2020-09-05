@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.dotop.smartwater.project.module.dao.tool.IUserLoraDao">
+		
+	<resultMap id="UserLoraVoMap" type="com.dotop.smartwater.project.module.core.auth.vo.UserLoraVo">
+		<result column="id" jdbcType="VARCHAR" property="id" />
+		<result column="enterpriseid"   jdbcType="VARCHAR" property="enterpriseid" />
+		<result column="account" jdbcType="VARCHAR" property="account" />
+		<result column="password" jdbcType="VARCHAR" property="password" />
+		<result column="appeui" jdbcType="VARCHAR" property="appeui" />
+	</resultMap>
+
+	<select id="findByEnterpriseId" resultMap="UserLoraVoMap">
+     	SELECT id,enterpriseid,account,password,appeui FROM user_lora
+		<where>
+			<if test="enterpriseid != null and enterpriseid != ''">
+				AND enterpriseid=#{enterpriseid}
+			</if>
+		</where>
+	</select>
+	
+	<insert id="add">
+		INSERT INTO user_lora (id,enterpriseid,account,password,appeui) 
+		VALUES (#{id},#{enterpriseid},#{account},#{password},#{appeui})
+	</insert>
+	
+	<update id="edit">
+		UPDATE user_lora SET 
+			account = #{account},  password = #{password},  appeui = #{appeui}  
+		WHERE 
+			enterpriseid = #{enterpriseid}
+	</update>
+	
+
+</mapper>

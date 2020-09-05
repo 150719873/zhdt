@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper
+	namespace="com.dotop.pipe.api.dao.devicedata.IDeviceDataDao">
+	<insert id="addPointList">
+		INSERT INTO pls_point (point_id, code, name,
+		des, longitude, latitude,
+		remark, create_by, create_date, last_by,
+		last_date,
+		is_del,
+		enterprise_id) VALUES
+		<foreach collection="pointList" item="item" index="index"
+			separator=",">
+			(#{item.pointId}, #{item.code}, #{item.name},
+			#{item.des},
+			#{item.longitude},
+			#{item.latitude}, #{item.remark}, #{userBy},
+			#{curr}, #{userBy},
+			#{curr}, #{isNotDel}, #{operEid})
+		</foreach>
+	</insert>
+
+	<insert id="addDeviceList">
+		INSERT INTO pls_device
+		(device_id, code, name, des, address, length,depth,
+		laying, install_date,remark,version,pipe_elevation, ground_elevation,
+		create_by, create_date, last_by, last_date, is_del, enterprise_id,
+		product_id, area_id,scale,product_category,product_type)
+		VALUES
+		<foreach collection="deviceList" item="item" index="index"
+			separator=",">
+			(#{item.deviceId}, #{item.code}, #{item.name}, #{item.des},
+			#{item.address}, #{item.length},#{item.depth}, #{item.laying},
+			#{item.installDate},#{item.remark},#{item.version},
+			#{item.pipeElevation},#{item.groundElevation}, #{userBy},
+			#{curr},#{userBy},
+			#{curr}, #{isNotDel},
+			#{operEid}, #{item.productId}, #{item.areaId},#{item.scale},#{item.productCategory},#{item.productType})
+		</foreach>
+	</insert>
+</mapper>

@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper
+	namespace="com.dotop.smartwater.project.auth.dao.IUserDao">
+
+	<!-- <resultMap id="InventoryVoMap"
+		type="com.dotop.smartwater.project.module.core.water.vo.InventoryVo">
+		<result column="inTotal" jdbcType="VARCHAR" property="inTotal" />
+		<result column="outTotal" jdbcType="VARCHAR" property="outTotal" />
+		<result column="stockTotal" jdbcType="VARCHAR" property="stockTotal" />
+		<association property="product" javaType="com.dotop.smartwater.project.module.core.water.vo.StoreProductVo">
+			<result column="productNo" jdbcType="VARCHAR" property="productNo" />
+			<result column="name" jdbcType="VARCHAR" property="name" />
+			<result column="unit" jdbcType="VARCHAR" property="unit" />
+			<result column="model" jdbcType="VARCHAR" property="model" />
+			<result column="spec" jdbcType="VARCHAR" property="spec" />
+			<result column="material" jdbcType="VARCHAR" property="material" />
+			<result column="vender" jdbcType="VARCHAR" property="vender" />
+			<result column="produced" jdbcType="VARCHAR" property="produced" />
+			<result column="contact" jdbcType="VARCHAR" property="contact" />
+			<result column="phone" jdbcType="VARCHAR" property="phone" />
+		</association>
+	</resultMap> -->
+
+	<select id="getUserList" resultType="com.dotop.smartwater.project.module.core.auth.vo.UserVo">
+		select a.*, b.name as createName, ifnull(c.name,'水司最高级管理员') as accounttype, e.`name` as enterpriseName from user as a 
+			LEFT JOIN `user` as b on a.createuser = b.userid 
+			LEFT JOIN `role` as c on a.roleid = c.roleid 
+			LEFT JOIN `enterprise` as e on a.enterpriseid = e.enterpriseid
+			where 1=1
+			<choose>
+			    <when test="enterpriseid != null and enterpriseid != ''">
+			        AND a.enterpriseid = #{enterpriseid}
+			    </when>
+			    <otherwise>
+			        and (a.type=1 or a.type=0)
+			    </otherwise>
+			</choose>
+			<if test="name != null and name != ''">
+				AND a.name like concat('%',#{name},'%')
+			</if>
+			<if test="account != null and account != ''">
+				AND a.account like concat('%',#{account},'%')
+			</if>
+			<if test="phone != null and phone != ''">
+				AND a.phone like concat('%',#{phone},'%')
+			</if>
+			<if test="roleid != null and roleid != ''">
+				AND a.roleid = #{roleid}
+			</if>
+			<if test="(roleid != null and roleid != '') and (rid != null and rid != '')">
+				AND a.roleid = #{rid}
+			</if>
+			<if test="worknum != null">
+				AND a.worknum like concat('%',#{worknum},'%')
+			</if>
+			order by a.createtime desc
+	</select>
+	
+	<select id="login" resultType="com.dotop.smartwater.project.module.core.auth.vo.UserVo">
+		select * from `user` where account = #{account} and password =
+			#{password} and enterpriseid=#{enterpriseid} limit 1
+	</select>
+
+	<select id="getUsers" resultType="com.dotop.smartwater.project.module.core.auth.vo.UserVo">
+		select * from user where userid in (${userIds})
+	</select>
+		
+	
+	<select id="loginByWorkNum" resultType="com.dotop.smartwater.project.module.core.auth.vo.UserVo">
+		select * from user where worknum = #{worknum} and password = 
+			#{password} and enterpriseid=#{enterpriseid} limit 1
+	</select>
+	
+	<select id="findUserByAccount" resultType="com.dotop.smartwater.project.module.core.auth.vo.UserVo">
+		select * from user where account = #{account} and enterpriseid=#{enterpriseid} limit 1
+	</select>
+	
+	<select id="findUserByWorknum" resultType="com.dotop.smartwater.project.module.core.auth.vo.UserVo">
+		select * from user where worknum = #{worknum} and enterpriseid=#{enterpriseid} limit 1
+	</select>
+	
+	<select id="findUserByAccountAndId" resultType="com.dotop.smartwater.project.module.core.auth.vo.UserVo">
+		select * from user where account = #{account} and enterpriseid=#{enterpriseid} and userid !=#{userid} limit 1
+	</select>
+	
+	<select id="findUserByWorknumAndId" resultType="com.dotop.smartwater.project.module.core.auth.vo.UserVo">
+		select * from user where worknum = #{worknum} and enterpriseid=#{enterpriseid} and userid !=#{userid} limit 1
+	</select>
+	
+	<select id="findUserById" resultType="com.dotop.smartwater.project.module.core.auth.vo.UserVo">
+		select * from user where userid = #{userid}
+	</select>
+	
+	<delete id="delUserArea">
+		delete from user_area where userid= #{userid}
+	</delete>
+	
+	
+	<insert id="addUserArea">
+		insert into user_area (id, userid, areaid) values
+		<foreach collection="list" item="item1" index="index"  separator=",">
+			(uuid(), #{userid}, #{item1})
+		</foreach>
+	</insert>
+	
+	<insert id="add">
+		insert into user (userid,account,name,description,password,type,enterpriseid,status,phone,address,email,worknum,usertype,createtime,createuser,roleid,failuretime,failurestate,bindpermission) values
+			(#{userid},#{account},#{name},#{description},#{password},#{type},#{enterpriseid},#{status},#{phone},#{address},#{email},#{worknum},#{usertype},#{createtime},#{createuser},#{roleid},#{failuretime},#{failurestate},#{bindpermission})
+	</insert>
+	
+	<update id="changePwd">
+		update user set password=#{password} where userid = #{userid}
+	</update>
+		
+	<update id="update">
+		update user
+		<trim prefix="set" suffixOverrides="," >
+			failuretime = #{failuretime},
+			<if test="account != null and account != ''">
+				account = #{account},
+			</if>
+			<if test="name != null and name != ''">
+				`name` = #{name},
+			</if>
+			<if test="password != null and password != ''">
+				password = #{password},
+			</if>
+			<if test="roleid != null and roleid != ''">
+				roleid = #{roleid},
+			</if>
+			<if test="description != null and description != ''">
+				description = #{description},
+			</if>
+			<if test="enterpriseid != null and enterpriseid != ''">
+				enterpriseid = #{enterpriseid},
+			</if>
+			<if test="phone != null and phone != ''">
+				phone = #{phone},
+			</if>
+			<if test="address != null and address != ''">
+				address = #{address},
+			</if>
+			<if test="email != null and email != ''">
+				email = #{email},
+			</if>
+			<if test="worknum != null and worknum != ''">
+				worknum = #{worknum},
+			</if>
+			<if test="usertype != null">
+				usertype = #{usertype},
+			</if>
+			<if test="failurestate != null">
+				failurestate = #{failurestate},
+			</if>
+			bindpermission = #{bindpermission}
+		</trim>
+		where userid = #{userid}
+	</update>
+	
+	<update id="delete">
+		update user set status=#{status}
+		<trim prefix="set" suffixOverrides=",">
+			<if test="status != null">
+				status = #{status}
+			</if>
+		</trim>
+		 where userid = #{userid}
+	</update>
+	
+</mapper>

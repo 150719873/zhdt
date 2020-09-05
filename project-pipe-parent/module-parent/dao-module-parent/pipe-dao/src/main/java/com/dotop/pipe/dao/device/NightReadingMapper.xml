@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.dotop.pipe.api.dao.device.INightReadingDao">
+
+    <resultMap id="NightReadingVoMap" type="com.dotop.pipe.core.vo.report.NightReadingVo">
+        <result column="code" jdbcType="VARCHAR" property="code"/>
+        <result column="device_id" jdbcType="VARCHAR" property="deviceId"/>
+        <result column="name" jdbcType="VARCHAR" property="name"/>
+        <result column="area_name" jdbcType="VARCHAR" property="area"/>
+        <result column="area_id" jdbcType="VARCHAR" property="areaId"/>
+        <result column="read_date" jdbcType="VARCHAR" property="readDate"/>
+        <result column="total_water" jdbcType="DOUBLE" property="totalWater"/>
+        <result column="night_water" jdbcType="DOUBLE" property="nightWater"/>
+        <result column="night_max_water" jdbcType="DOUBLE" property="nightMaxWater"/>
+        <result column="max_water" jdbcType="DOUBLE" property="maxWater"/>
+        <result column="min_water" jdbcType="DOUBLE" property="minWater"/>
+        <result column="enterprise_id" jdbcType="VARCHAR" property="enterpriseId"/>
+    </resultMap>
+
+    <select id="listDevices" resultMap="NightReadingVoMap" parameterType="com.dotop.pipe.core.dto.report.NightReadingDto">
+        SELECT d.`code`,d.device_id,d.`name`,d.enterprise_id, a.`name` AS area_name,a.area_id,
+        MAX(if(UNIX_TIMESTAMP(l.dev_send_date) <![CDATA[<=]]> UNIX_TIMESTAMP(CONCAT(DATE_FORMAT(l.dev_send_date,'%Y-%m-%d'), " ",
+        DATE_FORMAT(TIMESTAMP(#{nightEndDate}),'%H:%i:%S'))), l.flw_total_value + 0, 0)) AS night_max_water,
+        MAX(l.flw_total_value + 0 ) as max_water,
+        MIN(l.flw_total_value + 0 ) as min_water,
+        if( UNIX_TIMESTAMP(#{nightStartDate}) <![CDATA[>]]> UNIX_TIMESTAMP(#{nightEndDate}),
+        if( UNIX_TIMESTAMP(l.dev_send_date) <![CDATA[>=]]>
+        UNIX_TIMESTAMP(CONCAT(DATE_FORMAT(l.dev_send_date,'%Y-%m-%d')," ",DATE_FORMAT(TIMESTAMP(#{nightStartDate}),'%H:%i:%S')))
+        AND UNIX_TIMESTAMP(l.dev_send_date) <![CDATA[<]]>
+        UNIX_TIMESTAMP(CONCAT(DATE_FORMAT(ADDDATE(l.dev_send_date,1),'%Y-%m-%d')," ",DATE_FORMAT(TIMESTAMP(#{nightStartDate}),'%H:%i:%S')))
+        ,DATE_FORMAT(ADDDATE(l.dev_send_date, 1),'%Y-%m-%d'),DATE_FORMAT(l.dev_send_date, '%Y-%m-%d')),
+        DATE_FORMAT(l.dev_send_date,'%Y-%m-%d')) AS read_date
+        FROM
+        pls_device as d
+        LEFT JOIN pls_area as a ON a.area_id = d.area_id AND a.is_del = 0
+        LEFT JOIN pls_device_data_log as l ON l.device_id = d.device_id AND l.is_del = 0
+        where
+        d.is_del = #{isDel}
+        and d.enterprise_id = #{enterpriseId}
+        and d.device_id IN (<foreach collection="deviceIds" item="item" separator=",">#{item}</foreach>)
+        AND l.dev_send_date BETWEEN ADDDATE(TIMESTAMP(#{startDate}), -1) AND ADDDATE(TIMESTAMP(#{endDate}), 1)
+        and
+        <foreach collection="ctimes" separator="," item="item" index="index" open=" l.ctime in (" close=")">
+            #{item}
+        </foreach>
+        GROUP BY d.device_id , read_date order by read_date asc
+    </select>
+</mapper>
+
+
+
+
+

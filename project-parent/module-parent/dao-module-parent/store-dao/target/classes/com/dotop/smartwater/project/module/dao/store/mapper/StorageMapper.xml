@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.dotop.smartwater.project.module.dao.store.IStorageDao">
+
+	<!-- <resultMap id="StorageVoMap"
+		type="com.dotop.smartwater.project.module.core.water.vo.StorageVo">
+		<result column="recordNo" jdbcType="VARCHAR" property="recordNo" />
+		<result column="repoNo" jdbcType="VARCHAR" property="repoNo" />
+		<result column="repoName" jdbcType="VARCHAR" property="repoName" />
+		<result column="productNo" jdbcType="VARCHAR" property="productNo" />		
+		<result column="quantity" jdbcType="VARCHAR" property="quantity" />
+		<result column="stock" jdbcType="VARCHAR" property="stock" />
+		<result column="price" jdbcType="VARCHAR" property="price" />
+		<result column="total" jdbcType="VARCHAR" property="total" />
+		<result column="productionDate" jdbcType="TIMESTAMP" property="productionDate" />
+		<result column="storageDate" jdbcType="TIMESTAMP" property="storageDate" />
+		<result column="storageUserId" jdbcType="VARCHAR" property="storageUserId" />
+		<result column="storageUsername" jdbcType="VARCHAR" property="storageUsername" />
+		<result column="effectiveDate" jdbcType="TIMESTAMP" property="effectiveDate" />
+		<result column="remark" jdbcType="VARCHAR" property="remark" />
+		<result column="enterpriseId" jdbcType="VARCHAR" property="enterpriseid" />
+		<result column="status" jdbcType="VARCHAR" property="status" />
+		<association property="product" javaType="com.dotop.smartwater.project.module.core.water.vo.StoreProductVo">
+			<result column="name" jdbcType="VARCHAR" property="name" /> 
+			<result column="price" jdbcType="VARCHAR" property="price" />
+		</association>
+	</resultMap> -->
+
+	<select id="getStorageByCon" resultType="com.dotop.smartwater.project.module.core.water.vo.StorageVo">
+		select recordNo, repoNo, repoName, a.productNo, name, quantity, stock, unit, 
+			b.price, total, productionDate, storageDate, effectiveDate, vender, 
+			storageUsername, a.status from store_storage as a, store_product as b 
+			where a.productNo = b.productNo and a.enterpriseId = #{enterpriseid} and b.enterpriseId = #{enterpriseid}
+		<if test="productNo != null and productNo != ''">
+			AND a.productNo like concat('%',#{productNo},'%')
+		</if>
+		<if test="name != null and name != ''">
+			AND name like concat('%',#{name},'%')
+		</if>
+		<if test="status != null">
+			AND a.status = status
+		</if>
+		<if test="storageDate != null">
+			AND storageDate &gt;= storageDate 
+		</if>
+		<if test="storDatePlus != null">
+			AND storageDate &lt; storDatePlus 
+		</if>
+		ORDER BY storageDate DESC
+	</select>
+	
+	<select id="getStorageByNo" resultType="com.dotop.smartwater.project.module.core.water.vo.StorageVo">
+		select recordNo, repoNo, repoName, a.productNo, name, quantity, stock, unit, 
+			b.price, total, productionDate, storageDate, effectiveDate, a.remark, vender, 
+			storageUsername, a.status from store_storage as a, store_product as b
+			where a.enterpriseId = #{enterpriseid} and b.enterpriseId = #{enterpriseid} and recordNo = #{recordNo} and a.productNo = b.productNo limit 1
+	</select>
+	
+	<insert id="addStorage">
+		insert into store_storage(recordNo,repoNo,repoName,productNo,quantity,stock,total,productionDate,
+			storageDate,storageUserId,storageUsername,effectiveDate,remark,enterpriseId,status) 
+			values (#{recordNo},#{repoNo}, #{repoName}, #{productNo},#{quantity}, #{stock}, #{total}, #{productionDate}, #{storageDate}, 
+			#{storageUserId}, #{storageUsername}, #{effectiveDate}, #{remark}, #{enterpriseid}, #{status})
+	</insert>
+	
+	<update id="editStorage" >
+		update store_storage set repoNo = #{repoNo}, repoName = #{repoName}, quantity = #{quantity}, stock = #{stock},
+			total = #{total}, productionDate = #{productionDate}, storageDate = #{storageDate},
+			storageUserId = #{storageUserId}, storageUsername = #{storageUsername}, effectiveDate = #{effectiveDate},
+			remark = #{remark}, status = #{status} ,productNo = #{productNo} where recordNo = #{recordNo} and enterpriseId = #{enterpriseid}
+	</update>
+
+	<delete id="deleteStorage">
+		delete from store_storage where recordNo = #{recordNo} and enterpriseId = #{enterpriseid}
+	</delete>
+	
+	<update id="confirmStorage">
+		update store_storage set status = 2, storageUserId = #{storageUserId}, 
+			storageUsername = #{storageUsername}, storageDate = #{storageDate}
+			where recordNo = #{recordNo} and enterpriseId = #{enterpriseid}
+	</update>
+	
+	<select id="getProIn" resultType="com.dotop.smartwater.project.module.core.water.vo.StoreProductVo">
+		select a.productNo, b.name, b.model, b.spec, b.material, b.weight, b.unit, b.useYear, b.limitValue,
+			b.price, b.vender, b.produced, b.contacts, b.phone, a.recordNo from store_storage as a, store_product as b
+			where a.`status` = 2 and a.productNo = b.productNo and a.enterpriseId = #{enterpriseid} and b.enterpriseId = #{enterpriseid} group by a.productNo
+	</select>
+	
+	<select id="getByProNoAndRepoNo" resultType="com.dotop.smartwater.project.module.core.water.vo.StorageVo">
+		select * from store_storage where enterpriseId = #{enterpriseid} and status = 2
+		 and repoNo = #{repoNo} and productNo = #{productNo} order by storageUsername desc
+	</select>
+
+</mapper>

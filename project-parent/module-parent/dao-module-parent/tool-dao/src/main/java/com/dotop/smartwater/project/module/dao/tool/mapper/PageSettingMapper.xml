@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.dotop.smartwater.project.module.dao.tool.IPageSettingDao">
+
+	<delete id="deleteSettingMenus">
+		delete from pagesetting_menu where 1=1 
+		<if test="userid != null and userid != ''">
+			and userid = #{userid}
+		</if>
+		<if test="id != null and id != ''">
+			and id = #{id}
+		</if>
+	</delete>
+	
+	<insert id="updateMenuSetting">
+		insert into pagesetting_menu values(#{id}, #{userid}, #{menuid}, #{status})
+	</insert>
+	
+	<select id="getPageSettingMenus" resultType="com.dotop.smartwater.project.module.core.water.vo.PageSettingMenuVo">
+		select p.*, m.name, m.uri from pagesetting_menu p, menu m where p.menuid = m.menuid and p.userid = #{userid}
+	</select>
+	
+	<delete id="deleteSettingReports">
+		delete from pagesetting_report where 1=1 
+		<if test="userid != null and userid != ''">
+			and userid = #{userid}
+		</if>
+		<if test="id != null and id != ''">
+			and id = #{id}
+		</if>
+	</delete>
+	
+	<insert id="updateReportSetting">
+		insert into pagesetting_report values(#{id}, #{userid}, #{bindid}, #{status})
+	</insert>
+	
+	<select id="getPageSettingReports" resultType="com.dotop.smartwater.project.module.core.water.vo.PageSettingReportVo">
+		select a.*, b.reportid, b.reportname from pagesetting_report a, report_bind b where a.bindid = b.bindid and a.userid = #{userid}
+	</select>
+	
+	<select id="getRoleIdAndSysChoice" resultType="com.dotop.smartwater.project.module.core.auth.vo.UserVo">
+		select roleid, syschoice from user where userid = #{userid}
+	</select>
+	
+	<update id="updateSysChoice">
+		update user set syschoice = #{syschoice} where userid = #{userid}
+	</update>
+	
+</mapper>

@@ -1,0 +1,19 @@
+druid:
+  datasource-weter:
+    name: datasource-weter
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://222.20.83.207:3306/water?useUnicode=true&characterEncoding=UTF8&useSSL=false&serverTimezone=Asia/Shanghai&allowMultiQueries=true
+    username: root
+    password: 123456
+
+redis:
+  cache:
+    database: 4
+    host: 222.20.83.207
+    password:
+    port: 6379
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://localhost:8761/eureka/

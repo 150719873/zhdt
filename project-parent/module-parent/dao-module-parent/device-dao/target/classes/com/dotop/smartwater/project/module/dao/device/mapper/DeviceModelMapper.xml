@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper
+        namespace="com.dotop.smartwater.project.module.dao.device.IDeviceModelDao">
+    <resultMap id="DeviceModelVo"
+               type="com.dotop.smartwater.project.module.core.water.vo.DeviceModelVo">
+
+        <id property="id" column="id"/>
+        <result property="type" column="type"/>
+        <result property="caliber" column="caliber"/>
+        <result property="maxwater" column="maxwater"/>
+        <result property="cycle" column="cycle"/>
+        <result property="createuser" column="createuser"/>
+        <result property="username" column="username"/>
+        <result property="createtime" column="createtime"/>
+        <result property="enterpriseid" column="enterpriseid"/>
+    </resultMap>
+
+    <select id="getList" resultMap="DeviceModelVo">
+        SELECT * FROM device_model
+        <where>
+            enterpriseid=#{enterpriseid}
+            <if test="type != null and type != ''">
+            AND type LIKE CONCAT('%',#{type},'%')
+            </if>
+            <if test="cycle != null and cycle != ''">
+            AND cycle=#{cycle}
+            </if>
+        </where>
+        ORDER BY createtime DESC
+    </select>
+
+    <insert id="save" useGeneratedKeys="true" keyColumn="id">
+        INSERT INTO device_model (type,caliber,maxwater,cycle,createuser,username,createtime,enterpriseid)
+			VALUE (#{type} , #{caliber} , #{maxwater}, #{cycle}, #{createuser},#{username}, #{createtime}, #{enterpriseid})
+    </insert>
+
+    <update id="update">
+        UPDATE device_model SET type=#{type},caliber=#{caliber},maxwater=#{maxwater},cycle=#{cycle},createuser=#{createuser},username=#{username},
+			createtime=#{createtime} WHERE id = #{id}
+    </update>
+
+    <delete id="delete">
+        DELETE FROM device_model WHERE id = #{id}
+    </delete>
+
+    <select id="get" resultMap="DeviceModelVo">
+        SELECT * FROM device_model WHERE id = #{id}
+    </select>
+</mapper>

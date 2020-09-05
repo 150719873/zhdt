@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.dotop.smartwater.project.third.module.api.dao.IWaterCommandDao">
+
+    <sql id="selectColumns">
+        id,
+        clientid,
+        status,
+        devid,
+        enterpriseid
+    </sql>
+
+    <resultMap id="CommandVo" type="com.dotop.smartwater.project.third.module.core.water.vo.CommandVo">
+        <result column="id" jdbcType="VARCHAR" property="id"/>
+        <result column="clientid" jdbcType="VARCHAR" property="clientid"/>
+        <result column="status" jdbcType="VARCHAR" property="status"/>
+        <result column="devid" jdbcType="VARCHAR" property="devid"/>
+        <result column="enterpriseid" jdbcType="INTEGER" property="enterpriseid"/>
+    </resultMap>
+
+    <select id="get" resultMap="CommandVo">
+        select
+        <include refid="selectColumns"/>
+        from device_downlink
+        <where>
+            enterpriseid = #{enterpriseid}
+            <if test="clientid != null and clientid != ''">
+                and clientid = #{clientid}
+            </if>
+            <if test="devid != null and devid != ''">
+                and devid = #{devid}
+            </if>
+        </where>
+    </select>
+
+</mapper>

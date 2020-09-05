@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>refresh</title>
+</head>
+<body>
+
+
+<div>
+    <input type="radio" name="check" checked onclick="change('checkOwners')"/>客户
+    <input type="radio" name="check" onclick="change('refreshDeviceUplinks')"/>上行
+    <input type="radio" name="check" onclick="change('checkDeviceValveCommands')"/>下发
+    <input type="radio" name="check" onclick="change('checkDeviceValveCommandStatuss')"/>下发状态
+    <form action="/meterread-client/third/checkOwners" id="test" method="post">
+        enterpriseid:<input type="text" name="enterpriseid">
+        deveui:<input type="text" name="deveui">
+        devno:<input type="text" name="devno">
+        <input value="更新" type="submit"/>
+    </form>
+</div>
+</body>
+<script>
+    function change(url){
+        if(url=="checkDeviceValveCommands"||url=="checkDeviceValveCommandStatuss"){
+            document.getElementById("test").action = "/meterread-client/third/" + url;
+            document.getElementById("test").method ="get";
+        }
+        else{
+            document.getElementById("test").action = "/meterread-client/third/" + url;
+            document.getElementById("test").method ="post";
+        }
+    }
+</script>
+</html>

@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper
+	namespace="com.dotop.smartwater.project.module.dao.revenue.ISummaryAccountDao">
+	<resultMap id="SummaryVoMap"
+		type="com.dotop.smartwater.project.module.core.water.vo.customize.SummaryVo">
+		<result column="id" jdbcType="VARCHAR" property="id" />
+		<result column="userid" jdbcType="VARCHAR" property="userid" />
+		<result column="account" jdbcType="VARCHAR" property="account" />
+		<result column="username" jdbcType="VARCHAR"
+			property="username" />
+		<result column="sys" jdbcType="VARCHAR" property="sys" />
+		<result column="artificial" jdbcType="VARCHAR"
+			property="artificial" />
+		<result column="differ" jdbcType="VARCHAR" property="differ" />
+		<result column="status" jdbcType="VARCHAR" property="status" />
+		<result column="rangetime" jdbcType="VARCHAR"
+			property="rangetime" />
+		<result column="year" jdbcType="VARCHAR" property="year" />
+		<result column="month" jdbcType="VARCHAR" property="month" />
+		<result column="day" jdbcType="VARCHAR" property="day" />
+	</resultMap>
+
+
+	<resultMap id="AccountingVoMap"
+		type="com.dotop.smartwater.project.module.core.water.vo.AccountingVo">
+		<!-- 账单id -->
+		<result column="id" jdbcType="VARCHAR" property="id" />
+		<result column="rid" jdbcType="VARCHAR" property="rid" />
+		<result column="userid" jdbcType="VARCHAR" property="userid" />
+		<result column="account" jdbcType="VARCHAR" property="account" />
+		<result column="username" jdbcType="VARCHAR"
+			property="username" />
+		<result column="sys" jdbcType="VARCHAR" property="sys" />
+		<result column="artificial" jdbcType="VARCHAR"
+			property="artificial" />
+		<result column="differ" jdbcType="VARCHAR" property="differ" />
+		<result column="supplement" jdbcType="VARCHAR"
+			property="supplement" />
+		<result column="dtime" jdbcType="VARCHAR" property="dtime" />
+		<result column="atime" jdbcType="VARCHAR" property="atime" />
+		<result column="status" jdbcType="VARCHAR" property="status" />
+		<result column="substatus" jdbcType="VARCHAR"
+			property="substatus" />
+		<result column="remark" jdbcType="VARCHAR" property="remark" />
+		<result column="createtime" jdbcType="VARCHAR"
+			property="createtime" />
+		<result column="communityid" jdbcType="VARCHAR"
+			property="communityid" />
+	</resultMap>
+
+	<select id="summaryData" resultMap="SummaryVoMap"
+		parameterType="java.util.Map">
+		SELECT sum(sys) as sys , sum(artificial) as artificial , sum(differ)
+		as differ, max(atime) as rangetime
+		FROM accounting
+		<where>
+			<if test="date != null">
+				AND atime like CONCAT('%',#{date},'%')
+			</if>
+			<if test="enterpriseid != null and enterpriseid != '' ">
+				AND enterpriseid = #{enterpriseid}
+			</if>
+		</where>
+		ORDER BY atime DESC
+	</select>
+
+
+	<select id="summaryDetail" resultMap="SummaryVoMap"
+		parameterType="java.util.Map">
+		SELECT userid , account , username , max(atime) as rangetime, sum(sys)
+		as sys , sum(artificial) as artificial , sum(differ) as differ
+		FROM
+		accounting
+		<where>
+			<if test="date != null ">
+				AND atime like CONCAT('%',#{date},'%')
+			</if>
+			<if test="enterpriseid != null and enterpriseid != '' ">
+				AND enterpriseid = #{enterpriseid}
+			</if>
+		</where>
+		GROUP BY userid
+	</select>
+
+	<select id="summarySelfDetail" resultMap="AccountingVoMap"
+		parameterType="java.util.Map">
+		SELECT * FROM accounting
+		<where>
+			<if test="userid != null and userid != ''">
+				and userid = #{userid}
+			</if>
+			<if test="enterpriseid != null and enterpriseid != '' ">
+				AND enterpriseid = #{enterpriseid}
+			</if>
+			<if test="date != null and date != '' ">
+				AND atime like CONCAT('%',#{date},'%')
+			</if>
+			and substatus = 1
+		</where>
+		ORDER BY atime DESC
+	</select>
+
+<!-- 汇总当月某个收营员核算数据 -->
+	<select id="summarySelf" resultMap="SummaryVoMap"
+		parameterType="java.util.Map">
+		SELECT userid , account , username , max(atime) as rangetime, sum(sys) as sys , sum(artificial) as artificial , sum(differ) as differ
+			FROM accounting 
+		<where>
+			<if test="userid != null and userid != ''">
+				and userid = #{userid}
+			</if>
+			<if test="enterpriseid != null and enterpriseid != '' ">
+				AND enterpriseid = #{enterpriseid}
+			</if>
+			<if test="date != null and date != '' ">
+				AND atime like CONCAT('%',#{date},'%')
+			</if>
+		</where>
+		GROUP BY userid
+	</select>
+
+
+</mapper>

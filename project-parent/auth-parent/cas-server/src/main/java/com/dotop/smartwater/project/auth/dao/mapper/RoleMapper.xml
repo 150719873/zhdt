@@ -1,0 +1,211 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper
+        namespace="com.dotop.smartwater.project.auth.dao.IRoleDao">
+
+    <!-- <resultMap id="InventoryVoMap"
+        type="com.dotop.smartwater.project.module.core.water.vo.InventoryVo">
+        <result column="inTotal" jdbcType="VARCHAR" property="inTotal" />
+        <result column="outTotal" jdbcType="VARCHAR" property="outTotal" />
+        <result column="stockTotal" jdbcType="VARCHAR" property="stockTotal" />
+        <association property="product" javaType="com.dotop.smartwater.project.module.core.water.vo.StoreProductVo">
+            <result column="productNo" jdbcType="VARCHAR" property="productNo" />
+            <result column="name" jdbcType="VARCHAR" property="name" />
+            <result column="unit" jdbcType="VARCHAR" property="unit" />
+            <result column="model" jdbcType="VARCHAR" property="model" />
+            <result column="spec" jdbcType="VARCHAR" property="spec" />
+            <result column="material" jdbcType="VARCHAR" property="material" />
+            <result column="vender" jdbcType="VARCHAR" property="vender" />
+            <result column="produced" jdbcType="VARCHAR" property="produced" />
+            <result column="contact" jdbcType="VARCHAR" property="contact" />
+            <result column="phone" jdbcType="VARCHAR" property="phone" />
+        </association>
+    </resultMap> -->
+
+    <select id="list" resultType="com.dotop.smartwater.project.module.core.auth.vo.RoleVo">
+        select a.* from role a
+        <where>
+            <if test="enterpriseid != null and enterpriseid != ''">
+                AND a.enterpriseid = #{enterpriseid}
+            </if>
+            <if test="name != null and name != ''">
+                AND a.name like concat('%',#{name},'%')
+            </if>
+        </where>
+        order by a.createtime desc
+    </select>
+
+    <select id="getRoleList" resultType="com.dotop.smartwater.project.module.core.auth.vo.RoleVo">
+        select a.roleid,CONCAT(c.`name`,'->',a.`name`) as `name`,
+        a.description,b.account as createuser,a.createtime
+        from role as a LEFT JOIN `user` as b on a.createuser = b.userid
+        LEFT JOIN enterprise as c on a.enterpriseid = c.enterpriseid
+        <where>
+            <if test="enterpriseid != null and enterpriseid != ''">
+                AND a.enterpriseid = #{enterpriseid}
+            </if>
+            <if test="name != null and name != ''">
+                AND a.name like concat('%',#{name},'%')
+            </if>
+        </where>
+        order by a.createtime desc
+    </select>
+
+    <select id="findRoleById" resultType="com.dotop.smartwater.project.module.core.auth.vo.RoleVo">
+		select * from role where roleid= #{roleid}
+	</select>
+
+    <select id="findRoleByName" resultType="com.dotop.smartwater.project.module.core.auth.vo.RoleVo">
+		select * from role where enterpriseid= #{enterpriseid} and name=#{name}
+	</select>
+
+    <select id="findRoleByNameAndId" resultType="com.dotop.smartwater.project.module.core.auth.vo.RoleVo">
+		select * from role where enterpriseid= #{enterpriseid} and name=#{name} and roleid!=#{roleid}
+	</select>
+
+    <insert id="addRole">
+		insert into role (roleid,name, description, enterpriseid, createuser, createtime) 
+			values (#{roleid},#{name}, #{description},#{enterpriseid}, #{createuser}, #{createtime})
+	</insert>
+
+    <update id="editRole">
+        update role
+        <trim prefix="set" suffixOverrides=",">
+            <if test="name != null and name != ''">
+                name = #{name},
+            </if>
+            <if test="description != null and description != ''">
+                description = #{description},
+            </if>
+            <if test="enterpriseid != null and enterpriseid != ''">
+                enterpriseid = #{enterpriseid},
+            </if>
+            <if test="createuser != null and createuser != ''">
+                createuser = #{createuser},
+            </if>
+            <if test="createtime != null">
+                createtime = #{createtime},
+            </if>
+        </trim>
+        where roleid = #{roleid}
+    </update>
+
+    <delete id="delRole">
+		delete from role where roleid= #{roleid}
+	</delete>
+
+    <select id="getAdminMenuByParentid" resultType="com.dotop.smartwater.project.module.core.auth.vo.MenuVo">
+		select * from admin_menu where parentid= #{parentid} GROUP BY menuid
+	</select>
+
+    <select id="getAdminTreeByModelid" resultType="com.dotop.smartwater.project.module.core.auth.vo.MenuVo">
+		select * from admin_menu where modelid= #{modelid} GROUP BY menuid
+	</select>
+
+    <select id="getMenuByParentid" resultType="com.dotop.smartwater.project.module.core.auth.vo.MenuVo">
+		select * from (select * from menu where menuid in 
+			(select menuid from platform_role_permission where proleid = #{proleid})) t1
+			where 1=1
+            <if test="parentid != null">
+              AND parentid= #{parentid}
+            </if>
+			 GROUP BY menuid ORDER BY menusort ASC
+	</select>
+
+    <select id="getMenuByModelidAndProleid" resultType="com.dotop.smartwater.project.module.core.auth.vo.MenuVo">
+		select * from (select * from menu where menuid in
+			(select menuid from platform_role_permission where proleid = #{proleid})) t1
+			where modelid= #{modelid} GROUP BY menuid ORDER BY menusort ASC
+	</select>
+
+    <select id="getMenuByRoleid" resultType="com.dotop.smartwater.project.module.core.auth.vo.MenuVo">
+        select * from (select * from menu where menuid in
+        (select permissionid from role_permission where roleid = #{roleid})) t1
+        where 1=1
+        <if test="parentid != null">
+            AND parentid= #{parentid}
+        </if>
+        GROUP BY menuid ORDER BY menusort ASC
+	</select>
+
+    <select id="getMenuByRoleidAndModelid" resultType="com.dotop.smartwater.project.module.core.auth.vo.MenuVo">
+		SELECT b.* from role_permission as a left join menu as b on a.permissionid = b.menuid
+			where a.roleid=#{roleid} and b.modelid=#{modelid} GROUP BY b.menuid
+	</select>
+
+    <select id="getMenus" resultType="com.dotop.smartwater.project.module.core.auth.vo.MenuVo">
+        select * from menu WHERE menuid IN (
+        <foreach collection="menuids" item="menuid" separator=",">
+            #{menuid}
+        </foreach>
+        ) ORDER BY menusort ASC
+    </select>
+
+    <select id="getPsidByRoleId" resultType="java.lang.String">
+		SELECT permissionid from role_permission where roleid =#{roleid}
+	</select>
+
+    <delete id="delRolePermission">
+		delete from role_permission where roleid= #{roleid}
+	</delete>
+
+    <delete id="delPermission">
+        delete from role_permission where permissionid= #{permissionid}
+    </delete>
+
+    <insert id="addRolePermission">
+        insert into role_permission (id, roleid, permissionid) values
+        <foreach collection="list" item="item1" index="index" separator=",">
+            (uuid(), #{roleid}, #{item1})
+        </foreach>
+    </insert>
+
+    <select id="getPermissionByRoleidAndProleid"
+            resultType="com.dotop.smartwater.project.module.core.auth.vo.PermissionVo">
+		SELECT a.menuid as id, a.parentid as pId,a.`name`,a.isTrue as `checked`,a.type as type,
+			CASE a.level WHEN 1 THEN true ELSE false END as `open` from 
+			(select menuid,name,false as isTrue,type,parentid,`level` from 
+			(select * from menu where menuid in (select menuid from platform_role_permission where proleid = #{proleid})) t1 
+			WHERE menuid not in (SELECT permissionid from role_permission where roleid=#{roleid}) UNION all
+			select menuid,name,true as isTrue,type,parentid,`level` from 
+			(select * from menu where menuid in (select menuid from platform_role_permission where proleid = #{proleid})) t2 
+			WHERE menuid in (SELECT permissionid from role_permission where roleid=#{roleid})) a 
+			ORDER BY a.menuid ASC
+	</select>
+
+    <select id="getCount" resultType="Integer">
+		SELECT count(*) from user where roleid=#{roleid}
+	</select>
+
+    <select id="findPermissionByRoleid"
+            resultType="com.dotop.smartwater.project.module.core.auth.vo.AreaNodeVo">
+
+          SELECT DISTINCT a.menuid AS `key`, a.parentid AS pId,a.`name` AS title,a.isTrue AS `checked`,a.type AS systype,CASE a.parentid WHEN '0' THEN FALSE ELSE TRUE END AS isLeaf,
+                CASE a.level WHEN 1 THEN TRUE ELSE FALSE END AS `expanded` FROM
+			(SELECT menuid,NAME,TRUE AS isTrue,TYPE,parentid,`level` FROM
+			(
+
+			SELECT * FROM menu WHERE menuid IN (SELECT menuid FROM platform_role_permission WHERE proleid = #{proleid}) UNION ALL
+        SELECT * FROM menu WHERE menuid IN (SELECT parentid FROM menu WHERE menuid IN (SELECT menuid FROM platform_role_permission WHERE proleid = #{proleid}))
+
+			) t2
+			WHERE menuid IN (
+
+			SELECT menuid FROM  menu  WHERE menuid IN (SELECT permissionid FROM role_permission WHERE roleid=#{roleid} )
+			)
+			 UNION ALL
+
+			SELECT menuid,NAME,FALSE AS isTrue,TYPE,parentid,`level` FROM
+			(
+
+			SELECT * FROM menu WHERE menuid IN (SELECT menuid FROM platform_role_permission WHERE proleid = #{proleid}) UNION ALL
+        SELECT * FROM menu WHERE menuid IN (SELECT parentid FROM menu WHERE menuid IN (SELECT menuid FROM platform_role_permission WHERE proleid = #{proleid}))
+
+			) t2
+			WHERE menuid NOT IN (
+
+			SELECT menuid FROM  menu  WHERE menuid IN (SELECT permissionid FROM role_permission WHERE roleid=#{roleid} )
+			) )a
+			ORDER BY a.menuid ASC
+    </select>
+</mapper>

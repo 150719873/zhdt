@@ -1,0 +1,403 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<artifactId>web-server</artifactId>
+	<packaging>jar</packaging>
+
+	<name>web-server</name>
+	<description>web-server</description>
+
+	<parent>
+		<groupId>com.eastcompeace.pipe</groupId>
+		<artifactId>project-pipe-parent</artifactId>
+		<version>1.0.0-SNAPSHOT</version>
+	</parent>
+
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+		<java.version>1.8</java.version>
+		<disruptor.version>3.4.2</disruptor.version>
+		<druid.version>1.1.10</druid.version>
+		<mybatis-spring-boot-starter.version>1.3.2</mybatis-spring-boot-starter.version>
+		<fastjson.version>1.2.49</fastjson.version>
+		<spring-cloud-dependencies>Finchley.SR1</spring-cloud-dependencies>
+		<cas.version>1.3.0-SNAPSHOT</cas.version>
+	</properties>
+
+	<dependencies>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter</artifactId>
+			<exclusions>
+				<exclusion>
+					<groupId>org.springframework.boot</groupId>
+					<artifactId>spring-boot-starter-logging</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>org.springframework.boot</groupId>
+					<artifactId>spring-boot-devtools</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework.cloud</groupId>
+			<artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.cloud</groupId>
+			<artifactId>spring-cloud-starter-openfeign</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>io.github.openfeign</groupId>
+			<artifactId>feign-okhttp</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-devtools</artifactId>
+			<optional>true</optional>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-log4j2</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>com.lmax</groupId>
+			<artifactId>disruptor</artifactId>
+			<version>${disruptor.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-test</artifactId>
+			<scope>test</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-web</artifactId>
+			<exclusions>
+				<exclusion>
+					<groupId>org.springframework.boot</groupId>
+					<artifactId>spring-boot-starter-tomcat</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-undertow</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-data-redis</artifactId>
+			<exclusions>
+				<exclusion>
+					<groupId>io.lettuce</groupId>
+					<artifactId>lettuce-core</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+
+		<dependency>
+			<groupId>redis.clients</groupId>
+			<artifactId>jedis</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-pool2</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-cache</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-jdbc</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>mysql</groupId>
+			<artifactId>mysql-connector-java</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.github.pagehelper</groupId>
+			<artifactId>pagehelper-spring-boot-starter</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>com.alibaba</groupId>
+			<artifactId>druid</artifactId>
+			<version>${druid.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.mybatis.spring.boot</groupId>
+			<artifactId>mybatis-spring-boot-starter</artifactId>
+			<version>${mybatis-spring-boot-starter.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>io.shardingsphere</groupId>
+			<artifactId>sharding-jdbc-core</artifactId>
+			<version>3.0.0</version>
+		</dependency>
+
+		<dependency>
+			<groupId>com.alibaba</groupId>
+			<artifactId>fastjson</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>joda-time</groupId>
+			<artifactId>joda-time</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-lang3</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.projectlombok</groupId>
+			<artifactId>lombok</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.apache.httpcomponents</groupId>
+			<artifactId>httpclient</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.httpcomponents</groupId>
+			<artifactId>httpmime</artifactId>
+		</dependency>
+
+		<!-- 业务 -->
+		<dependency>
+			<groupId>com.eastcompeace.pipe.dependence</groupId>
+			<artifactId>dependence-core</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.eastcompeace.pipe.dependence</groupId>
+			<artifactId>dependence-lock</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.eastcompeace.pipe.dependence</groupId>
+			<artifactId>dependence-cache</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>com.eastcompeace.pipe.auth</groupId>
+			<artifactId>auth-core</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.eastcompeace.pipe.auth</groupId>
+			<artifactId>auth-web</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.eastcompeace.pipe.auth</groupId>
+			<artifactId>auth-service</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.eastcompeace.pipe.auth</groupId>
+			<artifactId>auth-dao</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.eastcompeace.pipe.auth</groupId>
+			<artifactId>auth-cache</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.eastcompeace.pipe.auth</groupId>
+			<artifactId>auth-cas</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.eastcompeace.water</groupId>
+			<artifactId>auth-tool</artifactId>
+			<version>${cas.version}</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>com.eastcompeace.water</groupId>
+			<artifactId>auth-model</artifactId>
+			<version>${cas.version}</version>
+			<scope>provided</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>com.eastcompeace.pipe</groupId>
+			<artifactId>pipe-core</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.eastcompeace.pipe</groupId>
+			<artifactId>pipe-service</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.eastcompeace.pipe</groupId>
+			<artifactId>pipe-cache</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.eastcompeace.pipe</groupId>
+			<artifactId>pipe-dao</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.eastcompeace.pipe</groupId>
+			<artifactId>pipe-web</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>com.eastcompeace.pipe</groupId>
+			<artifactId>data-report-core</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.eastcompeace.pipe</groupId>
+			<artifactId>data-report-factory</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.eastcompeace.pipe</groupId>
+			<artifactId>data-report-service</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.eastcompeace.pipe</groupId>
+			<artifactId>data-report-dao</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>com.eastcompeace.pipe</groupId>
+			<artifactId>data-receiver-bridge-client</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.eastcompeace.pipe</groupId>
+			<artifactId>dispatch-bridge-client</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.eastcompeace.pipe</groupId>
+			<artifactId>dispatch-core</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.eastcompeace.pipe</groupId>
+			<artifactId>third-core</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+
+
+	</dependencies>
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>com.github.wvengen</groupId>
+				<artifactId>proguard-maven-plugin</artifactId>
+				<version>2.0.14</version>
+				<executions>
+					<execution>
+						<phase>package</phase>
+						<goals>
+							<goal>proguard</goal>
+						</goals>
+					</execution>
+				</executions>
+				<configuration>
+					<proguardVersion>6.0.3</proguardVersion>
+					<injar>${project.build.finalName}.jar</injar>
+					<outjar>${project.build.finalName}.jar</outjar>
+					<inFilter>!META-INF/maven/**,!module-info.class</inFilter>
+					<obfuscate>true</obfuscate>
+					<proguardInclude>${project.basedir}/proguard.cfg</proguardInclude>
+					<libs>
+						<lib>${java.home}/lib/rt.jar</lib>
+						<lib>${java.home}/lib/jce.jar</lib>
+					</libs>
+				</configuration>
+				<dependencies>
+					<dependency>
+						<groupId>net.sf.proguard</groupId>
+						<artifactId>proguard-base</artifactId>
+						<version>6.0.3</version>
+						<scope>runtime</scope>
+					</dependency>
+				</dependencies>
+			</plugin>
+
+			<plugin>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-maven-plugin</artifactId>
+				<!-- <executions> -->
+				<!-- <execution> -->
+				<!-- <goals> -->
+				<!-- <goal>repackage</goal> -->
+				<!-- </goals> -->
+				<!-- <configuration> -->
+				<!-- <mainClass>com.eastcompeace.pipe.server.web.PipeServerApplication</mainClass> -->
+				<!-- </configuration> -->
+				<!-- </execution> -->
+				<!-- </executions> -->
+				<!-- <configuration> -->
+				<!-- <fork>true</fork> -->
+				<!--<jvmArguments> -->
+				<!-- -Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=36663 -->
+				<!--</jvmArguments> -->
+				<!-- </configuration> -->
+			</plugin>
+
+<!-- 			<plugin> -->
+<!-- 				<groupId>com.github.core-lib</groupId> -->
+<!-- 				<artifactId>xjar-maven-plugin</artifactId> -->
+<!-- 				<version>v1.0.8</version> -->
+<!-- 				<executions> -->
+<!-- 					<execution> -->
+<!-- 						<goals> -->
+<!-- 							<goal>build</goal> -->
+<!-- 						</goals> -->
+<!-- 						<phase>install</phase> -->
+<!-- 						<configuration> -->
+<!-- 							<password>io.xjar</password> -->
+<!-- 							<algorithm>AES</algorithm> -->
+<!-- 							<ivSize>128</ivSize> -->
+<!-- 							<targetJar>${project.build.finalName}.x.jar</targetJar> -->
+<!-- 						</configuration> -->
+<!-- 					</execution> -->
+<!-- 				</executions> -->
+<!-- 			</plugin> -->
+		</plugins>
+	</build>
+
+<!-- 	<pluginRepositories> -->
+<!-- 		<pluginRepository> -->
+<!-- 			<id>jitpack.io</id> -->
+<!-- 			<url>https://jitpack.io</url> -->
+<!-- 		</pluginRepository> -->
+<!-- 	</pluginRepositories> -->
+
+</project>

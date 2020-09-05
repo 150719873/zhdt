@@ -1,0 +1,344 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper
+	namespace="com.dotop.smartwater.project.module.dao.revenue.IPerformanceExamDao">
+
+	<resultMap id="PerforExamVo"
+		type="com.dotop.smartwater.project.module.core.water.vo.PerforExamVo">
+		<!-- 主键 -->
+		<result column="id" jdbcType="VARCHAR" property="id" />
+		<result column="number" jdbcType="VARCHAR" property="number" />
+		<result column="name" jdbcType="VARCHAR" property="name" />
+		<result column="template_id" jdbcType="VARCHAR" property="templateId" />
+		<result column="template_name" jdbcType="VARCHAR" property="templateName" />
+		<result column="total_score" jdbcType="VARCHAR" property="totalScore" />
+		<result column="pass_score" jdbcType="VARCHAR" property="passScore" />
+		<result column="examines" jdbcType="TIMESTAMP" property="examines" />
+		<result column="audits" jdbcType="VARCHAR" property="audits" />
+		<result column="start_date" jdbcType="VARCHAR" property="startDate" />
+		<result column="end_date" jdbcType="VARCHAR" property="endDate" />
+		<result column="isfill" jdbcType="VARCHAR" property="isFill" />
+		<result column="status" jdbcType="VARCHAR" property="status" />
+		<result column="enterpriseid" jdbcType="TIMESTAMP" property="enterpriseid" />
+		<result column="create_by" jdbcType="VARCHAR" property="createBy" />
+		<result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
+		<result column="last_by" jdbcType="VARCHAR" property="lastBy" />
+		<result column="last_date" jdbcType="TIMESTAMP" property="lastDate" />
+	</resultMap>
+	
+	<resultMap id="PerforExamPersonnelVo"
+		type="com.dotop.smartwater.project.module.core.water.vo.PerforExamPersonnelVo">
+		<!-- 主键 -->
+		<result column="id" jdbcType="VARCHAR" property="id" />
+		<result column="number" jdbcType="VARCHAR" property="number" />
+		<result column="name" jdbcType="VARCHAR" property="name" />
+		<result column="assessment_id" jdbcType="VARCHAR" property="assessmentId" />
+		<result column="assessment_name" jdbcType="VARCHAR" property="assessmentName" />
+		<result column="submit_date" jdbcType="TIMESTAMP" property="submitDate" />
+		<result column="auditeds" jdbcType="VARCHAR" property="auditeds" />
+		<result column="fill_score" jdbcType="VARCHAR" property="fillScore" />
+		<result column="final_score" jdbcType="VARCHAR" property="finalScore" />
+		<result column="ispass" jdbcType="VARCHAR" property="isPass" />
+		<result column="submit_status" jdbcType="VARCHAR" property="submitStatus" />
+		<result column="audit_status" jdbcType="VARCHAR" property="auditStatus" />
+		
+		<result column="start_date" jdbcType="TIMESTAMP" property="startDate" />
+		<result column="end_date" jdbcType="TIMESTAMP" property="endDate" />
+		<result column="isfill" jdbcType="VARCHAR" property="isFill" />
+		<result column="total_score" jdbcType="VARCHAR" property="totalScore" />
+		<result column="status" jdbcType="VARCHAR" property="status" />
+		
+		<result column="enterpriseid" jdbcType="TIMESTAMP" property="enterpriseid" />
+		<result column="create_by" jdbcType="VARCHAR" property="createBy" />
+		<result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
+		<result column="last_by" jdbcType="VARCHAR" property="lastBy" />
+		<result column="last_date" jdbcType="TIMESTAMP" property="lastDate" />
+	</resultMap>
+	
+	
+	<resultMap id="PerforExamAuditVo"
+		type="com.dotop.smartwater.project.module.core.water.vo.PerforExamAuditVo">
+		<!-- 主键 -->
+		<result column="id" jdbcType="VARCHAR" property="id" />
+		<result column="number" jdbcType="VARCHAR" property="number" />
+		<result column="assessment_id" jdbcType="VARCHAR" property="assessmentId" />
+		<result column="assessment_name" jdbcType="VARCHAR" property="assessmentName" />
+		<result column="audit_id" jdbcType="VARCHAR" property="auditId" />
+		<result column="audit_name" jdbcType="VARCHAR" property="auditName" />
+		<result column="audit_time" jdbcType="TIMESTAMP" property="auditTime" />
+		<result column="audit_status" jdbcType="VARCHAR" property="auditStatus" />
+		<result column="score" jdbcType="VARCHAR" property="score" />
+		<result column="ispass" jdbcType="VARCHAR" property="isPass" />
+		<result column="explain" jdbcType="VARCHAR" property="explain" />
+		
+		<result column="name" jdbcType="VARCHAR" property="name" />
+		<result column="start_date" jdbcType="TIMESTAMP" property="startDate" />
+		<result column="end_date" jdbcType="TIMESTAMP" property="endDate" />
+		<result column="total_score" jdbcType="VARCHAR" property="totalScore" />
+		<result column="pass_score" jdbcType="VARCHAR" property="passScore" />
+		<result column="fill_score" jdbcType="VARCHAR" property="fillScore" />
+		<result column="isfill" jdbcType="VARCHAR" property="isFill" />
+		<result column="status" jdbcType="VARCHAR" property="status" />
+		
+		<result column="enterpriseid" jdbcType="TIMESTAMP" property="enterpriseid" />
+		<result column="create_by" jdbcType="VARCHAR" property="createBy" />
+		<result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
+		<result column="last_by" jdbcType="VARCHAR" property="lastBy" />
+		<result column="last_date" jdbcType="TIMESTAMP" property="lastDate" />
+	</resultMap>
+	
+	
+	
+	<resultMap id="PerforExamWeightVo"
+		type="com.dotop.smartwater.project.module.core.water.vo.PerforExamWeightVo">
+		<!-- 主键 -->
+		<result column="id" jdbcType="VARCHAR" property="id" />
+		<result column="number" jdbcType="VARCHAR" property="number" />
+		<result column="title" jdbcType="VARCHAR" property="title" />
+		<result column="describe" jdbcType="VARCHAR" property="describe" />
+		<result column="score" jdbcType="VARCHAR" property="score" />
+		<result column="create_by" jdbcType="VARCHAR" property="createBy" />
+		<result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
+		<result column="last_by" jdbcType="VARCHAR" property="lastBy" />
+		<result column="last_date" jdbcType="TIMESTAMP" property="lastDate" />
+	</resultMap>
+	
+	<resultMap id="PerforExamFillVo"
+		type="com.dotop.smartwater.project.module.core.water.vo.PerforExamFillVo">
+		<!-- 主键 -->
+		<result column="id" jdbcType="VARCHAR" property="id" />
+		<result column="number" jdbcType="VARCHAR" property="number" />
+		<result column="title" jdbcType="VARCHAR" property="title" />
+		<result column="describe" jdbcType="VARCHAR" property="describe" />
+		<result column="weight_score" jdbcType="VARCHAR" property="weightScore" />
+		<result column="assessment_id" jdbcType="VARCHAR" property="assessmentId" />
+		<result column="assessment_name" jdbcType="VARCHAR" property="assessmentName" />
+		<result column="score" jdbcType="VARCHAR" property="score" />
+		<result column="enterpriseid" jdbcType="TIMESTAMP" property="enterpriseid" />
+		<result column="create_by" jdbcType="VARCHAR" property="createBy" />
+		<result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
+		<result column="last_by" jdbcType="VARCHAR" property="lastBy" />
+		<result column="last_date" jdbcType="TIMESTAMP" property="lastDate" />
+	</resultMap>
+	
+
+	<select id="getList" resultMap="PerforExamVo">
+		SELECT * FROM performance_examine 
+		<where>
+		enterpriseid = #{enterpriseid} 
+			<if test="name != null and name != ''">
+				and name like concat('%',#{name},'%')
+			</if>
+		</where>
+		order by create_date desc
+		<if test="limit!=null and offset!=null">
+			LIMIT #{limit} OFFSET #{offset}
+		</if>
+	</select>
+	
+	<insert id="saveExam">
+        INSERT INTO `performance_examine` (id,number,name,template_id,template_name,total_score,pass_score,examines,audits,
+        start_date,end_date,isfill,status,enterpriseid,create_by,create_date)
+		VALUES (#{id}, #{number}, #{name}, #{templateId}, #{templateName}, #{totalScore}, #{passScore}, #{examines}, #{audits}
+		, #{startDate}, #{endDate}, #{isFill}, #{status}, #{enterpriseid}, #{userBy}, #{curr})
+    </insert>
+	
+	
+	
+	<insert id="saveExamWeights">
+        INSERT INTO `performance_examine_weight` (`id`,`number`,`title`,`describe`,`score`,create_by,create_date)
+           VALUES  
+            <foreach collection ="list" item="item1" index= "index" separator =",">
+			(#{item1.id}, #{item1.number}, #{item1.title}, #{item1.describe}, #{item1.score}, #{item1.userBy}, #{item1.curr})
+            </foreach >
+	</insert>
+	
+	<insert id="saveExamPersonnels">
+        INSERT INTO `performance_examine_personnel` (`id`,`number`,`name`,assessment_id,assessment_name,submit_date,
+        auditeds,submit_status,audit_status,enterpriseid,create_by,create_date)
+           VALUES  
+            <foreach collection ="list" item="item1" index= "index" separator =",">
+			(#{item1.id}, #{item1.number}, #{item1.name}, #{item1.assessmentId}, #{item1.assessmentName}, #{item1.submitDate}
+			, #{item1.auditeds}, #{item1.submitStatus}, #{item1.auditStatus}, #{item1.enterpriseid}, #{item1.userBy}, #{item1.curr})
+            </foreach >
+	</insert>
+	
+	<insert id="saveExamAudits">
+        INSERT INTO `performance_examine_audit` (`id`,`number`,assessment_id,assessment_name,audit_id,audit_name
+        ,audit_time,enterpriseid,create_by,create_date)
+           VALUES  
+            <foreach collection ="list" item="item1" index= "index" separator =",">
+			(#{item1.id}, #{item1.number}, #{item1.assessmentId}, #{item1.assessmentName}, #{item1.auditId}, #{item1.auditName}
+			, #{item1.auditTime}, #{item1.enterpriseid}, #{item1.userBy}, #{item1.curr})
+            </foreach >
+	</insert>
+	
+	<insert id="saveExamFills">
+        INSERT INTO `performance_examine_fill` (`id`,`number`,weight_id,assessment_id,assessment_name,enterpriseid,create_by,create_date)
+           VALUES  
+            <foreach collection ="list" item="item1" index= "index" separator =",">
+			(#{item1.id}, #{item1.number}, #{item1.weightId}, #{item1.assessmentId}, #{item1.assessmentName}, #{item1.enterpriseid}, #{item1.userBy}, #{item1.curr})
+            </foreach >
+	</insert>
+	
+	<select id="getExam" resultMap="PerforExamVo">
+		SELECT * FROM performance_examine WHERE enterpriseid = #{enterpriseid} and number = #{number}
+	</select>
+	
+	<select id="getExamPersonnels" resultMap="PerforExamPersonnelVo">
+		SELECT * FROM performance_examine_personnel WHERE enterpriseid = #{enterpriseid} and number = #{number}
+	</select>
+	
+	
+	<select id="getExamPersonnel" resultMap="PerforExamPersonnelVo">
+		SELECT * FROM performance_examine_personnel WHERE enterpriseid = #{enterpriseid} 
+		and number = #{number} and assessment_id = #{assessmentId} 
+	</select>
+	
+	<select id="getExamAudits" resultMap="PerforExamAuditVo">
+		SELECT * FROM performance_examine_audit WHERE enterpriseid = #{enterpriseid} and number = #{number} and assessment_id = #{assessmentId}
+	</select>
+	
+	
+	<select id="getExamWeights" resultMap="PerforExamWeightVo">
+		SELECT * FROM performance_examine_weight WHERE number = #{number}
+	</select>
+	
+	
+	<select id="selfList" resultMap="PerforExamPersonnelVo">
+		select p.* , e.start_date , e.end_date , e.isfill , e.total_score , e.pass_score ,e.status
+		FROM performance_examine_personnel p 
+		LEFT JOIN performance_examine e 
+		ON p.number = e.number 
+		<where>
+		p.enterpriseid = #{enterpriseid} and p.assessment_id = #{assessmentId}
+			<if test="name != null and name != ''">
+				and p.name like concat('%',#{name},'%')
+			</if>
+			<if test="status != null and status != ''">
+				and e.status = #{status}
+			</if>
+			<if test="submitStatus != null and submitStatus != ''">
+				and p.submit_status =#{submitStatus}
+			</if>
+		</where>
+		order by create_date desc
+		<if test="limit!=null and offset!=null">
+			LIMIT #{limit} OFFSET #{offset}
+		</if>
+	</select>
+	
+	
+	<select id="getExamFills" resultMap="PerforExamFillVo">
+		SELECT 
+			f.* , w.title , w.`describe` , w.score AS weight_score
+		FROM performance_examine_fill f LEFT JOIN performance_examine_weight w 
+		ON f.number = w.number AND f.weight_id = w.id 
+		WHERE f.enterpriseid = #{enterpriseid} and f.number = #{number} and f.assessment_id = #{assessmentId}
+	</select>
+	
+	<update id="updatePersonnel">
+        UPDATE `performance_examine_personnel` SET submit_date=#{submitDate} , fill_score=#{fillScore} , submit_status=#{submitStatus}
+        ,last_date=#{curr},last_by=#{userBy} WHERE enterpriseid = #{enterpriseid} and number=#{number} and assessment_id = #{assessmentId}
+    </update>
+	
+	<update id="updatePersonnelScores">
+		<foreach collection ="list" item="item" index= "index" separator =";">
+			UPDATE performance_examine_fill set score='${item.score}' WHERE number='${item.number}' and assessment_id = '${item.assessmentId}' and weight_id = '${item.weightId}'
+		</foreach >
+    </update>
+	
+	<update id="updatePersonnelScore">
+		UPDATE performance_examine_fill set score=#{score} WHERE number=#{number} and assessment_id = #{assessmentId} and id = #{weightId}
+    </update>
+	
+	
+	<update id="updateAuditFrequency">
+        UPDATE `performance_examine_personnel` SET 
+        	auditeds=(SELECT count(id) as count FROM performance_examine_audit WHERE number = #{number} and enterpriseid = #{enterpriseid} and assessment_id = #{assessmentId} and audit_status = 1)  
+        	WHERE enterpriseid = #{enterpriseid} and number=#{number} and assessment_id = #{assessmentId}
+    </update>
+    
+    <delete id="deleteExam">
+        delete from `performance_examine` where number =#{number} and enterpriseid = #{enterpriseid}
+    </delete>
+    
+	<delete id="deleteExamAudit">
+        delete from `performance_examine_audit` where number =#{number} and enterpriseid = #{enterpriseid}
+    </delete>
+    
+    <delete id="deleteExamFill">
+        delete from `performance_examine_fill` where number =#{number} and enterpriseid = #{enterpriseid}
+    </delete>
+    
+    <delete id="deleteExamPersonnel">
+        delete from `performance_examine_personnel` where number =#{number} and enterpriseid = #{enterpriseid}
+    </delete>
+    
+    <delete id="deleteExamWeight">
+        delete from `performance_examine_weight` where number =#{number}
+    </delete>
+    
+    <select id="auditEnd" resultType="java.lang.Integer">
+		SELECT count(id) as count FROM performance_examine_audit where number = #{number} and enterpriseid = #{enterpriseid} and audit_status != 1
+	</select>
+    
+    <select id="auditPage" resultMap="PerforExamAuditVo">
+		SELECT 
+			e.number, e.`name` , p.assessment_id , p.assessment_name , e.start_date, e.end_date, e.total_score, e.pass_score,e.status,
+			p.fill_score, a.score ,a.audit_status, a.audit_time
+		FROM performance_examine_audit a 
+		LEFT JOIN performance_examine_personnel p ON a.number = p.number AND a.assessment_id = p.assessment_id 
+		LEFT JOIN performance_examine e ON a.number = e.number
+		<where>
+		a.audit_id = #{auditId} AND a.enterpriseid = #{enterpriseid} and p.submit_status = 1
+			<if test="name != null and name != ''">
+				and e.name like concat('%',#{name},'%')
+			</if>
+			<if test="status != null and status != ''">
+				and e.status = #{status}
+			</if>
+			<if test="auditStatus != null and auditStatus != ''">
+				and a.audit_status =#{auditStatus}
+			</if>
+		</where>
+		order by e.create_date desc
+		<if test="limit!=null and offset!=null">
+			LIMIT #{limit} OFFSET #{offset}
+		</if>
+	</select>
+	
+	
+	<select id="getExamSubmitAudit" resultMap="PerforExamAuditVo">
+		select * FROM performance_examine_audit where number = #{number} and enterpriseid=#{enterpriseid} and audit_status = 1 
+	</select>
+	
+	<update id="calPersonnelScore">
+		update performance_examine_personnel set final_score = #{finalScore} , ispass=#{isPass} where number = #{number} and assessment_id = #{assessmentId}
+	</update>
+	
+	<update id="endExam">
+		update performance_examine set status = 2 where number = #{number}
+	</update>
+	
+	<update id="examination">
+		update performance_examine set status = 1 where number = #{number}
+	</update>
+	
+	<select id="getAudit" resultMap="PerforExamAuditVo">
+		SELECT * FROM performance_examine_audit 
+		WHERE enterpriseid = #{enterpriseid} and number = #{number} and audit_id = #{auditId} and assessment_id = #{assessmentId}
+	</select>
+	
+    <update id="submitAudit">
+        UPDATE `performance_examine_audit` SET audit_time=#{auditTime} , audit_status =#{auditStatus} , `score`=#{score} , `ispass`=#{isPass} ,
+        	  `explain`=#{explain} , last_by=#{userBy} , last_date=#{curr}
+        	WHERE enterpriseid = #{enterpriseid} and number=#{number} and audit_id = #{auditId} and assessment_id = #{assessmentId}
+    </update>
+    
+    <update id="returnAudit">
+        UPDATE `performance_examine_audit` SET audit_status =#{auditStatus} , last_by=#{userBy} , last_date=#{curr}
+        	WHERE number=#{number} and audit_id = #{auditId} and assessment_id = #{assessmentId}
+    </update>
+	
+</mapper>

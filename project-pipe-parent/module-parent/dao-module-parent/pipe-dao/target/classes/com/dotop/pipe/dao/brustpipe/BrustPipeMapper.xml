@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.dotop.pipe.api.dao.brustpipe.IBrustPipeDao">
+
+
+    <resultMap id="BaseResultMap"
+               type="com.dotop.pipe.core.vo.brustpipe.BrustPipeVo">
+
+        <result column="brust_pipe_id" jdbcType="VARCHAR" property="brustPipeId"/>
+        <result column="code" jdbcType="VARCHAR" property="code"/>
+        <result column="brust_pipe_name" jdbcType="VARCHAR" property="brustPipeName"/>
+        <result column="reporter" jdbcType="VARCHAR" property="reporter"/>
+        <result column="place" jdbcType="VARCHAR" property="place"/>
+        <result column="occurrence_time" jdbcType="TIMESTAMP" property="occurrenceTime"/>
+        <result column="write_time" jdbcType="TIMESTAMP" property="writeTime"/>
+        <result column="filler" jdbcType="VARCHAR" property="filler"/>
+        <result column="device_ids" jdbcType="VARCHAR" property="deviceIds"/>
+        <result column="status" jdbcType="VARCHAR" property="status"/>
+    </resultMap>
+
+    <sql id="selectColumns">
+        b.brust_pipe_id,
+        b.`code`,
+        b.brust_pipe_name,
+        b.reporter,
+        b.place,
+        b.occurrence_time,
+        b.write_time,
+        b.filler,
+        b.device_ids,
+        b.status,
+        b.enterprise_id,
+        b.create_by,
+        b.create_date,
+        b.is_del,
+        b.last_by,
+        b.last_date
+	</sql>
+
+    <update id="editStatus">
+         update pls_brust_pipe set status=#{status}
+      where brust_pipe_id=#{brustPipeId} and enterprise_id=#{enterpriseId}
+    </update>
+
+    <select id="list" resultMap="BaseResultMap">
+        SELECT
+        <include refid="selectColumns"/>
+        FROM
+        pls_brust_pipe b
+        <where>
+            <if test="status != null and status != ''">
+                and b.status = #{status}
+            </if>
+            <if test="brustPipeId != null and brustPipeId != ''">
+                and b.brust_pipe_id = #{brustPipeId}
+            </if>
+            <if test="code != null and code != ''">
+                and b.`code` like CONCAT('%',#{code},'%')
+            </if>
+            <if test="brustPipeName != null and brustPipeName != ''">
+                and b.brust_pipe_name like CONCAT('%',#{brustPipeName},'%')
+            </if>
+            <if test="startDate != null">
+                and b.occurrence_time <![CDATA[>=]]> #{startDate}
+            </if>
+            <if test="endDate != null">
+                and b.occurrence_time <![CDATA[<=]]> #{endDate}
+            </if>
+
+            <if test="enterpriseId != null and enterpriseId != ''">
+                and b.enterprise_id = #{enterpriseId}
+            </if>
+                and b.is_del = 0
+        </where>
+        ORDER BY  b.create_date desc
+    </select>
+
+
+    <select id="get" resultMap="BaseResultMap">
+        SELECT
+        <include refid="selectColumns"/>
+        FROM
+        pls_brust_pipe b
+        <where>
+            <if test="brustPipeId != null and brustPipeId != ''">
+                b.brust_pipe_id = #{brustPipeId}
+            </if>
+            <if test="code != null and code != ''">
+                and  b.`code` = #{code}
+            </if>
+            <if test="enterpriseId != null and enterpriseId != ''">
+                and c.enterprise_id = #{enterpriseId}
+            </if>
+        </where>
+    </select>
+
+
+    <insert id="add">
+        insert into pls_brust_pipe(brust_pipe_id, `code`, brust_pipe_name, reporter, place, occurrence_time, write_time, filler, device_ids, status,
+            enterprise_id, create_by, create_date, is_del, last_by, last_date)
+        values
+            (#{brustPipeId}, #{code}, #{brustPipeName},#{reporter},#{place},#{occurrenceTime},#{writeTime}, #{filler},
+            #{deviceIds,javaType=java.util.List,jdbcType=VARCHAR},  #{status},
+            #{enterpriseId}, #{userBy}, #{curr}, #{isDel}, #{userBy}, #{curr})
+    </insert>
+
+    <update id="edit">
+        update pls_brust_pipe
+        <set>
+            <if test="code != null and code != ''">
+                `code`=#{code},
+            </if>
+            <if test="status != null and status != ''">
+                status=#{status},
+            </if>
+            <if test="deviceIds != null">
+                device_ids=#{areaIds,javaType=java.util.List,jdbcType=VARCHAR},
+            </if>
+            <if test="brustPipeName != null and brustPipeName != ''">
+                brust_pipe_name=#{installName},
+            </if>
+            <if test="reporter != null and reporter != ''">
+                reporter=#{reporter},
+            </if>
+            <if test="place != null and place != ''">
+                place=#{place},
+            </if>
+            <if test="occurrenceTime != null">
+                occurrence_time=#{occurrenceTime},
+            </if>
+            <if test="writeTime != null">
+                write_time=#{writeTime},
+            </if>
+            <if test="filler != null and filler != '' ">
+                filler=#{filler},
+            </if>
+            <if test="userBy != null and userBy != '' ">
+                last_by=#{userBy},
+            </if>
+            <if test="curr != null">
+                last_date=#{curr}
+            </if>
+        </set>
+        where brust_pipe_id=#{brustPipeId} and enterprise_id=#{enterpriseId}
+    </update>
+
+    <delete id="del">
+         update pls_brust_pipe set is_del=#{isDel}
+        where brust_pipe_id=#{brustPipeId} and enterprise_id=#{enterpriseId}
+    </delete>
+
+
+
+
+
+</mapper>

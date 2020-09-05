@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper
+	namespace="com.dotop.smartwater.project.module.dao.wechat.IWechatDao">
+
+	<select id="getOrderTrend"
+		resultType="com.dotop.smartwater.project.module.core.water.vo.customize.QueryBillVo">
+		SELECT CONCAT(`year`,`month`) as sumMonth,SUM(amount)
+		as
+		sumRealpay,SUM(water) as sumWater FROM `order` WHERE
+		ownerid=#{ownerid} AND tradestatus=1 AND amount>0 ORDER BY
+		generatetime DESC limit 0,12
+	</select>
+
+	<select id="OrderList"
+		resultType="com.dotop.smartwater.project.module.core.water.vo.OrderVo">
+
+		SELECT * FROM `order`
+		WHERE ownerid=#{ownerid}
+		<if test="paystatus!=null">
+			AND paystatus=#{paystatus}
+		</if>
+		AND tradestatus=1 AND issub=0
+		ORDER BY generatetime DESC ${value}
+	</select>
+
+
+	<insert id="insertRecord">
+
+		INSERT INTO wechat_notify_msg (id,`createtime`,
+		`appid`, `mch_id`,
+		`device_info`, `nonce_str`, `sign`, `sign_type`,
+		`result_code`,
+		`err_code`, `err_code_des`, `openid`, `is_subscribe`,
+		`trade_type`,
+		`bank_type`, `total_fee`, `settlement_total_fee`,
+		`fee_type`,
+		`cash_fee`, `cash_fee_type`, `coupon_fee`, `coupon_count`,
+		`coupon_type`, `coupon_id`, `coupon_fee_single`, `transaction_id`,
+		`out_trade_no`, `attach`, `time_end`, `notify_msg`, `return_code`,
+		`return_msg`) VALUES (#{id},
+		#{createtime},#{appid},#{mchId},#{deviceInfo},#{nonceStr},#{sign},#{signType},
+		#{resultCode},#{errCode},#{errCodeDes},#{openid},#{isSubscribe},#{tradeType},#{bankType},#{totalFee},#{settlementTotalFee},#{feeType},#{cashFee},#{cashFeeType},#{couponFee},#{couponCount},#{couponType},
+		#{couponId},#{couponFeeSingle},#{transactionId},#{outTradeNo},#{attach},#{timeEnd},#{notifyMsg},#{returnCode},#{returnMsg})
+	</insert>
+
+</mapper>

@@ -1,0 +1,253 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper
+        namespace="com.dotop.smartwater.project.module.dao.revenue.IPayTypeDao">
+
+    <resultMap id="BaseResultMap"
+               type="com.dotop.smartwater.project.module.core.water.vo.PayTypeVo">
+        <!-- 账单id -->
+        <id column="typeid" jdbcType="VARCHAR" property="typeid"/>
+        <result column="name" jdbcType="VARCHAR" property="name"/>
+        <result column="overdueday" jdbcType="VARCHAR" property="overdueday"/>
+        <result column="guarantees" jdbcType="VARCHAR" property="guarantees"/>
+        <result column="remark" jdbcType="VARCHAR" property="remark"/>
+        <result column="createuser" jdbcType="VARCHAR" property="createuser"/>
+        <result column="username" jdbcType="VARCHAR" property="username"/>
+        <result column="account" jdbcType="VARCHAR" property="account"/>
+        <result column="createtime" jdbcType="VARCHAR" property="createtime"/>
+        
+        <result column="invoice_type" jdbcType="VARCHAR" property="invoiceType"/>
+        <result column="is_latefee" jdbcType="VARCHAR" property="isLatefee"/>
+        <result column="increase" jdbcType="VARCHAR" property="increase"/>
+        <result column="ratio" jdbcType="VARCHAR" property="ratio"/>
+
+        <result column="task_switch" jdbcType="BIT" property="taskSwitch" />
+        <result column="task_month" jdbcType="VARCHAR" property="taskMonth" />
+        <result column="task_day" jdbcType="VARCHAR" property="taskDay" />
+        <result column="task_interval_day" jdbcType="INTEGER" property="taskIntervalDay" />
+        <result column="updated" jdbcType="TIMESTAMP" property="updated" />
+    </resultMap>
+
+    <resultMap id="AreaNodeVoMap"
+               type="com.dotop.smartwater.project.module.core.auth.vo.AreaNodeVo">
+        <result column="key" jdbcType="VARCHAR" property="key"/>
+        <result column="pId" jdbcType="VARCHAR" property="pId"/>
+        <result column="code" jdbcType="VARCHAR" property="code"/>
+        <result column="title" jdbcType="VARCHAR" property="title"/>
+        <result column="isLeaf" jdbcType="VARCHAR" property="isLeaf"/>
+    </resultMap>
+    
+    
+    <resultMap id="CompriseVo"
+               type="com.dotop.smartwater.project.module.core.water.vo.CompriseVo">
+        <id column="id" jdbcType="VARCHAR" property="id"/>
+        <result column="typeid" jdbcType="VARCHAR" property="typeid"/>
+        <result column="name" jdbcType="VARCHAR" property="name"/>
+        <result column="createtime" jdbcType="VARCHAR" property="createtime"/>
+    </resultMap>
+    
+    <resultMap id="LadderVo"
+               type="com.dotop.smartwater.project.module.core.water.vo.LadderVo">
+        <id column="id" jdbcType="VARCHAR" property="id"/>
+        <result column="typeid" jdbcType="VARCHAR" property="typeid"/>
+        <result column="ladderno" jdbcType="VARCHAR" property="ladderno"/>
+        <result column="minval" jdbcType="VARCHAR" property="minval"/>
+        <result column="maxval" jdbcType="VARCHAR" property="maxval"/>
+        <result column="price" jdbcType="VARCHAR" property="price"/>
+        <result column="createtime" jdbcType="VARCHAR" property="createtime"/>
+    </resultMap>
+    
+    <resultMap id="LadderPriceVo"
+               type="com.dotop.smartwater.project.module.core.water.vo.LadderPriceVo">
+        <id column="id" jdbcType="VARCHAR" property="id"/>
+        <result column="typeid" jdbcType="VARCHAR" property="typeid"/>
+        <result column="ladderid" jdbcType="VARCHAR" property="ladderid"/>
+        <result column="name" jdbcType="VARCHAR" property="name"/>
+        <result column="price" jdbcType="VARCHAR" property="price"/>
+        <result column="createtime" jdbcType="VARCHAR" property="createtime"/>
+    </resultMap>
+    
+
+    <insert id="insert">
+    insert into pay_type (
+    		typeid, name, invoice_type, 
+    		guarantees , is_latefee, overdueday , 
+    		increase , ratio, createuser,
+    		username, createtime, enterpriseid
+      )
+    values (#{typeid,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR}, #{invoiceType,jdbcType=INTEGER},
+      #{guarantees,jdbcType=DECIMAL}, #{isLatefee,jdbcType=VARCHAR}, #{overdueday,jdbcType=VARCHAR},
+      #{increase,jdbcType=VARCHAR},#{ratio,jdbcType=VARCHAR},#{createuser,jdbcType=VARCHAR},
+      #{username,jdbcType=VARCHAR},#{createtime,jdbcType=TIMESTAMP},#{enterpriseid,jdbcType=VARCHAR}
+      )
+  </insert>
+  
+	<insert id="batchComprises">
+		insert into pay_type_comprise (id,typeid,name,createtime) values
+        <foreach collection="list" item="item1" index="index" separator=",">
+            (#{item1.id},#{item1.typeid},#{item1.name}, #{item1.createtime})
+        </foreach>
+	</insert>  
+
+	<insert id="batchLadders">
+		insert into pay_type_ladder (id,typeid,ladderno,minval,maxval,price,createtime) values
+        <foreach collection="list" item="item1" index="index" separator=",">
+            (#{item1.id},#{item1.typeid},#{item1.ladderno}, #{item1.minval}, #{item1.maxval}, #{item1.price}, #{item1.createtime})
+        </foreach>
+	</insert>
+	
+	<insert id="batchLadderPrices">
+		insert into pay_type_ladder_price (id,typeid,ladderid,name,price,createtime) values
+        <foreach collection="list" item="item1" index="index" separator=",">
+            (#{item1.id},#{item1.typeid},#{item1.ladderid}, #{item1.name}, #{item1.price}, #{item1.createtime})
+        </foreach>
+	</insert>
+	
+	
+	<select id="checkNameIsExist" resultType="java.lang.Integer">
+        select count(typeid) as count from pay_type where `name` = #{name,jdbcType=VARCHAR}
+        <if test="typeid != null">
+            and typeid != #{typeid,jdbcType=VARCHAR}
+        </if>
+        <if test="enterpriseid != null and enterpriseid != ''">
+            and enterpriseid = #{enterpriseid,jdbcType=VARCHAR}
+        </if>
+    </select>
+
+    <select id="findById" parameterType="java.lang.String" resultMap="BaseResultMap">
+        select *
+        from pay_type
+        where typeid = #{typeid,jdbcType=VARCHAR}
+    </select>
+
+	<select id="getPayType" parameterType="java.lang.String" resultMap="BaseResultMap">
+        select
+        	typeid, name, invoice_type,guarantees , is_latefee, overdueday ,
+    		increase , ratio, createuser,username, createtime, enterpriseid,
+    		task_switch, task_month, task_day, task_interval_day, updated
+        from pay_type where typeid = #{typeid,jdbcType=VARCHAR}
+    </select>
+
+
+	<select id="getComprises" parameterType="java.lang.String" resultMap="CompriseVo">
+        select id , typeid , name , createtime
+        from pay_type_comprise where typeid = #{typeid,jdbcType=VARCHAR}
+    </select>
+    
+    <select id="getLadders" parameterType="java.lang.String" resultMap="LadderVo">
+        select id , typeid , ladderno , minval , maxval ,price , createtime
+        from pay_type_ladder where typeid = #{typeid,jdbcType=VARCHAR} ORDER BY minval ASC
+    </select>
+    
+    <select id="getLadderPrices" parameterType="java.lang.String" resultMap="LadderPriceVo">
+        select id , typeid ,ladderid ,name ,price , createtime
+        from pay_type_ladder_price where ladderid = #{ladderid,jdbcType=VARCHAR}
+    </select>
+    
+
+	<delete id="delComprises" parameterType="java.lang.String">
+        delete from pay_type_comprise
+        where typeid = #{typeid,jdbcType=VARCHAR}
+    </delete>
+    
+    <delete id="delLadders" parameterType="java.lang.String">
+        delete from pay_type_ladder
+        where typeid = #{typeid,jdbcType=VARCHAR}
+    </delete>
+    
+     <delete id="delLadderPrices" parameterType="java.lang.String">
+        delete from pay_type_ladder_price
+        where typeid = #{typeid,jdbcType=VARCHAR}
+    </delete>
+
+    <delete id="delete">
+        delete from pay_type
+        where typeid = #{typeid,jdbcType=VARCHAR}
+    </delete>
+
+    <update id="update">
+        update pay_type
+        <set>
+            <if test="name != null">
+                name = #{name,jdbcType=VARCHAR},
+            </if>
+            <if test="invoiceType != null">
+                invoice_type = #{invoiceType,jdbcType=VARCHAR},
+            </if>
+            <if test="guarantees != null">
+                guarantees = #{guarantees,jdbcType=VARCHAR},
+            </if>
+            <if test="isLatefee != null">
+                is_latefee = #{isLatefee,jdbcType=VARCHAR},
+            </if>
+            <if test="overdueday != null">
+                overdueday = #{overdueday,jdbcType=VARCHAR},
+            </if>
+            <if test="increase != null">
+                increase = #{increase,jdbcType=VARCHAR},
+            </if>
+            <if test="ratio != null">
+                ratio = #{ratio,jdbcType=VARCHAR},
+            </if>
+            <if test="createuser != null">
+                createuser = #{createuser,jdbcType=VARCHAR},
+            </if>
+            <if test="username != null">
+                username = #{username,jdbcType=VARCHAR},
+            </if>
+            <if test="createtime != null">
+                createtime = #{createtime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="enterpriseid != null">
+                enterpriseid = #{enterpriseid,jdbcType=VARCHAR},
+            </if>
+            <if test="taskSwitch != null">
+                task_switch = #{taskSwitch,jdbcType=BIT},
+            </if>
+            <if test="taskMonth != null and taskMonth != '' ">
+                task_month = #{taskMonth,jdbcType=VARCHAR},
+            </if>
+            <if test="taskDay != null and taskDay != '' ">
+                task_day = #{taskDay,jdbcType=VARCHAR},
+            </if>
+            <if test="taskIntervalDay != null">
+                task_interval_day = #{taskIntervalDay,jdbcType=INTEGER},
+            </if>
+            <if test="updated != null">
+                updated = #{updated,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where typeid = #{typeid,jdbcType=VARCHAR}
+    </update>
+
+    <select id="getList" resultMap="BaseResultMap">
+        select * from pay_type p
+        where 1=1
+        <if test="name != null">
+            and p.name like #{name,jdbcType=VARCHAR}
+        </if>
+        <if test="enterpriseid != null">
+            and p.enterpriseid = #{enterpriseid,jdbcType=VARCHAR}
+        </if>
+        <if test="taskSwitch != null">
+            and p.task_switch = #{taskSwitch,jdbcType=BIT}
+        </if>
+        order by p.createtime desc
+    </select>
+
+    <select id="checkPayTypeIsUse" parameterType="java.lang.String" resultType="java.lang.Integer">
+        select count(ownerid) as count from owner where `status` = 1 AND paytypeid = #{typeid}
+    </select>
+
+    <select id="getPayTypeMap" resultType="com.dotop.smartwater.project.module.core.water.vo.PayTypeVo">
+        select
+        p.typeid, p.name, p.overdueday, p.guarantees, p.remark, p.createuser, p.username, p.createtime, p.enterpriseid
+        from pay_type p
+        where 1=1 and p.enterpriseid = #{enterpriseid,jdbcType=VARCHAR} order by p.createtime desc
+    </select>
+
+
+    <select id="getAreaMapByEid" resultMap="AreaNodeVoMap">
+		select id as `key`,CONCAT(`name` , '(' ,`code` , ')') as title , pId,`code` as code, true as isLeaf from `area` where enterpriseid = #{enterpriseid}
+	</select>
+</mapper>

@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.dotop.pipe.api.dao.common.ICommonDao">
+
+	<resultMap id="DictionaryVoMap"
+			   type="com.dotop.pipe.core.vo.common.DictionaryVo">
+		<result column="id" jdbcType="VARCHAR" property="id" />
+		<result column="name" jdbcType="VARCHAR" property="name" />
+		<result column="val" jdbcType="VARCHAR" property="val" />
+		<result column="des" jdbcType="VARCHAR" property="des" />
+		<result column="type" jdbcType="VARCHAR" property="type" />
+		<result column="unit" jdbcType="VARCHAR" property="unit" />
+		<result column="is_del" jdbcType="INTEGER" property="isDel" />
+	</resultMap>
+
+	<select id="getVo" resultType="com.dotop.pipe.core.vo.common.DictionaryVo">
+		SELECT * FROM pls_dictionary 
+		<where>
+			<if test="type != null and type != ''">
+				AND type=#{type}
+			</if>
+			<if test="isDel != null">
+				AND is_del=#{isDel}
+			</if>
+		</where>
+	</select>
+	
+	<select id="get" resultType="com.dotop.pipe.core.vo.common.DictionaryVo">
+		SELECT * FROM pls_dictionary 
+		<where>
+			<if test="id != null and id != ''">
+				AND id=#{id}
+			</if>
+			<if test="isDel != null">
+				AND is_del=#{isDel}
+			</if>
+		</where>
+	</select>
+
+	<select id="list" resultMap="DictionaryVoMap"
+			parameterType="java.util.Map">
+		SELECT * FROM pls_dictionary
+		<where>
+			<if test="type != null and type != ''">
+				AND type=#{type}
+			</if>
+			<if test="isDel != null">
+				AND is_del=#{isDel}
+			</if>
+		</where>
+		<if test="limit!=null and offset!=null">
+			LIMIT #{limit} OFFSET
+			#{offset}
+		</if>
+	</select>
+
+	<update id="del" parameterType="java.util.Map">
+		UPDATE pls_dictionary SET
+		is_del=#{newIsDel}
+		WHERE
+		id=#{id} AND is_del=#{isDel}
+	</update>
+
+	<insert id="add">
+		INSERT INTO pls_dictionary
+		(id, name, val, des, type, unit, is_del)
+		VALUES
+		(#{id}, #{name}, #{val},
+		#{des}, #{type}, #{unit}, #{isDel});
+	</insert>
+
+	<select id="getMaxByType" resultType="com.dotop.pipe.core.vo.common.DictionaryVo">
+		SELECT * FROM pls_dictionary
+		WHERE
+		type=#{type} ORDER BY id DESC LIMIT 1
+	</select>
+
+	<select id="getByTypeAndName" resultMap="DictionaryVoMap">
+		SELECT * FROM pls_dictionary
+		WHERE
+		type=#{type} and name=#{name}
+	</select>
+
+	<update id="edit" parameterType="java.util.Map">
+		UPDATE pls_dictionary
+		<trim prefix="set" suffixOverrides=",">
+			<if test="name != null and name != ''">
+				name=#{name},
+			</if>
+			<if test="val != null and val != ''">
+				val=#{val},
+			</if>
+			<if test="des != null and des != ''">
+				des=#{des},
+			</if>
+			<if test="type != null and type != ''">
+				type=#{type},
+			</if>
+			<if test="unit != null and unit != ''">
+				unit=#{unit},
+			</if>
+			<if test="isDel != null">
+				is_del=#{isDel},
+			</if>
+		</trim>
+		WHERE
+		id=#{id} 
+	</update>
+	
+	<!-- 获取编号规则中的最大编号 -->
+	<select id="getMaxCode" resultType="com.dotop.pipe.core.vo.common.NumRuleVo">
+    select id, category_type as categoryType ,title,max_value as 'maxValue' from pls_num_rule 
+      where category_type =  #{type}  and enterprise_id = #{operEid} 
+
+	<!-- <choose>
+		<when test="type != null and type !='' and type =='point' ">
+			select max(a.code) as maxCode from pls_point as a where a.enterprise_id =  #{operEid}
+			and a.code LIKE CONCAT( #{type}, "%")
+		</when>
+		<otherwise>
+			select max(a.code) as maxCode from pls_device as a join pls_product as b on
+			a.product_id = b.product_id
+			join pls_dictionary as c on b.category = c.id
+			where c.type = 'category' and c.val = #{type}  and a.enterprise_id = #{operEid}
+			and a.code LIKE CONCAT( #{type}, "%") and a.code not  like "%\_%"
+		</otherwise>
+	</choose> -->
+	</select>
+	
+	<select id = "getALarmNoticeRule" resultType="com.dotop.pipe.core.vo.alarm.AlarmNoticeRuleVo">
+    	select a.device_code as deviceCode,a.device_name as deviceName,a.device_type as deviceType , a.alarm_num as alarmNum ,a.notify_type as notifyType , a.notify_user_type as notifyUserType,a.model_type as modelType
+          ,a.notify_user as notifyUser , a.notify_user_id as notifyUserId 
+          from pls_alarm_notice_rule  as a where a.enterprise_id = #{operEid} and a.is_del = 0 and a.device_code = #{deviceCode}
+	</select>
+	
+	 <update id="editNumRule" parameterType="java.util.Map">
+		UPDATE pls_num_rule
+		<trim prefix="set" suffixOverrides=",">
+			<if test="maxValue != null ">
+				max_value=#{maxValue},
+			</if>
+		</trim>
+		WHERE id=#{id} 
+	</update>
+	
+	<insert id="addNumRule">
+		INSERT INTO pls_num_rule
+		(id, category_type, title, max_value, is_del, create_date, create_by,enterprise_id)
+		VALUES
+		(UUID(), #{category}, #{title}, #{maxValue}, #{isDel}, #{cuur}, #{userBy},#{operEid});
+	</insert>
+
+	<select id="getEnterpriseIdList" resultType="java.lang.String">
+		select enterprise_id from  pls_enterprise
+		where is_del = #{isDel}
+	</select>
+	
+</mapper>

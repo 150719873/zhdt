@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper
+	namespace="com.dotop.smartwater.project.module.dao.revenue.IInstallAppointmentAmountDao">
+
+	<resultMap id="InstallAmountVo"
+		type="com.dotop.smartwater.project.module.core.water.vo.InstallAmountVo">
+		
+		<!-- 主键 -->
+		<result column="id" jdbcType="VARCHAR" property="id" />
+		<result column="number" jdbcType="VARCHAR" property="number" />
+		<result column="device_numbers" jdbcType="VARCHAR" property="deviceNumbers" />
+		<result column="model_id" jdbcType="VARCHAR" property="modelId" />
+		<result column="model_name" jdbcType="VARCHAR" property="modelName" />
+		<result column="price" jdbcType="VARCHAR" property="price" />
+		<result column="other_expenses" jdbcType="VARCHAR" property="otherExpenses" />
+		<result column="amount" jdbcType="VARCHAR" property="amount"/>
+		<result column="pay_type" jdbcType="VARCHAR" property="payType"/>
+		<result column="net_receipts" jdbcType="VARCHAR" property="netReceipts"/>
+		<result column="give_change" jdbcType="VARCHAR" property="giveChange"/>
+		<result column="trade_no" jdbcType="VARCHAR" property="tradeNo"/>
+		<result column="trade_status" jdbcType="VARCHAR" property="tradeStatus"/>
+		<result column="trade_date" jdbcType="VARCHAR" property="tradeDate"/>
+		<result column="enterprise_id" jdbcType="VARCHAR" property="enterpriseid" />
+		<result column="create_by" jdbcType="VARCHAR" property="createBy" />
+		<result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
+		<result column="last_by" jdbcType="VARCHAR" property="lastBy" />
+		<result column="last_date" jdbcType="TIMESTAMP" property="lastDate" />
+		
+	</resultMap>
+
+	<select id="get" resultMap="InstallAmountVo">
+		SELECT * FROM install_amount where number = #{number} and enterprise_id = #{enterpriseid} 
+	</select>
+	
+	<insert id="submitAmount">
+		 INSERT INTO `install_amount` (id,number,device_numbers,model_id,model_name,price,other_expenses,amount,pay_type,
+		 net_receipts,give_change,trade_no,trade_status,trade_date,enterprise_id,create_by,create_date)
+		VALUES (#{id}, #{number}, #{deviceNumbers}, #{modelId}, #{modelName}, #{price}, #{otherExpenses}, #{amount}, #{payType}
+		, #{netReceipts}, #{giveChange}, #{tradeNo}, #{tradeStatus}, #{tradeDate}, #{enterpriseid}, #{userBy}, #{curr})
+	</insert>
+	
+	<update id="updateAmount">
+		UPDATE `install_amount` SET device_numbers=#{deviceNumbers} , model_id=#{modelId}, model_name=#{modelName}, price=#{price}, 
+		other_expenses=#{otherExpenses}, amount=#{amount}, pay_type=#{payType}, net_receipts=#{netReceipts}, give_change=#{giveChange}, 
+		trade_no=#{tradeNo}, trade_status=#{tradeStatus}, trade_date=#{tradeDate} ,enterprise_id=#{enterpriseid} ,last_date=#{curr} ,last_by=#{userBy}
+		WHERE enterprise_id = #{enterpriseid} and number=#{number}
+	</update>
+</mapper>

@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.dotop.pipe.api.dao.patrol.IPatrolTaskDao">
+
+
+    <resultMap id="BaseResultMap"
+               type="com.dotop.pipe.core.vo.patrol.PatrolTaskVo">
+        <result column="patrol_task_id" jdbcType="VARCHAR" property="patrolTaskId"/>
+        <result column="code" jdbcType="VARCHAR" property="code"/>
+        <result column="name" jdbcType="VARCHAR" property="name"/>
+        <result column="start_time" jdbcType="TIMESTAMP" property="startTime"/>
+        <result column="end_time" jdbcType="TIMESTAMP" property="endTime"/>
+        <result column="completion_time" jdbcType="TIMESTAMP" property="completionTime"/>
+        <result column="patrol_route_id" jdbcType="VARCHAR" property="patrolRouteId"/>
+        <result column="status" jdbcType="VARCHAR" property="status"/>
+        <result column="desc" jdbcType="VARCHAR" property="desc"/>
+        <result column="reason" jdbcType="VARCHAR" property="reason"/>
+        <result column="handler_user_ids" jdbcType="VARCHAR" property="handlerUserIds"/>
+        <result column="task_ids" jdbcType="VARCHAR" property="taskIds"/>
+        <result column="enterprise_id" jdbcType="VARCHAR" property="enterpriseId"/>
+        <result column="create_by" jdbcType="VARCHAR" property="createBy"/>
+        <result column="create_date" jdbcType="TIMESTAMP" property="createDate"/>
+        <result column="is_del" jdbcType="VARCHAR" property="isDel"/>
+        <result column="last_by" jdbcType="VARCHAR" property="lastBy"/>
+        <result column="last_date" jdbcType="TIMESTAMP" property="lastDate"/>
+    </resultMap>
+
+    <sql id="selectColumns">
+        pt.patrol_task_id,
+        pt.`code`,
+        pt.`name`,
+        pt.start_time,
+        pt.end_time,
+        pt.completion_time,
+        pt.status,
+        pt.patrol_route_id,
+        pt.desc,
+        pt.reason,
+        pt.handler_user_ids,
+        pt.task_ids,
+        pt.enterprise_id,
+        pt.create_by,
+        pt.create_date,
+        pt.is_del,
+        pt.last_by,
+        pt.last_date
+	</sql>
+
+    <update id="editStatus">
+         update pls_patrol_task set status=#{status}
+      where patrol_task_id=#{patrolTaskId} and enterprise_id=#{enterpriseId}
+    </update>
+
+    <select id="list" resultMap="BaseResultMap">
+        SELECT
+        <include refid="selectColumns"/>
+        FROM
+        pls_patrol_task pt
+        <where>
+            <if test="status != null and status != ''">
+                and pt.status = #{status}
+            </if>
+            <if test="statusList != null and statusList.size() > 0">
+                and pt.status in
+                <foreach collection="statusList" separator="," open="(" close=")" item="item">
+                    #{item}
+                </foreach>
+            </if>
+            <if test="patrolTaskId != null and patrolTaskId != ''">
+                and pt.patrol_task_id = #{patrolTaskId}
+            </if>
+            <if test="code != null and code != ''">
+                and pt.`code` like CONCAT('%',#{code},'%')
+            </if>
+            <if test="name != null and name != ''">
+                and pt.`name` like CONCAT('%',#{name},'%')
+            </if>
+            <if test="startDateTemp != null">
+                and pt.start_time <![CDATA[>=]]> #{startDateTemp}
+            </if>
+            <if test="endDateTemp != null">
+                and pt.start_time <![CDATA[<=]]> #{endDateTemp}
+            </if>
+
+            <if test="enterpriseId != null and enterpriseId != ''">
+                and pt.enterprise_id = #{enterpriseId}
+            </if>
+                and pt.is_del = 0
+        </where>
+        ORDER BY pt.last_date desc
+    </select>
+
+
+    <select id="get" resultMap="BaseResultMap">
+        SELECT
+        <include refid="selectColumns"/>
+        FROM
+        pls_patrol_task pt
+        <where>
+            <if test="patrolTaskId != null and patrolTaskId != ''">
+                pt.patrol_task_id = #{patrolTaskId}
+            </if>
+            <if test="code != null and code != ''">
+                and  pt.`code` = #{code}
+            </if>
+            <if test="enterpriseId != null and enterpriseId != ''">
+                and pt.enterprise_id = #{enterpriseId}
+            </if>
+            <if test="name != null and name != ''">
+                and pt.name = #{name}
+            </if>
+            <if test="patrolRouteId != null and patrolRouteId != ''">
+                and pt.patrol_route_id = #{patrolRouteId}
+            </if>
+        </where>
+    </select>
+
+    <insert id="add">
+        insert into pls_patrol_task(patrol_task_id, `code`, `name`, start_time, end_time, completion_time, status, `desc`, reason, patrol_route_id,
+             handler_user_ids, task_ids, enterprise_id, create_by, create_date, is_del, last_by, last_date)
+        values
+            (#{patrolTaskId}, #{code}, #{name},#{startTime},#{endTime},#{completionTime},#{status}, #{desc}, #{reason}, #{patrolRouteId},
+            #{handlerUserIds,javaType=java.util.List,jdbcType=VARCHAR}, #{taskIds,javaType=java.util.List,jdbcType=VARCHAR},
+            #{enterpriseId}, #{userBy}, #{curr}, #{isDel}, #{userBy}, #{curr})
+    </insert>
+
+    <update id="edit">
+        update pls_patrol_task
+        <set>
+            <if test="code != null and code != ''">
+                `code`=#{code},
+            </if>
+            <if test="name != null and name != ''">
+                `name`=#{name},
+            </if>
+            <if test="status != null and status != ''">
+                status=#{status},
+            </if>
+            <if test="completionTime != null">
+                completion_time=#{completionTime},
+            </if>
+            <if test="userBy != null and userBy != '' ">
+                last_by=#{userBy},
+            </if>
+            <if test="curr != null">
+                last_date=#{curr}
+            </if>
+        </set>
+        where patrol_task_id=#{patrolTaskId} and enterprise_id=#{enterpriseId}
+    </update>
+
+    <delete id="del">
+         update pls_patrol_task set is_del=#{isDel}
+        where patrol_task_id=#{patrolTaskId} and enterprise_id=#{enterpriseId}
+    </delete>
+
+    <update id="batchUpdateStatus">
+        update pls_patrol_task
+        <set>
+            <if test="status != null and status != ''">
+                status = #{status},
+            </if>
+        </set>
+        <where>
+            <if test="batList != null">
+                patrol_task_id in
+                <foreach collection="batList" open="(" item="ele" separator="," close=")">
+                    #{ele.patrolTaskId}
+                </foreach>
+                and enterprise_id=#{enterpriseId}
+            </if>
+        </where>
+    </update>
+
+</mapper>

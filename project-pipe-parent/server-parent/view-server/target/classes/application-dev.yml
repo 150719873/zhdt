@@ -1,0 +1,29 @@
+druid:
+  datasource-pipe:
+    name: datasource-pipe
+    url: jdbc:mysql://222.20.83.207:3306/pipe?useUnicode=true&characterEncoding=UTF8&useSSL=false&serverTimezone=Asia/Shanghai&allowMultiQueries=true
+    username: root
+    password: 123456
+  datasource-water:
+    name: datasource-water
+    url: jdbc:mysql://222.20.83.207:3306/water?useUnicode=true&characterEncoding=UTF8&useSSL=false&serverTimezone=Asia/Shanghai&allowMultiQueries=true
+    username: root
+    password: 123456
+
+redis:
+  cache:
+    database: 5
+    host: 222.20.83.207
+    password:
+    port: 6379
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://localhost:8761/eureka/
+
+cas.auth.path: http://localhost:39000/water-cas
+
+param:
+  config:
+    enterpriseids: 1f8b23a9-a614-4d41-8410-2de4bdec4cdb

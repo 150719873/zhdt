@@ -1,0 +1,13 @@
+com\dotop\smartwater\project\module\dao\device\IDeviceUplinkDao.class
+com\dotop\smartwater\project\module\dao\device\IDeviceWarningSettingDao.class
+com\dotop\smartwater\project\module\dao\device\IDeviceChangeDao.class
+com\dotop\smartwater\project\module\dao\device\IDeviceDao.class
+com\dotop\smartwater\project\module\dao\device\IDeviceMigrationDao.class
+com\dotop\smartwater\project\module\dao\device\IMeterReadingTaskDao.class
+com\dotop\smartwater\project\module\dao\device\IDeviceBookBindDao.class
+com\dotop\smartwater\project\module\dao\device\IDeviceDownlinkDao.class
+com\dotop\smartwater\project\module\dao\device\IDeviceWarningDao.class
+com\dotop\smartwater\project\module\dao\device\IDeviceSubscribeDao.class
+com\dotop\smartwater\project\module\dao\device\IMeterReadingDetailDao.class
+com\dotop\smartwater\project\module\dao\device\IDeviceBookManagementDao.class
+com\dotop\smartwater\project\module\dao\device\IDeviceModelDao.class

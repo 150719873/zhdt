@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper
+	namespace="com.dotop.smartwater.project.module.dao.revenue.IPerformanceTemplateDao">
+
+	<resultMap id="PerforTemplateVo"
+		type="com.dotop.smartwater.project.module.core.water.vo.PerforTemplateVo">
+		
+		<!-- 主键 -->
+		<result column="id" jdbcType="VARCHAR" property="id" />
+		<!-- 企业ID -->
+		<result column="enterprise_id" jdbcType="VARCHAR" property="enterpriseid" />
+		<result column="name" jdbcType="VARCHAR" property="name" />
+		<result column="weights" jdbcType="VARCHAR" property="weights" />
+		<result column="total_score" jdbcType="VARCHAR" property="totalScore" />
+		<result column="pass_score" jdbcType="VARCHAR" property="passScore" />
+		<result column="reports" jdbcType="TIMESTAMP" property="reports" />
+		<result column="create_by" jdbcType="VARCHAR" property="createBy" />
+		<result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
+		<result column="last_by" jdbcType="VARCHAR" property="lastBy" />
+		<result column="last_date" jdbcType="TIMESTAMP" property="lastDate" />
+	</resultMap>
+
+	<select id="getList" resultMap="PerforTemplateVo"
+		parameterType="java.util.Map">
+		SELECT 
+		id,enterprise_id,`name`,weights , pass_score , reports ,create_by , create_date,
+		(SELECT SUM(w.score) FROM performance_template_relation r LEFT JOIN performance_weight w 
+		ON r.weight_id = w.id WHERE r.template_id = t.id) AS total_score 
+		FROM performance_template  t
+		<where>
+		enterprise_id = #{enterpriseid} 
+			<if test="name != null and name != ''">
+				and t.name like concat('%',#{name},'%')
+			</if>
+		</where>
+		order by t.create_date desc
+		<if test="limit!=null and offset!=null">
+			LIMIT #{limit} OFFSET #{offset}
+		</if>
+	</select>
+	
+	<insert id="saveTemp">
+        INSERT INTO `performance_template` (id,enterprise_id,name,weights,total_score,pass_score,reports,create_by,create_date)
+		VALUES (#{id}, #{enterpriseid}, #{name}, #{weights}, #{totalScore}, #{passScore}, #{reports}, #{userBy}, #{curr})
+    </insert>
+    
+    <update id="updateTemp">
+        UPDATE `performance_template` SET name=#{name},weights=#{weights},total_score=#{totalScore},pass_score=#{passScore},
+         reports=#{reports},last_date=#{curr},last_by=#{userBy} WHERE id=#{id} and enterprise_id=#{enterpriseid}
+    </update>
+    
+	
+	<select id="getTemp" resultMap="PerforTemplateVo">
+        select 
+        id,enterprise_id,`name`,weights , pass_score , reports ,create_by , create_date,
+		(SELECT SUM(w.score) FROM performance_template_relation r LEFT JOIN performance_weight w 
+		ON r.weight_id = w.id WHERE r.template_id = t.id) AS total_score 
+         from `performance_template` t where t.enterprise_id=#{enterpriseid} and t.id = #{id}
+    </select>
+	
+	
+	<delete id="delete">
+        delete from `performance_weight` where id=#{id}
+    </delete>
+	
+	<delete id="deleteTemp">
+        delete from `performance_template` where id=#{id} and enterprise_id=#{enterpriseid}
+    </delete>
+	
+	
+</mapper>

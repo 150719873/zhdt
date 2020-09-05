@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dotop.smartwater.project.module.dao.workcenter.IProcessNodeDao">
+
+	<resultMap id="WorkCenterProcessNodeVoMap" type="com.dotop.smartwater.project.module.core.water.vo.WorkCenterProcessNodeVo">
+		<result column="id" property="id" />
+		<result column="process_id" property="processId" />  
+		<result column="name" property="name" />
+		<result column="type" property="type" />  
+		<result column="sort" property="sort" /> 
+		<result column="process_node_parent_id" property="processNodeParentId" /> 
+		<result column="handlers" property="handlers" /> 
+		<result column="carbon_copyers" property="carbonCopyers" /> 
+		<result column="handler_roles" property="handlerRoles" /> 
+		<result column="carbon_copyer_roles" property="carbonCopyerRoles" /> 
+		<result column="if_verify" property="ifVerify" /> 
+		<result column="verify_process_id" property="verifyProcessNodeId" /> 
+		<result column="no_verify_process_id" property="noVerifyProcessNodeId" /> 
+		<result column="if_notice" property="ifNotice" /> 
+		<result column="noticers" property="noticers" /> 
+		<result column="noticer_roles" property="noticerRoles" /> 
+		<result column="if_update" property="ifUpdate" /> 
+		<result column="if_photo" property="ifPhoto" /> 
+		<result column="photo_num" property="photoNum" /> 
+		<result column="if_upload" property="ifUpload" /> 
+		<result column="upload_num" property="uploadNum" /> 
+		<result column="if_opinion" property="ifOpinion" />
+		<result column="opinion_num" property="opinionNum" />
+		<result column="last_by" jdbcType="VARCHAR" property="lastBy" />
+		<result column="last_date" jdbcType="VARCHAR" property="lastDate" />
+		<result column="create_by" jdbcType="VARCHAR" property="createBy" />
+		<result column="create_date" jdbcType="VARCHAR" property="createDate" />
+		<result column="enterpriseid" jdbcType="VARCHAR" property="enterpriseid" />
+		<association property="handleDict" javaType="com.dotop.smartwater.project.module.core.water.vo.DictionaryVo">
+			<result column="handle_dict_id" jdbcType="VARCHAR" property="dictionaryId" /> 
+		</association>
+		<association property="updateDictChild" javaType="com.dotop.smartwater.project.module.core.water.vo.DictionaryChildVo">
+			<result column="update_dict_child_id" jdbcType="VARCHAR" property="childId" />
+		</association>
+	</resultMap>
+	
+	<select id="get" resultMap="WorkCenterProcessNodeVoMap">
+		SELECT id,process_id,name,type,sort,process_node_parent_id
+		,handlers,carbon_copyers,handler_roles,carbon_copyer_roles
+		,handle_dict_id,if_verify,verify_process_node_id,no_verify_process_node_id
+		,if_notice,noticers,if_update,update_dict_child_id
+		,if_photo,photo_num,if_upload,upload_num
+		,if_opinion,opinion_num
+		,is_del,create_by,create_date,last_by,last_date,enterpriseid
+        FROM wc_process_node
+		<where>
+			<if test="enterpriseid != null and enterpriseid != ''">
+				AND enterpriseid=#{enterpriseid}
+			</if>
+			<if test="isDel != null">
+				AND is_del=#{isDel}
+			</if>
+			<if test="id != null and id != ''">
+				AND id=#{id}
+			</if>
+			<if test="processId != null and processId != ''">
+				AND process_id=#{processId}
+			</if>
+			<if test="name != null and name != ''">
+				AND name=#{name}
+			</if>
+		</where>
+	</select>
+	
+   	<insert id="add">
+		INSERT INTO wc_process_node
+		(id,process_id,name,type,sort,process_node_parent_id,handlers,carbon_copyers,handler_roles,carbon_copyer_roles,
+		handle_dict_id,if_verify,verify_process_node_id,no_verify_process_node_id,
+		if_notice,noticers,noticer_roles,if_update,update_dict_child_id,if_photo,photo_num,
+		if_upload,upload_num,if_opinion,opinion_num,tmpl_node_id
+		,is_del,create_by,create_date,last_by,last_date,enterpriseid)
+		VALUES
+		(#{id},#{processId},#{name},#{type},#{sort},#{processNodeParentId},
+		#{handlers,javaType=java.util.List,jdbcType=VARCHAR},
+		#{carbonCopyers,javaType=java.util.List,jdbcType=VARCHAR},
+		#{handlerRoles,javaType=java.util.List,jdbcType=VARCHAR},
+		#{carbonCopyerRoles,javaType=java.util.List,jdbcType=VARCHAR},
+		#{handleDict.dictionaryId},#{ifVerify},#{verifyProcessNodeId},#{noVerifyProcessNodeId},
+		#{ifNotice},
+		#{noticers,javaType=java.util.List,jdbcType=VARCHAR},
+		#{noticerRoles,javaType=java.util.List,jdbcType=VARCHAR},
+		#{ifUpdate},#{updateDictChild.childId},#{ifPhoto},#{photoNum},
+		#{ifUpload},#{uploadNum},#{ifOpinion},#{opinionNum},#{tmplNodeId}
+		,#{isDel},#{userBy},#{curr},#{userBy},#{curr},#{enterpriseid})
+	</insert>
+    
+</mapper>

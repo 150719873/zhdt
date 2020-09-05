@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dotop.smartwater.project.module.dao.tool.IDictionaryChildDao">
+    <resultMap id="BaseResultMap" type="com.dotop.smartwater.project.module.core.water.vo.DictionaryChildVo">
+        <id column="child_id" jdbcType="VARCHAR" property="childId"/>
+        <result column="dictionary_id" jdbcType="VARCHAR" property="dictionaryId"/>
+        <result column="child_name" jdbcType="VARCHAR" property="childName"/>
+        <result column="child_value" jdbcType="VARCHAR" property="childValue"/>
+        <result column="remark" jdbcType="VARCHAR" property="remark"/>
+        <result column="create_by" jdbcType="VARCHAR" property="createBy"/>
+        <result column="create_date" jdbcType="TIMESTAMP" property="createDate"/>
+        <result column="last_by" jdbcType="VARCHAR" property="lastBy"/>
+        <result column="last_date" jdbcType="TIMESTAMP" property="lastDate"/>
+        <result column="is_del" jdbcType="TINYINT" property="isDel"/>
+    </resultMap>
+
+    <select id="get" parameterType="java.lang.String" resultMap="BaseResultMap">
+        select
+            child_id, dictionary_id, child_name, child_value, remark, create_by, create_date,
+        last_by, last_date, is_del
+        from dictionary_child
+        where child_id = #{childId,jdbcType=VARCHAR}
+    </select>
+
+    <select id="list" parameterType="com.dotop.smartwater.project.module.core.water.dto.DictionaryChildDto" resultMap="BaseResultMap">
+        select
+            child_id, dictionary_id, child_name, child_value, remark, create_by, create_date,
+        last_by, last_date, is_del
+        from dictionary_child
+        where 1=1 
+        <if test="dictionaryId != null">
+           and dictionary_id = #{dictionaryId,jdbcType=VARCHAR}
+        </if>
+        order by create_date desc
+    </select>
+
+    <delete id="del" parameterType="com.dotop.smartwater.project.module.core.water.dto.DictionaryChildDto">
+        delete from dictionary_child
+        where child_id = #{childId,jdbcType=VARCHAR}
+    </delete>
+
+    <delete id="deleteByDictionaryId" parameterType="com.dotop.smartwater.project.module.core.water.dto.DictionaryChildDto">
+        delete from dictionary_child
+        where dictionary_id = #{dictionaryId,jdbcType=VARCHAR}
+    </delete>
+
+    <insert id="add" parameterType="com.dotop.smartwater.project.module.core.water.dto.DictionaryChildDto">
+    insert into dictionary_child (child_id, dictionary_id, child_name, 
+      child_value, remark, create_by, 
+      create_date, last_by, last_date, 
+      is_del)
+    values (#{childId,jdbcType=VARCHAR}, #{dictionaryId,jdbcType=VARCHAR}, #{childName,jdbcType=VARCHAR}, 
+      #{childValue,jdbcType=VARCHAR}, #{remark,jdbcType=VARCHAR}, #{createBy,jdbcType=VARCHAR}, 
+      #{createDate,jdbcType=TIMESTAMP}, #{lastBy,jdbcType=VARCHAR}, #{lastDate,jdbcType=TIMESTAMP}, 
+      #{isDel,jdbcType=TINYINT})
+  </insert>
+
+    <update id="edit"
+            parameterType="com.dotop.smartwater.project.module.core.water.dto.DictionaryChildDto">
+        update dictionary_child
+        <set>
+            <if test="dictionaryId != null">
+                dictionary_id = #{dictionaryId,jdbcType=VARCHAR},
+            </if>
+            <if test="childName != null">
+                child_name = #{childName,jdbcType=VARCHAR},
+            </if>
+            <if test="childValue != null">
+                child_value = #{childValue,jdbcType=VARCHAR},
+            </if>
+            <if test="remark != null">
+                remark = #{remark,jdbcType=VARCHAR},
+            </if>
+            <if test="createBy != null">
+                create_by = #{createBy,jdbcType=VARCHAR},
+            </if>
+            <if test="createDate != null">
+                create_date = #{createDate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="lastBy != null">
+                last_by = #{lastBy,jdbcType=VARCHAR},
+            </if>
+            <if test="lastDate != null">
+                last_date = #{lastDate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="isDel != null">
+                is_del = #{isDel,jdbcType=TINYINT},
+            </if>
+        </set>
+        where child_id = #{childId,jdbcType=VARCHAR}
+    </update>
+
+</mapper>

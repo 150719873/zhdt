@@ -1,0 +1,250 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper
+        namespace="com.dotop.smartwater.project.module.dao.device.IMeterReadingTaskDao">
+    <resultMap id="MeterReadingTaskVo"
+               type="com.dotop.smartwater.project.module.core.water.vo.MeterReadingTaskVo">
+
+        <id property="id" column="id"/>
+        <result property="batchId" column="batch_id"/>
+        <result property="taskName" column="task_name"/>
+        <result property="area" column="area"/>
+        <result property="taskStartTime" column="task_start_time"/>
+        <result property="taskEndTime" column="task_end_time"/>
+        <result property="readerNum" column="reader_num"/>
+        <result property="status" column="status"/>
+        <result property="createBy" column="create_by"/>
+        <result property="createDate" column="create_date"/>
+        <result property="lastBy" column="last_by"/>
+        <result property="lastDate" column="last_date"/>
+        <result property="isDel" column="is_del"/>
+        <result property="enterpriseid" column="enterpriseid"/>
+        <result property="deviceCount" column="device_count"/>
+        <result property="finishedCount" column="finished_count"/>
+        <result property="meterReader" column="meter_reader"/>
+        <result property="readerNum" column="reader_num"/>
+    </resultMap>
+
+    <select id="get" resultMap="MeterReadingTaskVo">
+        SELECT id,batch_id,task_name,area,task_start_time,task_end_time,reader_num,status,create_by,create_date,last_by,last_date,is_del,enterpriseid
+        FROM meter_reading_task WHERE is_del!=1 
+        <if test="id != null and id != ''">
+            AND id=#{id}
+        </if>
+        <if test="batchId != null and batchId != ''">
+            AND batch_id=#{batchId}
+        </if>
+    </select>
+
+    <select id="getTaskCountInfo" resultMap="MeterReadingTaskVo">
+        SELECT batch_id,COUNT(0) AS device_count,COUNT(meter_reader) AS finished_count,COUNT(DISTINCT meter_reader) AS reader_num,GROUP_CONCAT(DISTINCT meter_reader) AS meter_reader
+        FROM `meter_reading_detail`
+        WHERE 1=1
+        <if test="ids != null">
+        AND batch_id IN
+            <foreach collection="ids" open="(" close=")" item="id" separator=",">
+                #{id}
+            </foreach>
+        </if>
+        GROUP BY batch_id
+    </select>
+    
+    
+    <update id="updateStatus">
+    	update meter_reading_task set `status`=1 where batch_id=#{batchId}
+    </update>
+
+    <select id="list" resultMap="MeterReadingTaskVo">
+        SELECT
+        id,batch_id,task_name,area,task_start_time,task_end_time,reader_num,status,create_by,create_date,last_by,last_date,is_del,enterpriseid
+        FROM meter_reading_task WHERE is_del!=1
+        <if test="id != null and id != ''">
+            AND id=#{id}
+        </if>
+        <if test="batchId != null and batchId != ''">
+            AND batch_id LIKE CONCAT('%',#{batchId},'%')
+        </if>
+        <if test="taskName != null and taskName != ''">
+            AND task_name LIKE CONCAT('%',#{taskName},'%')
+        </if>
+        <if test="area != null and area != ''">
+            AND area LIKE CONCAT('%',#{area},'%')
+        </if>
+        <if test="status != null and status != -1">
+            AND status=#{status}
+        </if>
+        <if test="enterpriseid != null and enterpriseid != ''">
+            AND enterpriseid=#{enterpriseid}
+        </if>
+        ORDER BY create_date DESC
+    </select>
+    
+    
+    <select id="listApp" resultMap="MeterReadingTaskVo">
+        SELECT
+        id,batch_id,task_name,area,task_start_time,task_end_time,reader_num,status,create_by,create_date,last_by,last_date,is_del,enterpriseid
+        FROM meter_reading_task WHERE is_del!=1
+        <if test="id != null and id != ''">
+            AND id=#{id}
+        </if>
+        <if test="batchId != null and batchId != ''">
+            AND batch_id LIKE CONCAT('%',#{batchId},'%')
+        </if>
+        <if test="taskName != null and taskName != ''">
+            AND task_name LIKE CONCAT('%',#{taskName},'%')
+        </if>
+        <if test="areaIds != null and areaIds.size() > 0">
+        AND (
+            <foreach collection="areaIds" item="areaId" separator=" or ">
+                area like CONCAT('%',#{areaId},'%')
+            </foreach>
+            )
+        </if>
+        <if test="status != null and status != -1">
+            AND status=#{status}
+        </if>
+        <if test="enterpriseid != null and enterpriseid != ''">
+            AND enterpriseid=#{enterpriseid}
+        </if>
+    </select>
+    
+
+    <insert id="edit">
+        INSERT INTO meter_reading_task
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null and id != ''">
+                id,
+            </if>
+            <if test="batchId != null and batchId != ''">
+                batch_id,
+            </if>
+            <if test="taskName != null and taskName != ''">
+                task_name,
+            </if>
+            <if test="area != null and area != ''">
+                area,
+            </if>
+            <if test="taskStartTime != null">
+                task_start_time,
+            </if>
+            <if test="taskEndTime != null">
+                task_end_time,
+            </if>
+            <if test="readerNum != null">
+                reader_num,
+            </if>
+            <if test="status != null and status != -1">
+                status,
+            </if>
+            <if test="createBy != null and createBy != ''">
+                create_by,
+            </if>
+            <if test="createDate != null">
+                create_date,
+            </if>
+            <if test="lastBy != null and lastBy != ''">
+                last_by,
+            </if>
+            <if test="lastDate != null">
+                last_date,
+            </if>
+            <if test="isDel != null and isDel != -1">
+                is_del,
+            </if>
+            <if test="enterpriseid != null and enterpriseid != ''">
+                enterpriseid,
+            </if>
+        </trim>
+        VALUES
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null and id != ''">
+                #{id},
+            </if>
+            <if test="batchId != null and batchId != ''">
+                #{batchId},
+            </if>
+            <if test="taskName != null and taskName != ''">
+                #{taskName},
+            </if>
+            <if test="area != null and area != ''">
+                #{area},
+            </if>
+            <if test="taskStartTime != null">
+                #{taskStartTime},
+            </if>
+            <if test="taskEndTime != null">
+                #{taskEndTime},
+            </if>
+            <if test="readerNum != null">
+                #{readerNum},
+            </if>
+            <if test="status != null and status != -1">
+                #{status},
+            </if>
+            <if test="createBy != null and createBy != ''">
+                #{createBy},
+            </if>
+            <if test="createDate != null">
+                #{createDate},
+            </if>
+            <if test="lastBy != null and lastBy != ''">
+                #{lastBy},
+            </if>
+            <if test="lastDate != null">
+                #{lastDate},
+            </if>
+            <if test="isDel != null and isDel != -1">
+                #{isDel},
+            </if>
+            <if test="enterpriseid != null and enterpriseid != ''">
+                #{enterpriseid},
+            </if>
+        </trim>
+        ON DUPLICATE KEY UPDATE
+        <trim suffixOverrides=",">
+            <if test="id != null and id != ''">
+                id=#{id},
+            </if>
+            <if test="batchId != null and batchId != ''">
+                batch_id=#{batchId},
+            </if>
+            <if test="taskName != null and taskName != ''">
+                task_name=#{taskName},
+            </if>
+            <if test="area != null and area != ''">
+                area=#{area},
+            </if>
+            <if test="taskStartTime != null">
+                task_start_time=#{taskStartTime},
+            </if>
+            <if test="taskEndTime != null">
+                task_end_time=#{taskEndTime},
+            </if>
+            <if test="readerNum != null">
+                reader_num=#{readerNum},
+            </if>
+            <if test="status != null and status != -1">
+                status=#{status},
+            </if>
+            <if test="createBy != null and createBy != ''">
+                create_by=#{createBy},
+            </if>
+            <if test="createDate != null">
+                create_date=#{createDate},
+            </if>
+            <if test="lastBy != null and lastBy != ''">
+                last_by=#{lastBy},
+            </if>
+            <if test="lastDate != null">
+                last_date=#{lastDate},
+            </if>
+            <if test="isDel != null and isDel != -1">
+                is_del=#{isDel},
+            </if>
+            <if test="enterpriseid != null and enterpriseid != ''">
+                enterpriseid=#{enterpriseid},
+            </if>
+        </trim>
+    </insert>
+
+</mapper>

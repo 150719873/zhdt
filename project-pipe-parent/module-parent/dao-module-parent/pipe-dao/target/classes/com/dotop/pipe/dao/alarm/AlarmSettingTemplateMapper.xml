@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.dotop.pipe.api.dao.alarm.IAlarmSettingTemplateDao">
+
+    <resultMap id="AlarmSettingVoMap"
+               type="com.dotop.pipe.core.vo.alarm.AlarmSettingTemplateVo">
+        <result column="id" jdbcType="VARCHAR" property="id"/>
+        <result column="code" jdbcType="VARCHAR" property="code"/>
+        <result column="name" jdbcType="VARCHAR" property="name"/>
+        <result column="content" jdbcType="VARCHAR" property="content"/>
+        <result column="product_category" jdbcType="VARCHAR" property="productCategory"/>
+        <result column="product_type" jdbcType="VARCHAR" property="productType"/>
+        <result column="last_by" jdbcType="VARCHAR" property="lastBy"/>
+        <result column="last_date" jdbcType="TIMESTAMP" property="lastDate"/>
+    </resultMap>
+
+    <!-- 预警值批量添加 -->
+    <insert id="add">
+        INSERT INTO pls_alarm_setting_template
+        (id,code,name,content,product_category,product_type,create_by,create_date,last_by,last_date,is_del,enterprise_id)
+        VALUE(UUID(),#{code},#{name},#{content},#{productCategory},#{productType},#{userBy},#{curr},#{userBy},#{curr},#{isDel},#{enterpriseId})
+    </insert>
+
+    <delete id="del">
+        delete from pls_alarm_setting_template
+        where id =#{id}
+        and enterprise_id = #{enterpriseId}
+    </delete>
+
+    <select id="lists" resultMap="AlarmSettingVoMap">
+        select id,code,name,content,product_category,product_type,last_by,last_date
+        from pls_alarm_setting_template
+        <where>
+            <if test="enterpriseId != null and enterpriseId != '' ">
+                and enterprise_id = #{enterpriseId}
+            </if>
+            <if test="isDel != null and isDel !='' ">
+                and is_del = #{isDel}
+            </if>
+            <if test="productCategory != null and productCategory !='' ">
+                and product_category = #{productCategory}
+            </if>
+            <if test="productType != null and productType !='' ">
+                and product_type = #{productType}
+            </if>
+            <if test="id != null and id !='' ">
+                and id = #{id}
+            </if>
+        </where>
+        order by last_date desc
+    </select>
+
+    <select id="get" resultMap="AlarmSettingVoMap">
+        select id, code,name,content,product_category,product_type,last_date,last_by
+        from pls_alarm_setting_template where id =#{id}
+        and is_del = #{idDel}
+        and enterprise_id = #{enterpriseId}
+    </select>
+
+</mapper>

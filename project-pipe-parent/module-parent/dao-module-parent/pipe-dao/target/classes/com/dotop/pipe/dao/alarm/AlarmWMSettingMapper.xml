@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.dotop.pipe.api.dao.alarm.IAlarmWMSettingDao">
+
+	<resultMap id="DeviceVoMap" type="com.dotop.pipe.core.vo.device.DeviceVo">
+		<result column="device_id" jdbcType="VARCHAR" property="deviceId" />
+		<result column="code" jdbcType="VARCHAR" property="code" />
+		<result column="name" jdbcType="VARCHAR" property="name" />
+		<result column="des" jdbcType="VARCHAR" property="des" />
+		<result column="address" jdbcType="VARCHAR" property="address" />
+		<result column="acreage" jdbcType="VARCHAR" property="acreage" />
+		<result column="scale" jdbcType="VARCHAR" property="scale" />
+		<result column="enterprise_id" jdbcType="VARCHAR" property="enterpriseId" />
+		<result column="alarmWMSettingId" jdbcType="VARCHAR" property="alarmWMSettingId" />
+		 <result column="product_category" jdbcType="VARCHAR" property="productCategory"/>
+        <result column="product_type" jdbcType="VARCHAR" property="productType"/>
+		<association property="area" javaType="com.dotop.pipe.core.vo.area.AreaModelVo">
+			<result column="area_id"   jdbcType="VARCHAR"   property="areaId" />
+			<result column="area_code" jdbcType="VARCHAR"   property="areaCode" />
+			<result column="area_name" jdbcType="VARCHAR"   property="name" />
+			<result column="area_des"  jdbcType="VARCHAR"   property="des" />
+		</association>
+		<association property="product" javaType="com.dotop.pipe.core.vo.product.ProductVo">
+            <result column="product_id" jdbcType="VARCHAR" property="productId"/>
+        </association>
+		 <collection property="points" ofType="com.dotop.pipe.core.vo.point.PointVo"
+                    javaType="java.util.List" column="device_id" select="queryPointsById">
+            <result column="point_id" jdbcType="VARCHAR" property="pointId"/>
+            <result column="point_code" jdbcType="VARCHAR" property="code"/>
+            <result column="point_name" jdbcType="VARCHAR" property="name"/>
+            <result column="point_des" jdbcType="VARCHAR" property="des"/>
+            <result column="point_longitude" jdbcType="VARCHAR" property="longitude"/>
+            <result column="point_latitude" jdbcType="VARCHAR" property="latitude"/>
+            <result column="point_remark" jdbcType="VARCHAR" property="remark"/>
+        </collection>
+	</resultMap>
+	
+	<resultMap id="pointsVoMap" type="com.dotop.pipe.core.vo.point.PointVo">
+        <result column="point_id" jdbcType="VARCHAR" property="pointId"/>
+        <result column="point_code" jdbcType="VARCHAR" property="code"/>
+        <result column="point_name" jdbcType="VARCHAR" property="name"/>
+        <result column="point_des" jdbcType="VARCHAR" property="des"/>
+        <result column="point_longitude" jdbcType="VARCHAR" property="longitude"/>
+        <result column="point_latitude" jdbcType="VARCHAR" property="latitude"/>
+        <result column="point_remark" jdbcType="VARCHAR" property="remark"/>
+    </resultMap>
+	
+	
+
+	<!-- 报警处理 -->
+	  <update id="edit">
+		UPDATE pls_alarm_wm_setting
+		<trim prefix="set" suffixOverrides=",">
+			<if test="userBy != null and userBy != ''">
+				  last_by = #{userBy} ,
+			</if>
+			<if test="curr != null ">
+				  last_date = #{curr},
+			</if>
+			<if test="isDel != null  ">
+				  is_del = #{isDel} ,
+			</if>
+		</trim>
+		WHERE enterprise_id = #{enterpriseId}  and user_id = #{userId}
+		<if test="deviceId != null">
+		  AND device_id = #{deviceId}
+		</if>
+		<if test="id != null">
+		  AND id = #{id}
+		</if>
+	</update>  
+
+	<insert id="add">
+		INSERT INTO	pls_alarm_wm_setting
+		(id,device_id,user_id,create_by,create_date,last_by,last_date,is_del,enterprise_id)
+		VALUE
+		(#{id},#{deviceId},#{userId},#{userBy},#{curr},#{userBy},#{curr},#{isDel},#{enterpriseId})
+	</insert>
+	
+	<select id="getPage" resultMap="DeviceVoMap" parameterType="java.util.Map">
+	SELECT a.device_id,a.code, a.name, a.des, a.address,a.length,a.depth,a.pipe_elevation,a.ground_elevation,
+		       a.laying, a.install_date, a.remark,a.version,a.last_by, a.last_date,a.is_del, a.enterprise_id,
+		       c.area_id AS area_id, c.area_code AS area_code,c.name AS area_name,
+		       a.product_category ,a.product_type,a.product_id,
+		      <!--  f.product_id,f.category AS product_category,f.type AS product_type,f.code AS product_code,f.name as product_name,
+		       j.name AS product_category_name,j.val AS product_category_val,
+		       k.name AS product_type_name,k.val AS product_type_val, -->
+		       l.id as alarmWMSettingId
+		FROM pls_device AS a
+		JOIN pls_area AS c ON a.area_id=c.area_id AND a.is_del=#{isDel} AND c.is_del=#{isDel}
+	   <!--  JOIN pls_product AS f ON a.product_id = f.product_id AND a.is_del=#{isDel} AND f.is_del=#{isDel}
+		产品类别
+		JOIN pls_dictionary AS j ON f.category=j.id AND j.type='${@CommonConstants@DICTIONARY_TYPE_PRODUCTCATEGORY}' AND f.is_del=#{isDel} AND j.is_del=#{isDel}
+		产品类型
+		LEFT JOIN pls_dictionary AS k ON f.type=k.id AND f.is_del=#{isDel} AND k.is_del=#{isDel} -->
+		left join pls_alarm_wm_setting as l on l.device_id = a.device_id and l.is_del=#{isDel} 
+		<if test="userId != null">
+			AND l.user_id=#{userId}
+		</if>
+		<if test="enterpriseId != null and enterpriseId != ''">
+				AND l.enterprise_id=#{enterpriseId}
+		</if>
+	  <where>
+			<if test="enterpriseId != null and enterpriseId != ''">
+				AND a.enterprise_id=#{enterpriseId}
+			</if> 
+			<if test="isDel != null">
+				AND a.is_del=#{isDel}
+			</if>
+			<if test="areaIds != null and areaIds.size > 0 ">
+				AND c.area_id in 
+				<foreach collection="areaIds" index="index"
+				item="id" open="(" separator="," close=")">
+				#{id}
+			</foreach>
+			</if>
+			<if test="productIds != null and productIds.size() > 0">
+                AND a.product_id in
+                <foreach collection="productIds" index="index" item="id" open="(" separator="," close=")">
+                    #{id}
+                </foreach>
+            </if>
+			AND a.product_category='${@CommonConstants@DICTIONARY_TYPE_SENSORTYPE}'
+		    AND a.product_type ='${@CommonConstants@DICTIONARY_SENSORTYPE_WM}'
+		</where>
+		order by l.last_date desc ,a.last_date desc
+	</select>
+	 
+	<select id= "getWmAlarm" resultMap="DeviceVoMap" >
+	SELECT a.device_id,a.code, a.name, a.des , a.product_id,a.product_category,
+		     c.area_id AS area_id, c.area_code AS area_code,c.name AS area_name
+		FROM pls_device AS a
+		JOIN pls_area AS c ON a.area_id=c.area_id AND a.is_del=#{isDel} AND c.is_del=#{isDel}
+		join pls_alarm_wm_setting as b  on a.device_id = b.device_id AND b.is_del = #{isDel}
+		<!-- join pls_alarm as d on a.device_id = d.device_id -->
+		JOIN pls_point_map AS e ON a.device_id = e.device_id AND a.is_del=#{isDel} AND e.is_del=#{isDel}
+        JOIN pls_point AS f ON e.point_id = f.point_id AND e.is_del=#{isDel} AND f.is_del=#{isDel}
+	  <where>
+			<if test="enterpriseId != null and enterpriseId != ''">
+				AND a.enterprise_id=#{enterpriseId}
+			</if> 
+			<if test="isDel != null">
+				AND a.is_del=#{isDel}
+			</if>
+			<if test="userId != null and userId != ''">
+			    AND b.user_id = #{userId}
+			</if>
+			AND a.product_category='${@CommonConstants@DICTIONARY_TYPE_SENSORTYPE}'
+		    AND a.product_type ='${@CommonConstants@DICTIONARY_SENSORTYPE_WM}'
+		  	<!-- and d.`status` = 0 -->
+       </where>
+   </select>
+
+   <select id="queryPointsById" parameterType="java.lang.String"
+           resultMap="pointsVoMap">
+       SELECT e.point_id, e.code AS point_code, e.name AS point_name, e.longitude
+       AS point_longitude, e.latitude AS point_latitude
+       from pls_point_map AS d
+       JOIN pls_point AS e ON d.point_id = e.point_id AND d.is_del=0 AND
+       e.is_del=0
+       where d.device_id = #{device_id} AND d.is_del=0
+   </select>
+
+</mapper>

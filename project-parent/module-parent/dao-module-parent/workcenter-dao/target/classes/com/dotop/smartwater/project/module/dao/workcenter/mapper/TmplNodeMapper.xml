@@ -1,0 +1,327 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dotop.smartwater.project.module.dao.workcenter.ITmplNodeDao">
+
+   <resultMap id="WorkCenterTmplNodeVoMap" type="com.dotop.smartwater.project.module.core.water.vo.WorkCenterTmplNodeVo">
+		<result column="id" jdbcType="VARCHAR" property="id" />
+		<result column="name" jdbcType="VARCHAR" property="name" />
+		<result column="desc" jdbcType="VARCHAR" property="desc" />
+		<result column="type" jdbcType="VARCHAR" property="type" />
+		<result column="sort" jdbcType="VARCHAR" property="sort" />
+		<result column="tmpl_id" jdbcType="VARCHAR" property="tmplId" />
+		<result column="parent_id"   jdbcType="VARCHAR" property="parentId" />
+		<result column="handlers"   jdbcType="VARCHAR" property="handlers" />
+		<result column="carbon_copyers"   jdbcType="VARCHAR" property="carbonCopyers" />
+		<result column="handler_roles"   jdbcType="VARCHAR" property="handlerRoles" />
+		<result column="carbon_copyer_roles"   jdbcType="VARCHAR" property="carbonCopyerRoles" />
+		<result column="if_verify"   jdbcType="VARCHAR" property="ifVerify" />
+		<result column="verify_tmpl_node_id"   jdbcType="VARCHAR" property="verifyTmplNodeId" />
+		<result column="no_verify_tmpl_node_id"   jdbcType="VARCHAR" property="noVerifyTmplNodeId" />
+		<result column="if_notice"   jdbcType="VARCHAR" property="ifNotice" />
+		<result column="noticers"   jdbcType="VARCHAR" property="noticers" />
+		<result column="noticer_roles"   jdbcType="VARCHAR" property="noticerRoles" />
+		<result column="if_update"   jdbcType="VARCHAR" property="ifUpdate" />
+		<result column="if_photo"   jdbcType="VARCHAR" property="ifPhoto" />
+		<result column="photo_num"   jdbcType="VARCHAR" property="photoNum" />
+		<result column="if_upload"   jdbcType="VARCHAR" property="ifUpload" />
+		<result column="upload_num"   jdbcType="VARCHAR" property="uploadNum" />
+		<result column="if_opinion"   jdbcType="VARCHAR" property="ifOpinion" />
+		<result column="opinion_num"   jdbcType="VARCHAR" property="opinionNum" />
+		<result column="last_by" jdbcType="VARCHAR" property="lastBy" />
+		<result column="last_date" jdbcType="VARCHAR" property="lastDate" />
+		<result column="create_by" jdbcType="VARCHAR" property="createBy" />
+		<result column="create_date" jdbcType="VARCHAR" property="createDate" />
+		<result column="enterpriseid" jdbcType="VARCHAR" property="enterpriseid" />
+		<association property="handleDict" javaType="com.dotop.smartwater.project.module.core.water.vo.DictionaryVo">
+			<result column="handle_dict_id" jdbcType="VARCHAR" property="dictionaryId" /> 
+		</association>
+		<association property="updateDictChild" javaType="com.dotop.smartwater.project.module.core.water.vo.DictionaryChildVo">
+			<result column="update_dict_child_id" jdbcType="VARCHAR" property="childId" />
+		</association>
+	</resultMap>
+	
+	<select id="list" resultMap="WorkCenterTmplNodeVoMap">
+		SELECT id,name,`desc`,type,sort,tmpl_id,parent_id,handlers,carbon_copyers,handler_roles,carbon_copyer_roles,
+		handle_dict_id,if_verify,verify_tmpl_node_id,no_verify_tmpl_node_id,
+		if_notice,noticers,noticer_roles,if_update,update_dict_child_id,if_photo,photo_num,if_ upload,upload_num,if_opinion,opinion_num
+		,is_del,create_by,create_date,last_by,last_date,enterpriseid
+        FROM wc_tmpl_node
+		<where>
+			<if test="enterpriseid != null and enterpriseid != ''">
+				AND enterpriseid=#{enterpriseid}
+			</if>
+			<if test="tmplId != null and tmplId != ''">
+				AND tmpl_id=#{tmplId}
+			</if>
+			<if test="isDel != null">
+				AND is_del=#{isDel}
+			</if>
+		</where>
+		<if test="ifSort">
+			ORDER BY last_date DESC
+		</if>
+	</select>
+	
+	<select id="get" resultMap="WorkCenterTmplNodeVoMap">
+		SELECT id,name,`desc`,type,sort,tmpl_id,parent_id,handlers,carbon_copyers,handler_roles,carbon_copyer_roles,
+		handle_dict_id,if_verify,verify_tmpl_node_id,no_verify_tmpl_node_id,
+		if_notice,noticers,noticer_roles,if_update,update_dict_child_id,if_photo,photo_num,if_upload,upload_num,if_opinion,opinion_num
+		,is_del,create_by,create_date,last_by,last_date,enterpriseid
+        FROM wc_tmpl_node
+		<where>
+			<if test="enterpriseid != null and enterpriseid != ''">
+				AND enterpriseid=#{enterpriseid}
+			</if>
+			<if test="isDel != null">
+				AND is_del=#{isDel}
+			</if>
+			<if test="id != null and id != ''">
+				AND id=#{id}
+			</if>
+		</where>
+	</select>
+	
+	<insert id="add">
+		INSERT INTO wc_tmpl_node
+		(id,name,`desc`,type,sort,tmpl_id,parent_id,handlers,carbon_copyers,handler_roles,carbon_copyer_roles,
+		handle_dict_id,if_verify,verify_tmpl_node_id,no_verify_tmpl_node_id,
+		if_notice,noticers,noticer_roles,if_update,update_dict_child_id,if_photo,photo_num,if_upload,upload_num,if_opinion,opinion_num
+		,is_del,create_by,create_date,last_by,last_date,enterpriseid)
+		VALUES
+		(#{id},#{name},#{desc},#{type},#{sort},#{tmplId},#{parentId},#{handlers},#{carbonCopyers},#{handlerRoles},#{carbonCopyerRoles},
+		#{handleDict.dictionaryId},#{ifVerify},#{verifyTmplNodeId},#{noVerifyTmplNodeId},
+		#{ifNotice},#{noticers},#{noticerRoles},#{ifUpdate},#{updateDictChild.childId},#{ifPhoto},#{photoNum},#{ifUpload},#{uploadNum},#{ifOpinion},#{opinionNum}
+		,#{isDel},#{userBy},#{curr},#{userBy},#{curr},#{enterpriseid})
+	</insert>
+	
+	<update id="edit">
+		UPDATE wc_tmpl_node
+		<trim prefix="set" suffixOverrides=",">
+			<if test="name != null and name != ''">
+				name=#{name},
+			</if>
+			<if test="desc != null and desc != ''">
+				`desc`=#{desc},
+			</if>
+			<if test="sort != null and sort != ''">
+				sort=#{sort},
+			</if>
+			<if test="tmplId != null and tmplId != ''">
+				tmpl_id=#{tmplId},
+			</if>
+			<if test="parentId != null and parentId != ''">
+				parent_id=#{parentId},
+			</if>
+			<if test="handlers != null">
+				handlers=#{handlers,javaType=java.util.List,jdbcType=VARCHAR},
+			</if>
+			<if test="carbonCopyers != null">
+				carbon_copyers=#{carbonCopyers,javaType=java.util.List,jdbcType=VARCHAR},
+			</if>
+			<if test="handlerRoles != null">
+				handler_roles=#{handlerRoles,javaType=java.util.List,jdbcType=VARCHAR},
+			</if>
+			<if test="carbonCopyerRoles != null">
+				carbon_copyer_roles=#{carbonCopyerRoles,javaType=java.util.List,jdbcType=VARCHAR},
+			</if>
+			<if test="handleDict != null and handleDict.dictionaryId != ''">
+				handle_dict_id=#{handleDict.dictionaryId},
+			</if>
+			<if test="ifVerify != null and ifVerify != ''">
+				if_verify=#{ifVerify},
+			</if>
+			<if test="verifyTmplNodeId != null and verifyTmplNodeId != ''">
+				verify_tmpl_node_id=#{verifyTmplNodeId},
+			</if>
+			<if test="noVerifyTmplNodeId != null and noVerifyTmplNodeId != ''">
+				no_verify_tmpl_node_id=#{noVerifyTmplNodeId},
+			</if>
+			<if test="ifNotice != null and ifNotice != ''">
+				if_notice=#{ifNotice},
+			</if>
+			<if test="noticers != null">
+				noticers=#{noticers,javaType=java.util.List,jdbcType=VARCHAR},
+			</if>
+			<if test="noticerRoles != null">
+				noticer_roles=#{noticerRoles,javaType=java.util.List,jdbcType=VARCHAR},
+			</if>
+			<if test="ifUpdate != null and ifUpdate != ''">
+				if_update=#{ifUpdate},
+			</if>
+			<if test="updateDictChild != null and updateDictChild.childId != ''">
+				update_dict_child_id=#{updateDictChild.childId},
+			</if>
+			<if test="ifPhoto != null and ifPhoto != ''">
+				if_photo=#{ifPhoto},
+			</if>
+			<if test="photoNum != null and photoNum != ''">
+				photo_num=#{photoNum},
+			</if>
+			<if test="ifUpload != null and ifUpload != ''">
+				if_upload=#{ifUpload},
+			</if>
+			<if test="uploadNum != null and uploadNum != ''">
+				upload_num=#{uploadNum},
+			</if>
+			<if test="ifOpinion != null and ifOpinion != ''">
+				if_opinion=#{ifOpinion},
+			</if>
+			<if test="opinionNum != null and opinionNum != ''">
+				opinion_num=#{opinionNum},
+			</if>
+			<if test="userBy != null and userBy != ''">
+				last_by=#{userBy},
+			</if>
+			<if test="curr != null">
+				last_date=#{curr},
+			</if>
+		</trim>
+		WHERE enterpriseid=#{enterpriseid} AND id=#{id} AND is_del=#{isDel}
+	</update>
+	
+	<update id="del">
+		UPDATE wc_tmpl_node
+		<trim prefix="set" suffixOverrides=",">
+			<if test="newIsDel != null and newIsDel != ''">
+				is_del=#{newIsDel},
+			</if>
+			<if test="userBy != null and userBy != ''">
+				last_by=#{userBy},
+			</if>
+			<if test="curr != null">
+				last_date=#{curr},
+			</if>
+		</trim>
+		<where>
+			enterpriseid=#{enterpriseid} AND is_del=#{isDel}
+			<if test="id != null and id != ''">
+			 	AND id=#{id}
+			</if>
+			<if test="tmplId != null and tmplId != ''">
+				AND tmpl_id=#{tmplId}
+			</if>
+		</where>
+	</update>
+	
+	<insert id="adds" parameterType="java.util.List">
+		<foreach collection="list" item="item" index="index" open="" close="" separator=";">
+			INSERT INTO wc_tmpl_node
+			(id,name,`desc`,type,sort,tmpl_id,parent_id,handlers,carbon_copyers,handler_roles,carbon_copyer_roles,
+			handle_dict_id,if_verify,verify_tmpl_node_id,no_verify_tmpl_node_id,
+			if_notice,noticers,noticer_roles,if_update,update_dict_child_id,if_photo,photo_num,if_upload,upload_num,if_opinion,opinion_num
+			,is_del,create_by,create_date,last_by,last_date,enterpriseid)
+			VALUES
+			(#{item.id},#{item.name},#{item.desc},#{item.type},#{item.sort},#{item.tmplId},#{item.parentId},#{item.handlers},#{item.carbonCopyers},#{item.handlerRoles},#{item.carbonCopyerRoles},
+			#{item.handleDict.dictionaryId},#{item.ifVerify},#{item.verifyTmplNodeId},#{item.noVerifyTmplNodeId},
+			#{item.ifNotice},#{item.noticers},#{item.noticerRoles},#{item.ifUpdate},#{item.updateDictChild.childId},#{item.ifPhoto},#{item.photoNum},#{item.ifUpload},#{item.uploadNum},#{item.ifOpinion},#{item.opinionNum}
+			,#{item.isDel},#{item.userBy},#{item.curr},#{item.userBy},#{item.curr},#{item.enterpriseid})
+		</foreach>
+	</insert>
+	
+	<update id="edits" parameterType="java.util.List">
+		<foreach collection="list" item="item" index="index" open="" close="" separator=";">
+			UPDATE wc_tmpl_node
+			<trim prefix="set" suffixOverrides=",">
+				<if test="item.name != null and item.name != ''">
+					name=#{item.name},
+				</if>
+				<if test="item.desc != null and item.desc != ''">
+					`desc`=#{item.desc},
+				</if>
+				<if test="item.sort != null and item.sort != ''">
+					sort=#{item.sort},
+				</if>
+				<if test="item.tmplId != null and item.tmplId != ''">
+					tmpl_id=#{item.tmplId},
+				</if>
+				<if test="item.parentId != null and item.parentId != ''">
+					parent_id=#{item.parentId},
+				</if>
+				<if test="item.handlers != null">
+					handlers=#{item.handlers,javaType=java.util.List,jdbcType=VARCHAR},
+				</if>
+				<if test="item.carbonCopyers != null">
+					carbon_copyers=#{item.carbonCopyers,javaType=java.util.List,jdbcType=VARCHAR},
+				</if>
+				<if test="item.handlerRoles != null">
+					handler_roles=#{item.handlerRoles,javaType=java.util.List,jdbcType=VARCHAR},
+				</if>
+				<if test="item.carbonCopyerRoles != null">
+					carbon_copyer_roles=#{item.carbonCopyerRoles,javaType=java.util.List,jdbcType=VARCHAR},
+				</if>
+				<if test="item.handleDict != null and item.handleDict.dictionaryId != ''">
+					handle_dict_id=#{item.handleDict.dictionaryId},
+				</if>
+				<if test="item.ifVerify != null and item.ifVerify != ''">
+					if_verify=#{item.ifVerify},
+				</if>
+				<if test="item.verifyTmplNodeId != null and item.verifyTmplNodeId != ''">
+					verify_tmpl_node_id=#{item.verifyTmplNodeId},
+				</if>
+				<if test="item.noVerifyTmplNodeId != null and item.noVerifyTmplNodeId != ''">
+					no_verify_tmpl_node_id=#{item.noVerifyTmplNodeId},
+				</if>
+				<if test="item.ifNotice != null and item.ifNotice != ''">
+					if_notice=#{item.ifNotice},
+				</if>
+				<if test="item.noticers != null">
+					noticers=#{item.noticers,javaType=java.util.List,jdbcType=VARCHAR},
+				</if>
+				<if test="item.noticerRoles != null">
+					noticer_roles=#{item.noticerRoles,javaType=java.util.List,jdbcType=VARCHAR},
+				</if>
+				<if test="item.ifUpdate != null and item.ifUpdate != ''">
+					if_update=#{item.ifUpdate},
+				</if>
+				<if test="item.updateDictChild != null and item.updateDictChild.childId != ''">
+					update_dict_child_id=#{item.updateDictChild.childId},
+				</if>
+				<if test="item.ifPhoto != null and item.ifPhoto != ''">
+					if_photo=#{item.ifPhoto},
+				</if>
+				<if test="item.photoNum != null and item.photoNum != ''">
+					photo_num=#{item.photoNum},
+				</if>
+				<if test="item.ifUpload != null and item.ifUpload != ''">
+					if_upload=#{item.ifUpload},
+				</if>
+				<if test="item.uploadNum != null and item.uploadNum != ''">
+					upload_num=#{item.uploadNum},
+				</if>
+				<if test="item.ifOpinion != null and item.ifOpinion != ''">
+					if_opinion=#{item.ifOpinion},
+				</if>
+				<if test="item.opinionNum != null and item.opinionNum != ''">
+					opinion_num=#{item.opinionNum},
+				</if>
+				<if test="item.userBy != null and item.userBy != ''">
+					last_by=#{item.userBy},
+				</if>
+				<if test="item.curr != null">
+					last_date=#{item.curr},
+				</if>
+			</trim>
+			WHERE enterpriseid=#{item.enterpriseid} AND id=#{item.id} AND is_del=#{item.isDel}
+		</foreach>
+	</update>
+	
+	<update id="dels" parameterType="java.util.List">
+		<foreach collection="list" item="item" index="index" open="" close="" separator=";">
+			UPDATE wc_tmpl_node
+			<trim prefix="set" suffixOverrides=",">
+				<if test="item.newIsDel != null and item.newIsDel != ''">
+					is_del=#{item.newIsDel},
+				</if>
+				<if test="item.userBy != null and item.userBy != ''">
+					last_by=#{item.userBy},
+				</if>
+				<if test="item.curr != null">
+					last_date=#{item.curr},
+				</if>
+			</trim>
+			WHERE enterpriseid=#{item.enterpriseid} AND id=#{item.id} AND is_del=#{item.isDel}
+		</foreach>
+	</update>
+	
+    
+</mapper>

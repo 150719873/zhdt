@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper
+	namespace="com.dotop.smartwater.project.module.dao.wechat.IWechatRechargeDao">
+
+
+	<insert id="saveChargeRecord">
+		INSERT INTO `wechat_order` (`id`, `createtime`,
+		`ownerid`,
+		`wechatmchno`,
+		`wechatorderstatus`, `wechatpaytime`,
+		`wechatpaytype`,
+		`wechatamount`,
+		`prepayid`, `wechatresultcode`,
+		`wechatretruncode`,
+		`wechatsign`,`wechaterrormsg`,`orderpayparam`,`wechatorderstate`,`attach`,`paytype`,`remark`)
+		VALUES (#{id},
+		#{createtime},#{ownerid},#{wechatmchno},
+		#{wechatorderstatus},#{wechatpaytime},
+		#{wechatpaytype},#{wechatamount},#{prepayid},
+		#{wechatresultcode},#{wechatretruncode},#{wechatsign},
+		#{wechaterrormsg},#{orderpayparam},#{wechatorderstate},
+		#{attach},#{paytype},#{remark})
+	</insert>
+
+
+	<update id="updateRechargeRecord">
+		UPDATE `wechat_order`
+		<set>
+			<if test="updatetime!=null">
+				updatetime=#{updatetime},
+			</if>
+			<if test="wechatpaytime!=null">
+				wechatpaytime=#{wechatpaytime},
+			</if>
+			<if test="wechatorderstatus!=null">
+				wechatorderstatus=#{wechatorderstatus},
+			</if>
+			<if test="wechaterrormsg!=null">
+				wechaterrormsg=#{wechaterrormsg},
+			</if>
+			<if test="wechatretruncode!=null">
+				wechatretruncode =#{wechatretruncode},
+			</if>
+			<if test="wechatresultcode!=null">
+				wechatresultcode=#{wechatresultcode},
+			</if>
+			<if test="wechatorderstate!=null">
+				wechatorderstate=#{wechatorderstate},
+			</if>
+			<if test="paytype!=null">
+				paytype=#{paytype},
+			</if>
+			<if test="remark!=null">
+				remark=#{remark},
+			</if>
+		</set>
+		WHERE id=#{id}
+	</update>
+
+	<select id="list"
+		resultType="com.dotop.smartwater.project.module.core.water.vo.PayDetailVo">
+		SELECT * FROM `pay_detail` WHERE ownerid=#{ownerid} AND
+		`type`=1
+		<if test="limit!=null and offset!=null">
+			ORDER BY createtime DESC ${value}
+			LIMIT #{limit} OFFSET
+			#{offset}
+		</if>
+	</select>
+
+	<select id="rechargeQuery"
+		resultType="com.dotop.smartwater.project.module.core.third.vo.wechat.WechatOrderVo">
+		SELECT * FROM `wechat_order` WHERE
+		wechatmchno=#{rechargeQueryParam.wechatmchno} AND
+		paytype=#{paytype}
+	</select>
+
+</mapper>

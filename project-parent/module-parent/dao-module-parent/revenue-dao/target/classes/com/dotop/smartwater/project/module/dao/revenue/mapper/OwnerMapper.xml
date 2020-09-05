@@ -1,0 +1,731 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.dotop.smartwater.project.module.dao.revenue.IOwnerDao">
+
+    <resultMap id="BaseResultMap"
+               type="com.dotop.smartwater.project.module.core.water.vo.OwnerVo">
+        <id column="ownerid" jdbcType="VARCHAR" property="ownerid"/>
+        <result column="userno" jdbcType="VARCHAR" property="userno"/>
+        <result column="username" jdbcType="VARCHAR" property="username"/>
+        <result column="useraddr" jdbcType="VARCHAR" property="useraddr"/>
+        <result column="userphone" jdbcType="VARCHAR" property="userphone"/>
+        <result column="status" jdbcType="INTEGER" property="status"/>
+        <result column="remark" jdbcType="VARCHAR" property="remark"/>
+        <result column="devid" jdbcType="VARCHAR" property="devid"/>
+        <result column="pricetypeid" jdbcType="VARCHAR" property="pricetypeid"/>
+        <result column="communityid" jdbcType="VARCHAR" property="communityid"/>
+        <result column="communityname" jdbcType="VARCHAR" property="communityname"/>
+        <result column="createuser" jdbcType="VARCHAR" property="createuser"/>
+        <result column="createtime" jdbcType="TIMESTAMP" property="createtime"/>
+        <result column="installmonth" jdbcType="VARCHAR" property="installmonth"/>
+        <result column="alreadypay" jdbcType="DOUBLE" property="alreadypay"/>
+        <result column="ischargebacks" jdbcType="INTEGER" property="ischargebacks"/>
+        <result column="paytypeid" jdbcType="VARCHAR" property="paytypeid"/>
+        <result column="purposeid" jdbcType="VARCHAR" property="purposeid"/>
+        <result column="reduceid" jdbcType="VARCHAR" property="reduceid"/>
+        <result column="cardtype" jdbcType="INTEGER" property="cardtype"/>
+        <result column="cardid" jdbcType="VARCHAR" property="cardid"/>
+        <result column="modelid" jdbcType="VARCHAR" property="modelid"/>
+        <result column="enterpriseid" jdbcType="VARCHAR" property="enterpriseid"/>
+        <result column="devno" jdbcType="VARCHAR" property="devno"/>
+        <result column="water" jdbcType="VARCHAR" property="water"/>
+        <result column="tapstatus" jdbcType="VARCHAR" property="tapstatus"/>
+        <result column="reducename" jdbcType="VARCHAR" property="reducename"/>
+        <result column="rvalue" jdbcType="DOUBLE" property="rvalue"/>
+        <result column="runit" jdbcType="INTEGER" property="runit"/>
+        <result column="purposename" jdbcType="VARCHAR" property="purposename"/>
+        <result column="paytypename" jdbcType="VARCHAR" property="paytypename"/>
+        <result column="modelname" jdbcType="VARCHAR" property="modelname"/>
+        <result column="upreadtime" jdbcType="VARCHAR" property="upreadtime"/>
+        <result column="upreadwater" jdbcType="VARCHAR" property="upreadwater"/>
+        <result column="deveui" jdbcType="VARCHAR" property="deveui"/>
+        <result column="uplinktime" jdbcType="VARCHAR" property="uplinktime"/>
+        <result column="devStatus" jdbcType="VARCHAR" property="devStatus"/>
+        <result column="owner_type" jdbcType="VARCHAR" property="ownerType"/>
+        <result column="ownerTypeName" jdbcType="VARCHAR" property="ownerTypeName"/>
+        
+        <result column="province" jdbcType="VARCHAR" property="province"/>
+        <result column="city" jdbcType="VARCHAR" property="city"/>
+        <result column="district" jdbcType="VARCHAR" property="district"/>
+        <result column="building" jdbcType="VARCHAR" property="building"/>
+        <result column="unit" jdbcType="VARCHAR" property="unit"/>
+        <result column="room" jdbcType="VARCHAR" property="room"/>
+        <result column="box" jdbcType="VARCHAR" property="box"/>
+        <result column="book_num" jdbcType="VARCHAR" property="bookNum"/>
+        <result column="bar_code" jdbcType="VARCHAR" property="barCode"/>
+    </resultMap>
+
+    <resultMap id="OwnerDeviceMap"
+               type="com.dotop.smartwater.project.module.core.water.vo.customize.OwnerDeviceVo">
+        <result column="ownerid" jdbcType="VARCHAR" property="ownerid"/>
+        <result column="userno" jdbcType="VARCHAR" property="userno"/>
+        <result column="username" jdbcType="VARCHAR" property="username"/>
+        <result column="useraddr" jdbcType="VARCHAR" property="useraddr"/>
+        <result column="userphone" jdbcType="VARCHAR" property="userphone"/>
+        <result column="cardid" jdbcType="VARCHAR" property="cardid"/>
+        <result column="status" jdbcType="VARCHAR" property="status"/>
+        <result column="paytypeid" jdbcType="VARCHAR" property="paytypeid"/>
+        <result column="communityid" jdbcType="VARCHAR" property="communityid"/>
+        <result column="deveui" jdbcType="VARCHAR" property="deveui"/>
+        <result column="devno" jdbcType="VARCHAR" property="devno"/>
+        <result column="devStatus" jdbcType="VARCHAR" property="devStatus"/>
+        <result column="explain" jdbcType="VARCHAR" property="explain"/>
+        <result column="taptype" jdbcType="VARCHAR" property="taptype"/>
+        <result column="tapstatus" jdbcType="VARCHAR" property="tapstatus"/>
+        <result column="beginvalue" jdbcType="VARCHAR" property="beginvalue"/>
+        <result column="comname" jdbcType="VARCHAR" property="comname"/>
+        <result column="comno" jdbcType="VARCHAR" property="comno"/>
+        <result column="typename" jdbcType="VARCHAR" property="typename"/>
+        <result column="devid" jdbcType="VARCHAR" property="devid"/>
+        <result column="reduceid" jdbcType="VARCHAR" property="reduceid"/>
+        <result column="purposeid" jdbcType="VARCHAR" property="purposeid"/>
+        <result column="pid" jdbcType="VARCHAR" property="pid"/>
+        <result column="uplinktime" jdbcType="TIMESTAMP" property="uplinktime"/>
+    </resultMap>
+
+    <insert id="add">
+		insert into owner (ownerid, userno, username,
+      useraddr, userphone, status,
+      remark, devid, pricetypeid,
+      communityid, createuser, createtime,
+      installmonth, alreadypay, ischargebacks,
+      paytypeid, purposeid, reduceid,
+      cardtype, cardid, modelid,
+      enterpriseid,
+      province,city,district,building,unit,room,box,book_num,bar_code)
+    values (#{ownerid,jdbcType=VARCHAR}, #{userno,jdbcType=VARCHAR}, #{username,jdbcType=VARCHAR},
+      #{useraddr,jdbcType=VARCHAR}, #{userphone,jdbcType=VARCHAR}, #{status,jdbcType=INTEGER},
+      #{remark,jdbcType=VARCHAR}, #{devid,jdbcType=VARCHAR}, #{pricetypeid,jdbcType=VARCHAR},
+      #{communityid,jdbcType=VARCHAR}, #{createuser,jdbcType=VARCHAR}, #{createtime,jdbcType=TIMESTAMP},
+      #{installmonth,jdbcType=VARCHAR}, #{alreadypay,jdbcType=DOUBLE}, #{ischargebacks,jdbcType=INTEGER},
+      #{paytypeid,jdbcType=VARCHAR}, #{purposeid,jdbcType=VARCHAR}, #{reduceid,jdbcType=VARCHAR},
+      #{cardtype,jdbcType=INTEGER}, #{cardid,jdbcType=VARCHAR}, #{modelid,jdbcType=VARCHAR},
+      #{enterpriseid,jdbcType=VARCHAR}
+      , #{province,jdbcType=VARCHAR}, #{city,jdbcType=VARCHAR}, #{district,jdbcType=VARCHAR}, #{building,jdbcType=VARCHAR}
+      , #{unit,jdbcType=VARCHAR}, #{room,jdbcType=VARCHAR}, #{box,jdbcType=VARCHAR}, #{bookNum,jdbcType=VARCHAR}
+      , #{barCode,jdbcType=VARCHAR})
+	</insert>
+	
+	
+	<insert id="batchAdd">
+		insert into owner (ownerid, userno, username,useraddr, userphone, status,
+      devid, pricetypeid,communityid, createuser, createtime,installmonth, alreadypay, ischargebacks,
+      paytypeid, purposeid, reduceid,cardtype, cardid, modelid,enterpriseid,
+      province,city,district,building,unit,room,box,book_num)
+    values 
+      <foreach collection="list" item="item" index="index" separator=",">
+         (#{item.ownerid}, #{item.userno}, #{item.username},
+    		#{item.useraddr}, #{item.userphone}, #{item.status},
+    		#{item.devid}, #{item.pricetypeid},
+    		#{item.communityid}, #{item.createuser}, #{item.createtime},
+    		#{item.installmonth}, #{item.alreadypay}, #{item.ischargebacks},
+    		#{item.paytypeid}, #{item.purposeid}, #{item.reduceid},
+    		#{item.cardtype}, #{item.cardid}, #{item.modelid},
+    		#{item.enterpriseid}
+    		, #{item.province}, #{item.city}, #{item.district}, #{item.building}
+    		, #{item.unit}, #{item.room}, #{item.box}, #{item.bookNum})
+      </foreach>
+	</insert>
+
+    <insert id="batchAddOwnerExt">
+        insert into owner_ext (owner_id, owner_type)
+        values
+        <foreach collection="list" item="item" index="index" separator=",">
+            (#{item.ownerid}, #{item.ownerType})
+        </foreach>
+    </insert>
+	
+	<update id="batchEdit">
+        <foreach collection="list" item="item" separator=";" open="" close="">
+            update `owner`
+            <set>
+                <if test="item.username != null and item.username != ''">
+                    username=#{item.username},
+                </if>
+                <if test="item.useraddr != null and item.useraddr != ''">
+                    useraddr=#{item.useraddr},
+                </if>
+                <if test="item.userphone != null and item.userphone != ''">
+                    userphone=#{item.userphone},
+                </if>
+                <if test="item.cardid != null and item.cardid != ''">
+                    cardid=#{item.cardid},
+                </if>
+                <if test="item.province != null and item.province != ''">
+                    province=#{item.province},
+                </if>
+                <if test="item.city != null and item.city != ''">
+                    city=#{item.city},
+                </if>
+                <if test="item.district != null and item.district != ''">
+                    district=#{item.district},
+                </if>
+                <if test="item.building != null and item.building != ''">
+                    building=#{item.building},
+                </if>
+                <if test="item.unit != null and item.unit != ''">
+                    unit=#{item.unit},
+                </if>
+                <if test="item.room != null and item.room != ''">
+                    room=#{item.room},
+                </if>
+                <if test="item.box != null and item.box != ''">
+                    box=#{item.box},
+                </if>
+            </set>
+            where enterpriseid = #{item.enterpriseid} and ownerid = #{item.ownerid}
+        </foreach>
+    </update>
+    
+    
+    <update id="batchChange">
+    	<foreach collection="list" item="item" separator=";" open="" close="">
+            update `owner`
+            <set>
+                <if test="item.devid != null and item.devid != ''">
+                    devid=#{item.devid},
+                </if>
+            </set>
+            where enterpriseid = #{item.enterpriseid} and ownerid = #{item.ownerid}
+        </foreach>
+    </update>
+	
+
+    <select id="checkByOwnerNo" resultType="java.lang.Integer">
+        select count(*) from owner where 1=1 and `status`!=0
+        <if test="ownerid != null">
+            and ownerid != #{ownerid}
+        </if>
+        <if test="userno != null">
+            and userno = #{userno}
+        </if>
+    </select>
+    
+    <select id="checkBybarCode" resultType="java.lang.Integer">
+        select count(ownerid) from owner where 1=1 and enterpriseid = #{enterpriseid}
+        <if test="ownerid != null">
+            and ownerid != #{ownerid}
+        </if>
+        <if test="barCode != null">
+            and bar_code = #{barCode}
+        </if>
+    </select>
+    
+
+    <select id="findOwnerByDevNo" resultMap="BaseResultMap" parameterType="java.lang.String">
+        select b.* from device as a LEFT JOIN `owner` as b on a.devid = b.devid and a.flag != 4
+		where a.devno = #{devno} and b.`status` = 1
+    </select>
+
+    <select id="findDevIdByDevNo" resultType="java.lang.String" parameterType="java.lang.String">
+        select devid from device where devno=#{devno} and flag != 4
+    </select>
+
+    <update id="openOwner">
+       update owner set devid=#{devid}, status=#{status},
+			pricetypeid=#{pricetypeid},installmonth=#{installmonth},
+			paytypeid=#{paytypeid},purposeid=#{purposeid},reduceid=#{reduceid} 
+			where ownerid=#{ownerid}
+    </update>
+
+
+    <insert id="createAndopenOwner">
+    	insert into owner (ownerid, userno, username,useraddr, userphone, status,
+      devid, pricetypeid, communityid, createuser, createtime,
+      installmonth, alreadypay, ischargebacks,paytypeid, purposeid, 
+      reduceid , modelid,cardtype, cardid, enterpriseid)
+    values (#{ownerid}, #{userno}, #{username},#{useraddr}, #{userphone}, #{status},
+      #{devid}, #{pricetypeid},#{communityid}, #{createuser}, #{createtime},
+      #{installmonth}, #{alreadypay}, #{ischargebacks}, #{paytypeid}, #{purposeid}, 
+      #{reduceid}, #{modelid}, #{cardtype}, #{cardid}, #{enterpriseid})
+    </insert>
+
+    <select id="findByOwnerId" resultMap="BaseResultMap">
+        select a.*,b.devno from owner a left join device as b on a.devid=b.devid and b.flag != 4
+        <where>
+            <if test="ownerId != null and ownerId != ''">
+                and ownerid = #{ownerId}
+            </if>
+            <if test="userno != null and userno != ''">
+                and userno = #{userno}
+            </if>
+        </where>
+        limit 1
+    </select>
+    
+    <select id="getOwnerById" resultMap="BaseResultMap">
+        select a.*,b.devno from owner a left join device as b on a.devid=b.devid and b.flag != 4
+        <where>
+            <if test="ownerId != null and ownerId != ''">
+                and ownerid = #{ownerId}
+            </if>
+        </where>
+        limit 1
+    </select>
+
+    <update id="updateForNotOpen">
+       update owner set communityid=#{communityid} , ischargebacks=#{ischargebacks} , useraddr=#{useraddr},
+       userphone=#{userphone}, userno=#{userno},username=#{username}, cardtype=#{cardtype} ,
+       cardid=#{cardid},modelid=#{modelid}, paytypeid=#{paytypeid},
+       purposeid=#{purposeid}, reduceid=#{reduceid},
+	   remark=#{remark},username=#{username} ,
+	   province=#{province}, city=#{city} ,district=#{district} , building=#{building},
+       unit=#{unit}, room=#{room}, box=#{box}, book_num=#{bookNum},devid=#{devid},bar_code=#{barCode}
+	   where ownerid=#{ownerid} and status=#{status}
+    </update>
+
+    <update id="webUpdate">
+       update owner set communityid=#{communityid}, ischargebacks=#{ischargebacks} ,useraddr=#{useraddr},
+       userphone=#{userphone}, cardtype=#{cardtype} ,cardid=#{cardid} , modelid=#{modelid},
+       paytypeid=#{paytypeid}, purposeid=#{purposeid}, reduceid=#{reduceid},
+	   remark=#{remark} , username=#{username},
+	   province=#{province}, city=#{city} ,district=#{district} , building=#{building},
+       unit=#{unit}, room=#{room}, box=#{box}, book_num=#{bookNum} ,devid=#{devid},bar_code=#{barCode}
+	   where ownerid=#{ownerid} and status=#{status}
+    </update>
+
+    <delete id="delete" parameterType="java.lang.String">
+        delete from owner where ownerid=#{ownerid}
+    </delete>
+
+    <update id="updateStatusAndAlreadyPay">
+       update owner set status=#{status},alreadypay=#{alreadypay},modelid=#{modelid},devid=#{devid} where ownerid=#{ownerid}
+    </update>
+
+    <update id="updateDevId">
+       update owner set devid=#{devid} where ownerid=#{ownerid}
+    </update>
+
+    <select id="findByOwnerUserNo" resultMap="BaseResultMap" parameterType="java.lang.String">
+        select a.*,b.devno from owner a left join device as b on a.devid=b.devid and b.flag != 4
+        <where>
+            <if test="ownerid != null ">
+                and a.ownerid=#{ownerid}
+            </if>
+            <if test="userno != null ">
+                and a.userno=#{userno}
+            </if>
+        </where>
+    </select>
+
+    <select id="checkOwnerIsExist" resultMap="BaseResultMap">
+        SELECT o.* , c.child_name as purposename, a.`name` as communityname FROM `owner` o 
+		LEFT JOIN dictionary_child c ON o.purposeid = c.child_id
+		LEFT JOIN area a ON o.communityid = a.id
+        where o.userno = #{userno} 
+        and o.username = #{username} 
+        and o.userphone = #{userphone} 
+    </select>
+
+    <select id="getOwners" resultMap="BaseResultMap">
+        SELECT a.devid,a.ownerid,a.username,a.userphone,a.userno,b.devno,b.water , b.tapstatus ,
+        b.status ,DATE_FORMAT(b.uplinktime,'%Y-%m-%d %H:%i') as uplinktime FROM `owner` AS a
+        LEFT JOIN device AS b ON a.devid = b.devid and b.flag != 4 where 1 = 1
+        <if test="nodeIds != null">
+            and a.communityid in
+            <foreach collection="nodeIds" item="communityid" index="index"
+                     open="(" close=")" separator=",">
+                #{communityid}
+            </foreach>
+        </if>
+        <if test="devno != null and username != null and userphone !=null">
+            and ( b.devno like #{devno} or a.username like #{username} or a.userphone like #{userphone} )
+        </if>
+        <if test="status != null">
+            and a.status = #{status}
+        </if>
+        <if test="enterpriseid != null">
+            and a.enterpriseid = #{enterpriseid}
+        </if>
+        <if test="isonline != null">
+            and b.status = #{isonline}
+        </if>
+        order by b.uplinktime desc
+    </select>
+
+    <select id="getOwnerList" resultMap="BaseResultMap">
+        SELECT m.* , 
+        c.`name` AS reducename, 
+        e.`child_name` AS purposename, 
+        f.`name` AS paytypename, 
+        k.`child_name` AS ownerTypeName,
+        od.totalCost AS arrears
+        FROM ( SELECT
+        a.devid,a.ownerid,a.username,a.userphone,a.useraddr,a.userno,a.installmonth,a.remark,
+        ifnull(a.alreadypay, 0) AS alreadypay,(CASE a.cardtype WHEN 1 THEN '身份证' WHEN 2 THEN '护照' END) AS cardtype,a.cardid,
+        a.createtime,a.communityid, a.building, a.unit, a.room, a.box,
+        a.status, a.modelid, a.paytypeid,a.purposeid,a.reduceid,a.book_num,a.bar_code,
+        oe.owner_type,
+        b.devno,b.beginvalue,b.water,b.uplinktime
+        FROM `owner` AS a
+        LEFT JOIN owner_ext AS oe ON a.ownerid = oe.owner_id
+        LEFT JOIN device AS b ON a.devid = b.devid and b.flag != 4
+        <where>
+            <if test="nodeIds != null">
+                and a.communityid in
+                <foreach collection="nodeIds" item="communityid" index="index"
+                         open="(" close=")" separator=",">
+                    #{communityid}
+                </foreach>
+            </if>
+            <if test="ownerType != null and ownerType != ''">
+                and oe.owner_type = #{ownerType}
+            </if>
+            <if test="devno != null and devno != ''">
+                and b.devno like concat('%',#{devno},'%')
+            </if>
+            <if test="username != null and username != ''">
+                and a.username like concat('%',#{username},'%')
+            </if>
+            <if test="userno != null and userno != ''">
+                and a.userno like concat('%',#{userno},'%')
+            </if>
+            <if test="userphone != null and userphone != ''">
+                and a.userphone like concat('%',#{userphone},'%')
+            </if>
+            <if test="status != null">
+                and a.status = #{status}
+            </if>
+            <if test="cardid != null and cardid != ''">
+                and a.cardid = #{cardid}
+            </if>
+            <if test="bookNum != null and bookNum != ''">
+                and a.book_num = #{bookNum}
+            </if>
+            <if test="enterpriseid != null and enterpriseid != ''">
+                and a.enterpriseid = #{enterpriseid}
+            </if>
+            <if test="keywords != null and keywords != ''">
+                and (a.userno like concat('%',#{keywords},'%') or a.userphone like concat('%',#{keywords},'%') or b.devno like concat('%',#{keywords},'%'))
+            </if>
+        </where>
+        ) m
+        LEFT JOIN device AS b ON m.devid = b.devid 
+        LEFT JOIN reduce c ON m.reduceid = c.reduceid
+        LEFT JOIN dictionary_child e ON m.purposeid = e.child_id
+        LEFT JOIN dictionary_child k ON m.owner_type = k.child_id
+        LEFT JOIN pay_type f ON m.paytypeid = f.typeid
+        LEFT JOIN (
+			SELECT tod.userid ,cast(sum(oe.cost + oe.penalty) AS decimal(15,2)) AS totalCost
+			FROM payment_trade_order tod 
+			INNER JOIN payment_trade_orderext oe ON tod.tradeid = oe.tradeid
+			WHERE tod.enterpriseid = #{enterpriseid} and tod.`status` = 0 and tod.business_id = 'water-fee'
+			GROUP BY tod.userid
+		) od ON m.ownerid = od.userid
+		<if test="sortList != null">
+            <foreach item="item" index="index" collection="sortList" open="order by" separator=",">
+	            <if test="item.sortName == 'userno'">
+		            m.userno ${item.sortValue}
+		        </if>
+		        <if test="item.sortName == 'devno'">
+		            m.devno ${item.sortValue}
+		        </if>
+	        </foreach>
+        </if>
+        <if test="sortList == null">
+            order by m.ownerid desc
+        </if>
+    </select>
+
+    <select id="findByOwnerDetail" resultMap="BaseResultMap" parameterType="java.lang.String">
+       SELECT 
+       		m.* , 
+       		c.`name` AS reducename, 
+       		c.rvalue as rvalue, 
+       		c.`unit` as runit,
+       		e.`child_name` AS purposename, 
+       		f.`name` AS paytypename
+		FROM ( 
+			SELECT
+				a.devid,a.ownerid,a.username,a.userphone,a.useraddr,a.userno,a.installmonth,a.remark,
+				ifnull(a.alreadypay, 0) AS alreadypay,a.createtime,a.communityid, a.cardtype ,a.cardid, 
+				a.STATUS , a.ischargebacks,a.book_num,a.modelid, a.paytypeid,a.purposeid,a.reduceid,
+				a.province,a.city,a.district,a.building,a.unit,a.room,a.box,a.bar_code,
+				b.devno,b.deveui,b.beginvalue 
+			FROM `owner` AS a
+			LEFT JOIN device AS b ON a.devid = b.devid and b.flag != 4 
+			where a.ownerid = #{ownerid}
+		) m
+		LEFT JOIN device AS b ON m.devid = b.devid 
+		LEFT JOIN reduce c ON m.reduceid = c.reduceid
+		LEFT JOIN dictionary_child e ON m.purposeid = e.child_id
+		LEFT JOIN pay_type f ON m.paytypeid = f.typeid 
+    </select>
+
+    <update id="batchUpdateOwner">
+        update owner
+        <set>
+            <if test="paytypeid != null and paytypeid != ''">
+                paytypeid = #{paytypeid,jdbcType=VARCHAR},
+            </if>
+            <if test="purposeid != null and purposeid != ''">
+                purposeid = #{purposeid,jdbcType=VARCHAR},
+            </if>
+            <if test="reduceid != null and reduceid != ''">
+                reduceid = #{reduceid,jdbcType=VARCHAR},
+            </if>
+            <if test="modelid != null and modelid != ''">
+                modelid = #{modelid,jdbcType=VARCHAR},
+            </if>
+        </set>
+        <where>
+            <if test="nodeIds != null">
+                communityid in
+                <foreach collection="nodeIds" item="communityid" index="index"
+                         open="(" close=")" separator=",">
+                    #{communityid}
+                </foreach>
+            </if>
+        </where>
+    </update>
+
+    <select id="getOwnerCount" resultType="java.lang.Integer">
+        SELECT count(o.ownerid) as count FROM `owner` o LEFT JOIN device d ON o.devid = d.devid and d.flag != 4 WHERE 1=1 
+        <if test="status != null">
+            and o.status = #{status}
+        </if>
+        <if test="enterpriseid != null and enterpriseid !=''">
+            and o.enterpriseid = #{enterpriseid}
+        </if>
+        <if test="userno != null and userno !=''">
+            and o.userno like CONCAT("%",#{userno}, "%")
+        </if>
+        <if test="username != null and username !=''">
+            and o.username like CONCAT("%",#{username}, "%")
+        </if>
+        <if test="userphone != null and userphone !=''">
+            and o.userphone like CONCAT("%",#{userphone}, "%")
+        </if>
+        <if test="cardid != null and cardid !=''">
+            and o.cardid like CONCAT("%",#{cardid}, "%")
+        </if>
+        <if test="devno != null and devno !=''">
+            and d.devno like CONCAT("%",#{devno}, "%")
+        </if>
+        <if test="nodeIds != null">
+            and o.communityid in
+            <foreach collection="nodeIds" item="communityid" index="index"
+                     open="(" close=")" separator=",">
+                #{communityid}
+            </foreach>
+        </if>
+    </select>
+
+    <select id="getOwnerUser" resultMap="BaseResultMap">
+        select u.*, t.readtime as upreadtime,t.readwater as upreadwater from (
+        SELECT o.*,d.devno,d.deveui,d.water,d.uplinktime,d.status as devStatus
+        FROM `owner` o
+        INNER JOIN device d ON o.devid = d.devid  where o.userno = #{userno} and d.flag != 4) u  LEFT JOIN (
+        SELECT * FROM `order` where userno = #{userno} ORDER BY generatetime DESC LIMIT 1
+        ) t ON u.userno = t.userno where u.enterpriseid = #{enterpriseid}
+    </select>
+
+    <select id="getOwnerUserByDevId" resultMap="BaseResultMap" parameterType="java.lang.String">
+        select o.*, t.readtime as upreadtime,t.readwater as upreadwater
+        from `owner` o LEFT JOIN `device` d on o.devid = d.devid and d.flag != 4
+        LEFT JOIN `order` t on o.ownerid = t.ownerid
+        where d.devid = #{devid} and o.`status` =1 ORDER BY t.generatetime desc limit 1
+    </select>
+
+    <select id="findOwnerByCommunity" resultMap="BaseResultMap" parameterType="java.lang.String">
+		select * from owner o where o.status = 1 and o.communityid = #{areaId}
+	</select>
+
+    <select id="getUserCount" resultType="java.lang.Long" parameterType="java.lang.String">
+		select count(ownerid) as count from `owner` where enterpriseid = #{enterpriseId}
+	</select>
+	
+	<select id="userOpenCount" resultType="java.lang.Long" parameterType="java.lang.String">
+		select count(ownerid) as count from `owner` where enterpriseid = #{enterpriseId} and status = 1
+	</select>
+	
+	<select id="areaCount" resultType="java.lang.Long" parameterType="java.lang.String">
+		SELECT count(id) as count FROM `area` WHERE enterpriseid = #{enterpriseId}
+	</select>
+
+    <select id="findOwnerByCommunityIds" resultMap="OwnerDeviceMap">
+		select o.purposeid,o.reduceid, p.`name` as typename ,
+        d.devid,d.beginvalue,d.tapstatus,d.taptype,d.pid,d.uplinktime, o.ownerid,o.userno,
+        o.username,o.userphone,o.useraddr,o.cardid,o.paytypeid,
+        o.`status`,o.paytypeid,o.communityid, d.deveui,d.devno,  + d.`status` as devStatus,d.`explain`
+        from `owner` o left join device d on o.devid = d.devid and d.flag != 4
+        LEFT JOIN pay_type as p ON o.paytypeid = p.typeid
+        WHERE o.communityid IN (${str}) and o.status=1
+        and o.ownerid not in (select ownerid from order_preview)
+        and o.enterpriseid=#{enterpriseid}
+	</select>
+
+    <select id="findOwnerByOwnernos" resultMap="OwnerDeviceMap">
+		select o.purposeid,o.reduceid, p.`name` as typename ,
+        d.devid,d.beginvalue,d.tapstatus,d.taptype,d.pid,d.uplinktime,o.ownerid,o.userno,
+        o.username,o.userphone,o.useraddr,o.cardid,o.paytypeid,
+        o.`status`,o.paytypeid,o.communityid, d.deveui,d.devno,  + d.`status` as devStatus,d.`explain`
+        from `owner` o left join device d on o.devid = d.devid and d.flag != 4
+        LEFT JOIN pay_type as p ON o.paytypeid = p.typeid
+        WHERE o.userno IN (${str}) and o.status=1
+        and o.ownerid not in (select ownerid from order_preview)
+        and o.enterpriseid=#{enterpriseid}
+	</select>
+
+    <select id="findByDevId" resultMap="BaseResultMap" parameterType="java.lang.String">
+		select * from owner where devid = #{devid} and status = 1 limit 1
+	</select>
+
+    <select id="checkOwnerNo" resultType="java.lang.String">
+        select userno from owner where
+        `status`!=0
+        <if test="list != null">
+            and userno in
+            <foreach collection="list" item="userno" index="index"
+                     open="(" close=")" separator=",">
+                #{userno}
+            </foreach>
+        </if>
+    </select>
+
+    <select id="devNoCheck" resultType="java.lang.String" parameterType="java.lang.String">
+        select b.devno from owner a INNER JOIN device b
+        on a.devid=b.devid and b.flag != 4 where (a.`status`=1 or a.`status`=2) and b.devno in (${value})
+    </select>
+    
+    <select id="userNoCheck" resultType="java.lang.String" parameterType="java.lang.String">
+        select userno from owner where `status`!=0 and userno in (${value})
+    </select>
+
+    <select id="getByOwner" resultMap="BaseResultMap">
+        SELECT m.* , c.`name` AS reducename, e.`child_name` AS purposename, f.`name` AS paytypename,
+        g.`name` AS modelname FROM ( SELECT
+        a.devid,a.ownerid,a.username,a.userphone,a.useraddr,a.userno,a.installmonth,a.remark,ifnull(a.alreadypay, 0) AS
+        alreadypay,
+        a.createtime,a.communityid, a.cardtype ,a.cardid, a.STATUS , a.ischargebacks,
+        a.modelid, a.paytypeid,a.purposeid,a.reduceid,b.devno,b.beginvalue FROM `owner` AS a
+        LEFT JOIN device AS b ON a.devid = b.devid and b.flag != 4 where 1 = 1 and a.`status`=1
+        <if test="devno != null and devno !=''">
+            AND b.devno LIKE CONCAT('%',#{devno},'%')
+        </if>
+        <if test="username != null and username != ''">
+            AND a.username LIKE CONCAT('%',#{username},'%')
+        </if>
+        <if test="userno != null and userno != ''">
+            AND (a.userno LIKE CONCAT('%',#{userno},'%') or a.bar_code = #{userno})
+        </if>
+        <if test="userphone != null and userphone != ''">
+            AND a.userphone LIKE CONCAT('%',#{userphone},'%')
+        </if>
+        <if test="cardid != null and cardid != ''">
+            AND a.cardid LIKE CONCAT('%',#{cardid},'%')
+        </if>
+        <if test="enterpriseid != null and enterpriseid != ''">
+            AND a.enterpriseid=#{enterpriseid}
+        </if>
+        ) m
+        LEFT JOIN device AS b ON m.devid = b.devid LEFT JOIN reduce c ON m.reduceid = c.reduceid
+        LEFT JOIN dictionary_child e ON m.purposeid = e.child_id
+        LEFT JOIN pay_type f ON m.paytypeid = f.typeid LEFT JOIN store_product g ON m.modelid = g.productId
+        limit 1
+    </select>
+
+
+    <select id="getkeyWordOwner" resultMap="BaseResultMap">
+        SELECT m.* , e.`child_name` AS purposename, f.`name` AS paytypename,
+        g.name AS modelname FROM ( SELECT
+        a.devid,a.ownerid,a.username,a.userphone,a.useraddr,a.userno,a.installmonth,a.remark,ifnull(a.alreadypay, 0) AS
+        alreadypay,
+        a.createtime,a.communityid, a.cardtype ,a.cardid, a.STATUS , a.ischargebacks,
+        a.modelid, a.paytypeid,a.purposeid,a.reduceid,b.devno,b.beginvalue FROM `owner` AS a
+        LEFT JOIN device AS b ON a.devid = b.devid and b.flag != 4 where 1 = 1 and a.`status`=1
+        <if test="keywords != null and keywords !=''">
+            AND (b.deveui = #{keywords} OR b.devno = #{keywords} OR a.userno = #{keywords} OR a.userphone =#{keywords}
+            OR a.cardid=#{keywords})
+        </if>
+        <if test="enterpriseid != null and enterpriseid != ''">
+            AND a.enterpriseid=#{enterpriseid}
+        </if>
+        ) m
+        LEFT JOIN device AS b ON m.devid = b.devid
+        LEFT JOIN dictionary_child e ON m.purposeid = e.child_id
+        LEFT JOIN pay_type f ON m.paytypeid = f.typeid
+        LEFT JOIN store_product g ON m.modelid = g.productId
+    </select>
+
+
+    <select id="getUserNoOwner" resultMap="BaseResultMap">
+        SELECT m.* , c.`name` AS reducename, e.`child_name` AS purposename, f.`name` AS paytypename,
+        g.name AS modelname FROM ( SELECT
+        a.devid,a.ownerid,a.username,a.userphone,a.useraddr,a.userno,a.installmonth,a.remark,ifnull(a.alreadypay, 0) AS
+        alreadypay,
+        a.createtime,a.communityid, a.cardtype ,a.cardid, a.STATUS , a.ischargebacks,
+        a.modelid, a.paytypeid,a.purposeid,a.reduceid,b.devno,b.beginvalue FROM `owner` AS a
+        LEFT JOIN device AS b ON a.devid = b.devid and b.flag != 4 where 1 = 1 and a.`status`=1
+        <if test="userno != null and userno != ''">
+            AND a.userno =#{userno}
+        </if>
+        <if test="enterpriseid != null and enterpriseid != ''">
+            AND a.enterpriseid=#{enterpriseid}
+        </if>
+        ) m
+        LEFT JOIN device AS b ON m.devid = b.devid LEFT JOIN reduce c ON m.reduceid = c.reduceid
+        LEFT JOIN dictionary_child e ON m.purposeid = e.child_id
+        LEFT JOIN pay_type f ON m.paytypeid = f.typeid
+        LEFT JOIN store_product g ON m.modelid = g.productId
+    </select>
+
+    <update id="updateOwnerAccount">
+     update owner set alreadypay=#{alreadypay} where ownerid=#{ownerid}
+    </update>
+
+    <update id="updateStatusAndAlreadypay">
+      update owner set alreadypay=#{alreadypay} where ownerid=#{ownerid}
+    </update>
+
+    <select id="getCommunityOwner" resultMap="BaseResultMap">
+        SELECT
+        m.* , e.`child_name` AS purposename
+        FROM (
+        SELECT
+        a.communityid, a.userno,a.username,a.userphone,a.useraddr,b.devno,a.purposeid
+        FROM `owner` AS a
+        LEFT JOIN device AS b ON a.devid = b.devid and b.flag != 4
+        where a.`status`=1 AND b.`typeid`=1
+        <if test="communityid != null and communityid != ''">
+            AND a.communityid =#{communityid}
+        </if>
+        <if test="enterpriseid != null and enterpriseid != ''">
+            AND a.enterpriseid=#{enterpriseid}
+        </if>
+        ) m
+        LEFT JOIN dictionary_child e ON m.purposeid = e.child_id
+    </select>
+
+    <select id="getByIds" resultMap="BaseResultMap">
+        select * from `owner`
+        <where>
+            <if test="list != null">
+                and ownerid in
+                <foreach collection="list" item="ownerid" index="index"
+                         open="(" close=")" separator=",">
+                    #{ownerid}
+                </foreach>
+            </if>
+        </where>
+    </select>
+
+    <select id="findBusinessHallOwners" resultMap="BaseResultMap">
+        select ownerid,username,userno,userphone,useraddr,cardid from owner
+        <where>
+            enterpriseid = #{enterpriseid} and status = 1 and
+            <if test="list != null ">
+                <foreach collection="list" item="key" index="index"
+                         open="(" close=")" separator=" and ">
+                    (userno LIKE CONCAT('%',#{key},'%') or username LIKE CONCAT('%',#{key},'%')
+                    or userphone LIKE CONCAT('%',#{key},'%') or bar_code LIKE CONCAT('%',#{key},'%'))
+                </foreach>
+            </if>
+        </where>
+        order by createtime limit 4
+    </select>
+    <select id="getOwnersByTypeId" resultType="java.lang.String">
+        select userno from owner where paytypeid = #{typeId} and status = #{status}
+    </select>
+
+</mapper>

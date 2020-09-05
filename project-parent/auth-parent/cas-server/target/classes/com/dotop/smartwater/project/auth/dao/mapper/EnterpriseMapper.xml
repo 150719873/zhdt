@@ -1,0 +1,272 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper
+        namespace="com.dotop.smartwater.project.auth.dao.IEnterpriseDao">
+
+    <resultMap id="EnterpriseVoMap" type="com.dotop.smartwater.project.module.core.auth.vo.EnterpriseVo">
+        <result column="enterpriseid" property="enterpriseid"/>
+        <result column="name" property="name"/>
+        <result column="enprno" property="enprno"/>
+        <result column="description" property="description"/>
+        <result column="createuser" property="createuser"/>
+        <result column="website" property="website"/>
+        <result column="proleid" property="proleid"/>
+        <result column="center" property="center"/>
+        <result column="extent" property="extent"/>
+        <result column="license" property="license"/>
+        <result column="calibration" property="calibration"/>
+        <result column="failure_state" property="failureState"/>
+        <result column="failure_time" property="failureTime"/>
+        
+        <result column="user_manual" property="userManual"/>
+        <result column="work_app" property="workApp"/>
+        <result column="bind_app" property="bindApp"/>
+        
+        <result column="website_prefix" property="websitePrefix"/>
+        <result column="website_suffix" property="websiteSuffix"/>
+        
+    </resultMap>
+
+    <delete id="deleteById">
+		delete from enterprise where enterpriseid = #{enterpriseid}
+	</delete>
+
+    <select id="getEnterpriseList" resultMap="EnterpriseVoMap">
+        select * from enterprise where 1=1
+        <if test="enterpriseid != null and enterpriseid != ''">
+            AND enterpriseid = #{enterpriseid}
+        </if>
+        <if test="name != null and name != ''">
+            AND name like concat('%',#{name},'%')
+        </if>
+        <if test="website != null and website != ''">
+            AND website like concat('%',#{website},'%')
+        </if>
+        order by createtime desc
+    </select>
+
+    <select id="getErpList" resultMap="EnterpriseVoMap">
+		select name,enterpriseid from enterprise
+	</select>
+
+    <insert id="insert">
+        INSERT INTO enterprise
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="enterpriseid != null">
+                enterpriseid,
+            </if>
+            <if test="name != null">
+                `name`,
+            </if>
+            <if test="description != null">
+                description,
+            </if>
+            <if test="createtime != null">
+                createtime,
+            </if>
+            <if test="createuser != null">
+                createuser,
+            </if>
+            <if test="proleid != null">
+                proleid,
+            </if>
+            <if test="center != null">
+                center,
+            </if>
+            <if test="extent != null">
+                extent,
+            </if>
+            <if test="license != null">
+                license,
+            </if>
+            <if test="website != null">
+                website,
+            </if>
+            <if test="websitePrefix != null">
+                website_prefix,
+            </if>
+            <if test="websiteSuffix != null">
+                website_suffix,
+            </if>
+            <if test="calibration != null">
+                calibration,
+            </if>
+            <if test="failureState != null">
+                failure_state,
+            </if>
+            <if test="failureTime != null">
+                failure_time,
+            </if>
+            <if test="userManual != null">
+                user_manual,
+            </if>
+            <if test="workApp != null">
+                work_app,
+            </if>
+            <if test="bindApp != null">
+                bind_app,
+            </if>
+        </trim>
+        VALUES
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="enterpriseid != null">
+                #{enterpriseid},
+            </if>
+            <if test="name != null">
+                #{name},
+            </if>
+            <if test="description != null">
+                #{description},
+            </if>
+            <if test="createtime != null">
+                #{createtime},
+            </if>
+            <if test="createuser != null">
+                #{createuser},
+            </if>
+            <if test="proleid != null">
+                #{proleid},
+            </if>
+            <if test="center != null">
+                #{center},
+            </if>
+            <if test="extent != null">
+                #{extent},
+            </if>
+            <if test="license != null">
+                #{license},
+            </if>
+            <if test="website != null">
+                #{website},
+            </if>
+            <if test="websitePrefix != null">
+                #{websitePrefix},
+            </if>
+            <if test="websiteSuffix != null">
+                #{websiteSuffix},
+            </if>
+            <if test="calibration != null">
+                #{calibration},
+            </if>
+            <if test="failureState != null">
+                #{failureState},
+            </if>
+            <if test="failureTime != null">
+                #{failureTime},
+            </if>
+            <if test="userManual != null">
+                #{userManual},
+            </if>
+            <if test="workApp != null">
+                #{workApp},
+            </if>
+            <if test="bindApp != null">
+                #{bindApp},
+            </if>
+        </trim>
+    </insert>
+
+    <select id="findById" resultMap="EnterpriseVoMap">
+		select * from enterprise where enterpriseid = #{enterpriseid}
+	</select>
+
+    <select id="findEnterpriseByWebsite"
+            resultMap="EnterpriseVoMap">
+		select * from enterprise where website = #{website}
+	</select>
+
+    <update id="update">
+        update enterprise
+        <set>
+            <if test="name != null and name != ''">
+                `name` = #{name},
+            </if>
+            <if test="proleid != null and proleid != ''">
+                proleid = #{proleid},
+            </if>
+            <if test="website != null and website != ''">
+                website = #{website},
+            </if>
+            <if test="websitePrefix != null and websitePrefix != ''">
+                website_prefix = #{websitePrefix},
+            </if>
+            <if test="websiteSuffix != null and websiteSuffix != ''">
+                website_suffix = #{websiteSuffix},
+            </if>
+            <if test="description != null and description != ''">
+                description = #{description},
+            </if>
+            <if test="center != null and center != ''">
+                center = #{center},
+            </if>
+            <if test="extent != null and extent != ''">
+                extent = #{extent},
+            </if>
+            <if test="license != null and license != ''">
+                license = #{license},
+            </if>
+            <if test="calibration != null">
+                calibration = #{calibration},
+            </if>
+            <if test="failureState != null">
+                failure_state = #{failureState},
+            </if>
+            <if test="userManual != null">
+               user_manual = #{userManual},
+            </if>
+            <if test="workApp != null">
+                work_app = #{workApp},
+            </if>
+            <if test="bindApp != null">
+                bind_app = #{bindApp},
+            </if>
+            failure_time = #{failureTime},
+        </set>
+        where enterpriseid = #{enterpriseid}
+    </update>
+
+    <select id="findEnterpriseByName" resultMap="EnterpriseVoMap">
+		select * from enterprise where name = #{name}
+	</select>
+
+    <select id="findEnterpriseByNameAndId"
+            resultMap="EnterpriseVoMap">
+		select * from enterprise where name = #{name} and enterpriseid!=#{enterpriseid}
+	</select>
+
+    <select id="getLogo" resultType="com.dotop.smartwater.project.module.core.auth.vo.LogoVo">
+		select * from logo where enterpriseid=#{enterpriseid}
+	</select>
+
+    <update id="updateEnprno">
+        update enterprise set
+        <if test="enterpriseid != null and enterpriseid != ''">
+            enprno = #{enterpriseid}
+        </if>
+        where enterpriseid = #{enterpriseid}
+    </update>
+
+    <select id="getSettlement" resultType="com.dotop.smartwater.project.module.core.auth.vo.SettlementVo">
+		select * from settlement where enterpriseid=#{enterpriseid}
+	</select>
+
+    <select id="getSettlements" resultType="com.dotop.smartwater.project.module.core.auth.vo.SettlementVo">
+		select * from settlement
+	</select>
+
+    <insert id="addSettlement">
+		insert INTO settlement(enterpriseid,alias,status,offday,alarmday) 
+		VALUES (#{enterpriseid},#{alias},#{status},#{offday},#{alarmday})
+	</insert>
+
+    <select id="getEnterpriseMap" resultType="com.dotop.smartwater.project.module.core.auth.vo.EnterpriseVo">
+		select * from enterprise
+	</select>
+
+    <select id="getOrganizationChartMap"
+            resultType="com.dotop.smartwater.project.module.core.auth.vo.select.Obj">
+		select roleid as id , name from role where enterpriseid = #{enterpriseid}
+        UNION ALL
+        select userid as id , name from user where enterpriseid = #{enterpriseid}
+	</select>
+</mapper>

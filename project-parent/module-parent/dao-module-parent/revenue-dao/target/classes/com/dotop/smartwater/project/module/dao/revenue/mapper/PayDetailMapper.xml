@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper
+        namespace="com.dotop.smartwater.project.module.dao.revenue.IPayDetailDao">
+
+    <!-- <resultMap id="BillCheckVoMap" type="com.dotop.smartwater.project.module.core.water.vo.BillBadVo">
+        <result column="bill_bad_id" jdbcType="VARCHAR" property="billBadId" /> </resultMap> -->
+
+
+    <select id="list"
+            resultType="com.dotop.smartwater.project.module.core.water.dto.PayDetailDto">
+        SELECT *, createtime as ctime FROM `pay_detail`
+        <where>
+            <if test="ownerid != null and ownerid !='' ">
+                AND ownerid=#{ownerid}
+            </if>
+        </where>
+        ORDER BY createtime DESC
+        <if test="limit!=null and offset!=null">
+            LIMIT #{limit} OFFSET #{offset}
+        </if>
+    </select>
+
+    <delete id="deletePayDetail">
+	 delete from pay_detail where tradeno=#{tradeno}
+	</delete>
+
+    <select id="findTradePay" resultType="com.dotop.smartwater.project.module.core.water.vo.PayDetailVo">
+	 select * from pay_detail where tradeno = #{tradeno}
+	</select>
+
+
+    <insert id="addPayDetail">
+	 insert into pay_detail (id ,ownerid, ownerno, ownername, paymoney, createtime, createuser,
+	 username, type, beforemoney, aftermoney, payno, tradeno,remark)
+	 values (#{id}, #{ownerid}, #{ownerno}, #{ownername}, #{paymoney}, #{createtime}, #{createuser},
+		#{username}, #{type}, #{beforemoney}, #{aftermoney}, #{payno}, #{tradeno},#{remark})
+	</insert>
+
+    <update id="updateOwnerAlreadypay">
+	 update owner set alreadypay=#{alreadypay} where ownerid=#{ownerid}
+	</update>
+</mapper>

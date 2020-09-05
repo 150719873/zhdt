@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>com.dotop.smartwater.project.module</groupId>
+		<artifactId>module-parent</artifactId>
+		<version>3.0.0-SNAPSHOT</version>
+	</parent>
+	<groupId>com.dotop.smartwater.project.module.core</groupId>
+	<artifactId>core-module-parent</artifactId>
+	<name>core-module-parent</name>
+	<url>http://maven.apache.org</url>
+	<packaging>pom</packaging>
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+	</properties>
+	<dependencies>
+	</dependencies>
+	<modules>
+		<module>demo-core</module>
+		<module>water-core</module>
+		<module>auth-core</module>
+		<module>app-core</module>
+		<module>third-core</module>
+        <module>pay-core</module>
+    </modules>
+</project>

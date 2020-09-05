@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.dotop.smartwater.project.third.meterread.webservice.dao.third.IThirdDao">
+
+    <resultMap id="BaseResultMap"
+               type="com.dotop.smartwater.project.third.meterread.webservice.core.third.vo.RemoteCustomerVo">
+        <result column="ownerid" jdbcType="VARCHAR" property="ownerid"/>
+        <result column="enterpriseid" jdbcType="VARCHAR" property="enterpriseid"/>
+        <result column="factoryid" jdbcType="INTEGER" property="factoryId"/>
+        <result column="meteraddr" jdbcType="VARCHAR" property="meterAddr"/>
+        <result column="username" jdbcType="VARCHAR" property="userName"/>
+        <result column="linkman" jdbcType="VARCHAR" property="linkman"/>
+        <result column="phone" jdbcType="VARCHAR" property="phone"/>
+        <result column="paperno" jdbcType="VARCHAR" property="paperNo"/>
+        <result column="address" jdbcType="VARCHAR" property="address"/>
+        <result column="caliber" jdbcType="VARCHAR" property="caliber"/>
+        <result column="installdate" jdbcType="TIMESTAMP" property="installDate"/>
+        <result column="ifctrlvalve" jdbcType="INTEGER" property="ifCtrlValve"/>
+        <result column="remark" jdbcType="VARCHAR" property="remark"/>
+        <result column="usercode" jdbcType="VARCHAR" property="userCode"/>
+        <result column="extenddata1" jdbcType="VARCHAR" property="extendData1"/>
+        <result column="extenddata2" jdbcType="VARCHAR" property="extendData2"/>
+        <result column="extenddata3" jdbcType="VARCHAR" property="extendData3"/>
+        <result column="latestnumber" jdbcType="VARCHAR" property="latestNumber"/>
+    </resultMap>
+
+    <resultMap id="RemoteDataMap"
+               type="com.dotop.smartwater.project.third.meterread.webservice.core.third.vo.RemoteDataVo">
+        <result column="deviceid" jdbcType="VARCHAR" property="deviceId"/>
+        <result column="enterpriseid" jdbcType="VARCHAR" property="enterpriseid"/>
+        <result column="factoryid" jdbcType="VARCHAR" property="factoryId"/>
+        <result column="meteraddr" jdbcType="VARCHAR" property="meterAddr"/>
+        <result column="readnumber" jdbcType="VARCHAR" property="readNumber"/>
+        <result column="readdate" jdbcType="VARCHAR" property="readDate"/>
+        <result column="readdate" jdbcType="TIMESTAMP" property="readDate"/>
+        <result column="lastupdatetime" jdbcType="TIMESTAMP" property="lastUpdateTime"/>
+    </resultMap>
+
+
+    <select id="findOwnerByIdList"
+            resultMap="BaseResultMap">
+        SELECT
+        `ownerid`,`enterpriseid`,`factoryid`,`meteraddr`,`username`,`linkman`,`phone` ,
+        `paperno`, `address`, `caliber`, `installdate`, `ifctrlvalve`, `remark`, `usercode`,
+        `extenddata1`, `extenddata2`, `extenddata3`,`latestnumber`
+        FROM third_meterread_customer where extenddata1 in
+        <foreach collection="ownerIdList" open="(" item="ele" separator="," close=")">
+            #{ele}
+        </foreach>
+        AND factoryid=#{factoryId} AND enterpriseid=#{enterpriseid}
+    </select>
+
+    <insert id="insertBatch">
+        insert into third_meterread_customer (
+        ownerid,enterpriseid,factoryid,meteraddr,username,linkman,phone ,
+        paperno, address, caliber, installdate, ifctrlvalve, remark, usercode,
+        extenddata1, extenddata2, extenddata3,latestnumber
+        ) values
+        <foreach collection="list" item="item" index="index" separator=",">
+            (
+            #{item.ownerid},#{item.enterpriseid},#{item.factoryId},#{item.meterAddr},#{item.userName},#{item.linkman},#{item.phone},
+            #{item.paperNo},#{item.address},#{item.caliber},#{item.installDate},#{item.ifCtrlValve},#{item.remark},#{item.userCode},
+            #{item.extendData1},#{item.extendData2},#{item.extendData3},#{item.latestNumber}
+            )
+        </foreach>
+    </insert>
+
+    <update id="batchUpdate">
+        <foreach collection="customerDtoList" item="item">
+            update third_meterread_customer
+            set
+            meteraddr=#{item.meterAddr},
+            orldmeteraddr=#{item.oldMeterAddr},
+            username=#{item.userName},
+            linkman=#{item.linkman},
+            phone=#{item.phone},
+            paperno=#{item.paperNo},
+            address=#{item.address},
+            caliber=#{item.caliber},
+            installdate=#{item.installDate},
+            ifctrlvalve=#{item.ifCtrlValve},
+            usercode=#{item.userCode},
+            extenddata2=#{item.extendData2},
+            extenddata3=#{item.extendData3},
+            latestnumber=#{item.latestNumber},
+            wateyield=#{item.wateyield}
+            where ownerid = #{item.ownerid} and factoryid=#{item.factoryId} and enterpriseid=#{item.enterpriseid};
+        </foreach>
+    </update>
+
+    <select id="findOwnerByFactorId" resultMap="BaseResultMap">
+        SELECT
+          `ownerid`,`enterpriseid`,`factoryid`,`meteraddr`,`username`,`linkman`,`phone` ,
+          `paperno`, `address`, `caliber`, `installdate`, `ifctrlvalve`,  `remark`,  `usercode`,
+          `extenddata1`, `extenddata2`, `extenddata3`,`latestnumber`
+         FROM third_meterread_customer WHERE factoryid = #{factoryId} and enterpriseid=#{enterpriseid}
+    </select>
+
+
+    <select id="getList" resultMap="RemoteDataMap">
+        SELECT deviceid, enterpriseid, factoryid, meteraddr,
+        readnumber,readdate,lastupdatetime
+        FROM third_meterread_data
+        <where>
+            factoryid = #{factoryId} and enterpriseid=#{enterpriseid}
+            and deviceid in
+            <foreach collection="deviceIds" item="item" close=")" open="(" separator=",">#{item}</foreach>
+        </where>
+    </select>
+
+    <update id="updates">
+        <foreach collection="remoteDataBos" item="item">
+            update third_meterread_data
+            set
+            deviceid =#{item.deviceId}, enterpriseid= #{item.enterpriseid},
+            factoryid =#{item.factoryId}, meteraddr= #{item.meterAddr},
+            readnumber= #{item.readNumber},readdate = #{item.readDate},
+            lastupdatetime = #{item.lastUpdateTime}
+            where factoryid = #{item.factoryId} and enterpriseid=#{item.enterpriseid} and deviceid = #{item.deviceId};
+        </foreach>
+    </update>
+
+    <insert id="inserts">
+        insert into third_meterread_data(deviceid, enterpriseid, factoryid, meteraddr,
+        readnumber,readdate,lastupdatetime)
+        values
+        <foreach collection="remoteDataBos" item="item" separator=",">
+            (#{item.deviceId},#{item.enterpriseid},#{item.factoryId},#{item.meterAddr},#{item.readNumber},
+            #{item.readDate},#{item.lastUpdateTime})
+        </foreach>
+    </insert>
+
+</mapper>

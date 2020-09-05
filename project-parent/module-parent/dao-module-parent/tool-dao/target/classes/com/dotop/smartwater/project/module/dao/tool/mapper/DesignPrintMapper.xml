@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper
+	namespace="com.dotop.smartwater.project.module.dao.tool.IDesignPrintDao">
+	<resultMap id="BaseResultMap"
+		type="com.dotop.smartwater.project.module.core.water.vo.PrintBindVo">
+		<id column="id" jdbcType="VARCHAR" property="id" />
+		<result column="name" jdbcType="VARCHAR" property="name" />
+		<result column="createtime" jdbcType="TIMESTAMP"
+			property="createTime" />
+		<result column="status" jdbcType="INTEGER" property="status" />
+		<result column="describe" jdbcType="VARCHAR"
+			property="describe" />
+		<result column="sqlstr" jdbcType="VARCHAR" property="sqlstr" />
+		<result column="content" jdbcType="VARCHAR" property="content" />
+		<result column="tempid" jdbcType="VARCHAR" property="tempid" />
+	</resultMap>
+
+	<select id="templateList" resultMap="BaseResultMap">
+		select id as tempid , `name`
+		, `describe` , createtime FROM design_print
+	</select>
+
+	<!-- 分页查询 待修改 -->
+	<select id="getDesignPrintList"
+		resultType="com.dotop.smartwater.project.module.core.water.vo.DesignPrintVo">
+		select * from design_print
+		<where>
+			<if test="name != null and name != ''">
+				and name LIKE CONCAT('%',#{name},'%') </if>
+		</where>
+		<if test="limit!=null and offset!=null">
+			order by id desc
+			LIMIT #{limit} OFFSET #{offset}
+		</if>
+	</select>
+
+	<select id="get"
+		resultType="com.dotop.smartwater.project.module.core.water.vo.DesignPrintVo">
+		select * from design_print where id= #{id}
+	</select>
+
+	<delete id="delete">
+		delete from design_print where id= #{id}
+	</delete>
+
+	<select id="getFields"
+		resultType="com.dotop.smartwater.project.module.core.water.vo.customize.DesignFieldVo">
+		select * from design_field where designid= #{id}
+	</select>
+
+	<delete id="deleteDesignFields">
+		delete from design_field where designid= #{id}
+	</delete>
+
+	<delete id="deleteDesignPrint">
+		delete from design_print where id= #{id}
+	</delete>
+
+	<insert id="saveDesignPrint">
+		insert into design_print (`id`
+		,`name`,`describe`,`sqlstr`,`content`,`createtime`,`status`)
+		values
+		(#{id},#{name},#{describe},#{sqlstr},#{content},#{createTime},'0')
+	</insert>
+
+	<insert id="saveField">
+		insert into design_field (id,designid,field) values
+		<foreach collection="list" item="item" index="index"
+			separator=",">
+			( #{item.id}, #{item.designid},#{item.field})
+		</foreach>
+	</insert>
+
+	<update id="updateDesignPrint">
+		update design_print set `name`= #{name},`describe`
+		=#{describe},
+		sqlstr = #{sqlstr}, content =#{content} where id = #{id}
+	</update>
+
+	<select id="getView" resultType="java.util.HashMap">
+		${value}
+	</select>
+
+	<select id="getSqlView" resultType="java.util.HashMap">
+		${value}
+	</select>
+
+	<insert id="addTemplate">
+		INSERT INTO `design_print` (id,`name`, `describe`,
+		`sqlstr`, `content`,
+		`createtime`, `status`, `smstype`)
+		VALUES
+		(#{id},#{name},#{describe},#{sqlstr},#{content},
+		#{createTime},#{status},#{smstype})
+	</insert>
+
+	<update id="updateTemplate">
+		update `design_print` set
+		`name`=#{name},`describe`=#{describe},`sqlstr`=#{sqlstr},
+		`content`=#{content},`smstype`=#{smstype}
+		where id= #{id}
+
+	</update>
+
+	<select id="getPrintStatus" resultType="com.dotop.smartwater.project.module.core.water.vo.DesignPrintVo">
+		SELECT * ,designid AS designprintid, isprint AS printstatus FROM print_bind
+		WHERE enterpriseid = #{enterpriseid} AND type = #{smstype} limit 1
+	</select>
+
+</mapper>

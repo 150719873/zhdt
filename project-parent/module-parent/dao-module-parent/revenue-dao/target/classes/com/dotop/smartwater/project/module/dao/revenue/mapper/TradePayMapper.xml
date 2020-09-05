@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dotop.smartwater.project.module.dao.revenue.ITradePayDao">
+  <resultMap id="BaseResultMap" type="com.dotop.smartwater.project.module.core.water.vo.TradePayVo">
+    <id column="id" jdbcType="VARCHAR" property="id" />
+    <result column="tradeno" jdbcType="VARCHAR" property="tradeno" />
+    <result column="payno" jdbcType="VARCHAR" property="payno" />
+    <result column="createtime" jdbcType="TIMESTAMP" property="createtime" />
+    <result column="beforemoney" jdbcType="DECIMAL" property="beforemoney" />
+    <result column="amount" jdbcType="DECIMAL" property="amount" />
+    <result column="actualamount" jdbcType="DECIMAL" property="actualamount" />
+    <result column="aftermoney" jdbcType="DECIMAL" property="aftermoney" />
+    <result column="paytype" jdbcType="INTEGER" property="paytype" />
+    <result column="paystatus" jdbcType="INTEGER" property="paystatus" />
+    <result column="remark" jdbcType="VARCHAR" property="remark" />
+    <result column="paytime" jdbcType="TIMESTAMP" property="paytime" />
+    <result column="userno" jdbcType="VARCHAR" property="userno" />
+    <result column="username" jdbcType="VARCHAR" property="username" />
+    <result column="operatorid" jdbcType="VARCHAR" property="operatorid" />
+    <result column="operatorname" jdbcType="VARCHAR" property="operatorname" />
+    <result column="operatortime" jdbcType="TIMESTAMP" property="operatortime" />
+    <result column="ownerpay" jdbcType="DECIMAL" property="ownerpay" />
+    <result column="givechange" jdbcType="DECIMAL" property="givechange" />
+  </resultMap>
+
+  <select id="findById" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select *
+    from trade_pay
+    where id = #{id,jdbcType=VARCHAR}
+  </select>
+
+  <select id="getTradePay" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select * from trade_pay where tradeno=#{tradeno} order by paytime DESC limit 1
+  </select>
+
+	<select id="findPayNo" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select * from trade_pay where payno=#{payno}
+  </select>
+
+
+ <select id="getTradePayByTradenos"  resultMap="BaseResultMap">
+    select * from trade_pay where tradeno in
+       <foreach item="item" index="index" collection="tradenos" open="(" separator="," close=")">
+            '${item}'
+        </foreach>
+  </select>
+
+  <delete id="delete" parameterType="java.lang.String">
+    delete from trade_pay
+    where id = #{id,jdbcType=VARCHAR}
+  </delete>
+
+  <insert id="addTradePay">
+    insert into trade_pay (id, tradeno, payno, 
+      createtime, beforemoney, amount, 
+      actualamount, aftermoney, paytype, 
+      paystatus, remark, paytime, 
+      userno, username, operatorid, 
+      operatorname, operatortime, ownerpay, 
+      givechange)
+    values (#{id,jdbcType=VARCHAR}, #{tradeno,jdbcType=VARCHAR}, #{payno,jdbcType=VARCHAR}, 
+      #{createtime,jdbcType=TIMESTAMP}, #{beforemoney,jdbcType=DECIMAL}, #{amount,jdbcType=DECIMAL}, 
+      #{actualamount,jdbcType=DECIMAL}, #{aftermoney,jdbcType=DECIMAL}, #{paytype,jdbcType=INTEGER}, 
+      #{paystatus,jdbcType=INTEGER}, #{remark,jdbcType=VARCHAR}, #{paytime,jdbcType=TIMESTAMP}, 
+      #{userno,jdbcType=VARCHAR}, #{username,jdbcType=VARCHAR}, #{operatorid,jdbcType=VARCHAR}, 
+      #{operatorname,jdbcType=VARCHAR}, #{operatortime,jdbcType=TIMESTAMP}, #{ownerpay,jdbcType=DECIMAL}, 
+      #{givechange,jdbcType=DECIMAL})
+  </insert>
+
+  <update id="update" >
+    update trade_pay
+    <set>
+      <if test="tradeno != null">
+        tradeno = #{tradeno,jdbcType=VARCHAR},
+      </if>
+      <if test="payno != null">
+        payno = #{payno,jdbcType=VARCHAR},
+      </if>
+      <if test="createtime != null">
+        createtime = #{createtime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="beforemoney != null">
+        beforemoney = #{beforemoney,jdbcType=DECIMAL},
+      </if>
+      <if test="amount != null">
+        amount = #{amount,jdbcType=DECIMAL},
+      </if>
+      <if test="actualamount != null">
+        actualamount = #{actualamount,jdbcType=DECIMAL},
+      </if>
+      <if test="aftermoney != null">
+        aftermoney = #{aftermoney,jdbcType=DECIMAL},
+      </if>
+      <if test="paytype != null">
+        paytype = #{paytype,jdbcType=INTEGER},
+      </if>
+      <if test="paystatus != null">
+        paystatus = #{paystatus,jdbcType=INTEGER},
+      </if>
+      <if test="remark != null">
+        remark = #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="paytime != null">
+        paytime = #{paytime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="userno != null">
+        userno = #{userno,jdbcType=VARCHAR},
+      </if>
+      <if test="username != null">
+        username = #{username,jdbcType=VARCHAR},
+      </if>
+      <if test="operatorid != null">
+        operatorid = #{operatorid,jdbcType=VARCHAR},
+      </if>
+      <if test="operatorname != null">
+        operatorname = #{operatorname,jdbcType=VARCHAR},
+      </if>
+      <if test="operatortime != null">
+        operatortime = #{operatortime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="ownerpay != null">
+        ownerpay = #{ownerpay,jdbcType=DECIMAL},
+      </if>
+      <if test="givechange != null">
+        givechange = #{givechange,jdbcType=DECIMAL},
+      </if>
+    </set>
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+
+  <update id="updateTradePayStatus" >
+    update `trade_pay` set `paystatus` = '${paystatus}' ,`remark` = '${remark}' where `payno`='${payno}'
+  </update>
+</mapper>

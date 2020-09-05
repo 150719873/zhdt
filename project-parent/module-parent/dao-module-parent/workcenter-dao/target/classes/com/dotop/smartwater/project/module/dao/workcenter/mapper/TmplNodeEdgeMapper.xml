@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dotop.smartwater.project.module.dao.workcenter.ITmplNodeEdgeDao">
+
+    <resultMap id="WorkCenterTmplNodeEdgeVoMap"
+               type="com.dotop.smartwater.project.module.core.water.vo.WorkCenterTmplNodeEdgeVo">
+        <result column="id" jdbcType="VARCHAR" property="id"/>
+        <result column="index" jdbcType="VARCHAR" property="index"/>
+        <result column="label" jdbcType="VARCHAR" property="label"/>
+        <result column="shape" jdbcType="VARCHAR" property="shape"/>
+        <result column="color" jdbcType="VARCHAR" property="color"/>
+        <result column="type" jdbcType="VARCHAR" property="type"/>
+        <result column="source" jdbcType="VARCHAR" property="source"/>
+        <result column="source_anchor" jdbcType="VARCHAR" property="sourceAnchor"/>
+        <result column="target" jdbcType="VARCHAR" property="target"/>
+        <result column="target_anchor" jdbcType="VARCHAR" property="targetAnchor"/>
+        <result column="tmpl_id" jdbcType="VARCHAR" property="tmplId"/>
+        <result column="enterpriseid" jdbcType="VARCHAR" property="enterpriseid"/>
+
+    </resultMap>
+
+    <insert id="add">
+        INSERT INTO wc_tmpl_node_edge
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="index != null">
+                `index`,
+            </if>
+            <if test="label != null">
+                label,
+            </if>
+            <if test="shape != null">
+                shape,
+            </if>
+            <if test="color != null">
+                color,
+            </if>
+            <if test="type != null">
+                `type`,
+            </if>
+            <if test="source != null">
+                source,
+            </if>
+            <if test="sourceAnchor != null">
+                source_anchor,
+            </if>
+            <if test="target != null">
+                target,
+            </if>
+            <if test="targetAnchor != null">
+                target_anchor,
+            </if>
+            <if test="tmplId != null">
+                tmpl_id,
+            </if>
+            <if test="enterpriseid != null">
+                enterpriseid,
+            </if>
+        </trim>
+        VALUES
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id},
+            </if>
+            <if test="index != null">
+                #{index},
+            </if>
+            <if test="label != null">
+                #{label},
+            </if>
+            <if test="shape != null">
+                #{shape},
+            </if>
+            <if test="color != null">
+                #{color},
+            </if>
+            <if test="type != null">
+                #{type},
+            </if>
+            <if test="source != null">
+                #{source},
+            </if>
+            <if test="sourceAnchor != null">
+                #{sourceAnchor},
+            </if>
+            <if test="target != null">
+                #{target},
+            </if>
+            <if test="targetAnchor != null">
+                #{targetAnchor},
+            </if>
+            <if test="tmplId != null">
+                #{tmplId},
+            </if>
+            <if test="enterpriseid != null">
+                #{enterpriseid},
+            </if>
+        </trim>
+    </insert>
+
+
+    <select id="list" resultMap="WorkCenterTmplNodeEdgeVoMap">
+        select * from wc_tmpl_node_edge
+        <where>
+            <if test="enterpriseid != null and enterpriseid != ''">
+                AND enterpriseid=#{enterpriseid}
+            </if>
+            <if test="isDel != null">
+                AND is_del=#{isDel}
+            </if>
+            <if test="tmplId != null and tmplId != ''">
+                AND tmpl_id=#{tmplId}
+            </if>
+        </where>
+    </select>
+
+    <update id="del">
+        DELETE FROM wc_tmpl_node_edge
+        <!--UPDATE wc_tmpl_node_edge-->
+        <!--<trim prefix="set" suffixOverrides=",">-->
+            <!--<if test="newIsDel != null and newIsDel != ''">-->
+                <!--is_del=#{newIsDel},-->
+            <!--</if>-->
+        <!--</trim>-->
+        <where>
+            enterpriseid=#{enterpriseid} AND is_del=#{isDel}
+            <if test="id != null and id != ''">
+                AND id=#{id}
+            </if>
+            <if test="tmplId != null and tmplId != ''">
+                AND tmpl_id=#{tmplId}
+            </if>
+        </where>
+    </update>
+
+    <insert id="adds" parameterType="java.util.List">
+        INSERT INTO wc_tmpl_node_edge
+        (id,`index`,label,shape,color,`type`,source,source_anchor,target,target_anchor,tmpl_id,enterpriseid,is_del)
+        VALUES
+        <foreach collection="list" item="item" index="index" open="" close="" separator=",">
+            (#{item.id},#{item.index},#{item.label},#{item.shape},#{item.color},#{item.type},#{item.source},#{item.sourceAnchor},#{item.target},#{item.targetAnchor},#{item.tmplId},#{item.enterpriseid},#{item.isDel})
+        </foreach>
+    </insert>
+</mapper>

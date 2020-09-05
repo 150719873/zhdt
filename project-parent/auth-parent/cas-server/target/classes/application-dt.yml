@@ -1,0 +1,50 @@
+druid:
+  datasource:
+    url: jdbc:mysql://rm-wz91y5du7xqr0aot9.mysql.rds.aliyuncs.com:3306/water?useSSL=false&useUnicode=true&characterEncoding=utf-8&useLegacyDatetimeCode=false&useTimezone=true&serverTimezone=GMT%2B8&allowMultiQueries=true
+    username: water
+    password: 02f471eFBb6
+
+redis:
+  cache:
+    database: 1
+    host: r-wz9ewh0547c5u7eugl.redis.rds.aliyuncs.com
+    password: 6DCC6abA6CcE7
+    port: 6379
+
+oss:
+  AccessKeyId:
+  AccessKeySecret:
+  endpoint:
+  bucketName:
+  fileDir:
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://localhost:8761/eureka/
+
+spring.servlet.multipart.location: /opt/smartwater/water-server/upload_temp
+
+param:
+  revenue:
+    excelTempUrl: /opt/smartwater/water-cas/upload_temp
+    uploadUrl: /opt/smartwater/water-upload/upload/
+  config:
+    version: 2.5
+    userinvalidtime: 7
+      serverhost: #下发指令地址
+    weixindebug: false
+  initSetting:
+    offday: 5
+    alarmday: 5
+    appointmentDay: 5
+    appointmentNumber: 5
+    
+aliyundns:
+  accessKeyId:
+  accessSecret:
+  regionid:
+  type:
+  lang:
+  defaultIp:
+  defaultDoMain:

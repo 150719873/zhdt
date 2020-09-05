@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.dotop.smartwater.view.server.dao.pipe.waterwmlog.IWaterWmLogDao">
+
+    <resultMap id="BaseResultMap"
+               type="com.dotop.smartwater.view.server.core.device.vo.WaterWmLogVo">
+        <result column="id" jdbcType="VARCHAR" property="id"/>
+        <result column="turbid" jdbcType="VARCHAR" property="turbid"/>
+        <result column="chroma" jdbcType="VARCHAR" property="chroma"/>
+        <result column="odor" jdbcType="VARCHAR" property="odor"/>
+        <result column="chlorine" jdbcType="VARCHAR" property="chlorine"/>
+        <result column="flora" jdbcType="VARCHAR" property="flora"/>
+        <result column="alarm" jdbcType="VARCHAR" property="alarm"/>
+        <result column="address" jdbcType="VARCHAR" property="address"/>
+        <result column="summary_date" jdbcType="TIMESTAMP" property="summaryDate"/>
+        <result column="create_date" jdbcType="TIMESTAMP" property="createDate"/>
+        <result column="create_by" jdbcType="VARCHAR" property="createBy"/>
+        <result column="last_date" jdbcType="TIMESTAMP" property="lastDate"/>
+        <result column="last_by" jdbcType="VARCHAR" property="lastBy"/>
+    </resultMap>
+
+    <select id="adds" resultMap="BaseResultMap">
+        insert into
+        pls_facility_water_wm_log(id,turbid,chroma,odor,chlorine,flora,alarm,address,summary_date,create_date,create_by
+        ,last_date,last_by,is_del,enterprise_id)
+        values
+        <foreach collection="waterWmLogForms" item="item" separator=",">
+            (#{item.id},#{item.turbid},#{item.chroma},#{item.odor},#{item.chlorine},#{item.flora},#{item.alarm},#{item.address},
+            #{item.summaryDate},#{item.curr},#{item.userBy},#{item.curr},#{item.userBy},#{item.isDel},#{item.enterpriseId})
+        </foreach>
+    </select>
+
+    <select id="list" resultMap="BaseResultMap">
+        SELECT id,turbid,chroma,odor,chlorine,flora,alarm,address,summary_date,create_date,create_by FROM
+        pls_facility_water_wm_log
+        where enterprise_id = #{enterpriseId}
+        <if test="startDate != null ">
+            AND summary_date &gt;= #{startDate}
+        </if>
+        <if test="endDate != null ">
+            AND summary_date &lt;= #{endDate}
+        </if>
+        order by summary_date desc
+    </select>
+
+</mapper>

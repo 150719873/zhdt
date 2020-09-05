@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.dotop.smartwater.project.module.dao.tool.IWechatPublicSettingDao">
+
+	<insert id="add">
+		insert into wechat_public_setting (wechatpublicid,createtime, updatetime, appid, mchid,appsecret,paysecret,unifiedorderurl,orderqueryurl,
+		requestreturnurl,validtoken,enterpriseid,createuser,domain,wechatname,servicephone,gatewayauthorizecode,gatewayopenidbycode,qrcode)
+			values (#{wechatpublicid},#{createtime}, #{ updatetime}, #{appid}, #{mchid}, #{appsecret}, #{paysecret}, #{unifiedorderurl}, #{orderqueryurl}, #{requestreturnurl},
+			#{validtoken},#{enterpriseid},#{createuser},#{domain},#{wechatname},#{servicephone},#{gatewayauthorizecode},#{gatewayopenidbycode},#{qrcode})
+	</insert>
+	
+	<select id="list" resultType="com.dotop.smartwater.project.module.core.water.vo.customize.WechatPublicSettingVo">
+		select  wps.*, b.name as enterprisename from wechat_public_setting wps
+			inner join enterprise b on wps.enterpriseid = b.enterpriseid 
+			<where>
+			  <if test="enterprisename != null and enterprisename != ''">
+		    	AND wps.wechatname LIKE CONCAT('%',#{enterprisename},'%')
+	         	</if>
+			</where>
+	</select>
+	
+	<select id="details" resultType="com.dotop.smartwater.project.module.core.water.vo.customize.WechatPublicSettingVo">
+		select  * from wechat_public_setting where enterpriseid=#{enterpriseid}
+	</select>
+	
+	<delete id="del">
+		DELETE FROM wechat_public_setting WHERE wechatpublicid=#{wechatpublicid}
+	</delete>
+	
+	<update id="edit">
+		UPDATE wechat_public_setting SET appid=#{appid},mchid=#{mchid},updatetime=#{updatetime},appsecret=#{appsecret},
+		paysecret=#{paysecret},domain=#{domain},wechatname=#{wechatname},servicephone=#{servicephone},requestreturnurl=#{requestreturnurl} 
+		WHERE wechatpublicid=#{wechatpublicid}
+	</update>
+	
+	<select id="get" resultType="com.dotop.smartwater.project.module.core.water.vo.customize.WechatPublicSettingVo">
+		SELECT wps.wechatpublicid,DATE_FORMAT(wps.createtime,'%Y-%m-%d %H:%i:%s')
+			as createtime,DATE_FORMAT(wps.updatetime,'%Y-%m-%d %H:%i:%s') as updatetime,
+			wps.appid, wps.mchid,wps.appsecret,wps.paysecret,wps.unifiedorderurl,wps.orderqueryurl,wps.paybycardurl,
+			wps.requestreturnurl,wps.validtoken,wps.enterpriseid,wps.createuser,wps.domain,wps.wechatname,
+			wps.servicephone,wps.gatewayauthorizecode,wps.gatewayopenidbycode,b.name as enterprisename FROM wechat_public_setting wps
+			inner join enterprise b on wps.enterpriseid = b.enterpriseid
+			<where>
+			  <if test="wechatpublicid != null and wechatpublicid != ''">
+			   and  wps.wechatpublicid=#{wechatpublicid}
+			  </if>
+			    <if test="enterpriseid != null and enterpriseid != ''">
+			    and wps.enterpriseid= #{enterpriseid}
+			  </if>
+			</where>
+	</select>
+	
+	<select id="isExist" resultType="java.lang.Boolean">
+		SELECT EXISTS
+		(
+		SELECT wechatpublicid FROM wechat_public_setting
+		<where>
+			<if test="enterpriseid != null and enterpriseid != ''">
+				and enterpriseid= #{enterpriseid}
+			</if>
+		</where>
+		)
+	</select>
+	
+</mapper>

@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.dotop.smartwater.project.third.concentrator.dao.IDownLinkTaskLogDao">
+
+    <sql id="selectColumns">
+        u.id,
+        u.`type`,
+        u.task_type,
+        u.`result`,
+        u.delivery_date,
+        u.complete_date,
+        u.result_data,
+        u.success_num,
+        u.fail_num,
+        u.`desc`,
+        u.enterprise_id,
+        u.create_by
+	</sql>
+
+    <resultMap id="BaseResultMap"
+               type="com.dotop.smartwater.project.third.concentrator.core.vo.DownLinkTaskLogVo">
+        <result column="id" property="id"/>
+        <result column="type" property="type"/>
+        <result column="task_type" property="taskType"/>
+        <result column="result" property="result"/>
+        <result column="delivery_date" property="deliveryDate"/>
+        <result column="complete_date" property="completeDate"/>
+        <result column="callable_param" property="callableParam"/>
+        <result column="result_data" property="resultData"/>
+        <result column="success_num" property="successNum"/>
+        <result column="fail_num" property="failNum"/>
+        <result column="desc" property="desc"/>
+        <result column="enterprise_id" property="enterpriseid"/>
+        <result column="create_by" property="createBy"/>
+        <association property="concentrator"
+                     javaType="com.dotop.smartwater.project.third.concentrator.core.bo.ConcentratorBo"
+                     columnPrefix="con_">
+            <result column="id" property="id"/>
+            <result column="code" property="code"/>
+            <result column="install_address" property="installAddress"/>
+            <result column="areaIds" property="areaIds"/>
+        </association>
+        <association property="concentratorDevice"
+                     javaType="com.dotop.smartwater.project.third.concentrator.core.bo.ConcentratorDeviceBo"
+                     columnPrefix="cd_">
+            <result column="id" property="id"/>
+            <result column="area_name" property="areaName"/>
+            <result column="devno" property="devno"/>
+        </association>
+    </resultMap>
+
+    <select id="list" resultMap="BaseResultMap">
+        select<include refid="selectColumns"/>,con.id as con_id, con.code as con_code, con.install_address as
+        con_install_address,cd.id as cd_id, a.name as cd_area_name, d.devno as cd_devno, con.area_ids as con_areaIds
+        from cd_downlink_task_log u
+        left join cd_concentrator con on u.concentrator_id = con.id
+        left join cd_concentrator_device cd on cd.id = u.concentrator_device_id
+        left join device d on cd.devid = d.devid
+        left join owner ow on ow.devid = cd.devid
+        left join area a on a.id = ow.communityid
+        <where>
+            u.enterprise_id = #{enterpriseid}
+            <if test="concentrator != null and concentrator.code != null and concentrator.code != ''">
+                and con.code like CONCAT('%',#{concentrator.code},'%')
+            </if>
+            <if test="concentratorDevice != null and concentratorDevice.devno != null and concentratorDevice.devno != ''">
+                and d.devno like CONCAT('%',#{concentratorDevice.devno},'%')
+            </if>
+            <if test="taskType != null and taskType != ''">
+                and u.task_type = #{taskType}
+            </if>
+            <if test="result != null and result != ''">
+                and u.`result` = #{result}
+            </if>
+            <if test="taskTypes != null">
+                and u.task_type in
+                <foreach collection="taskTypes" item="item" open="(" separator="," close=")">
+                    #{item}
+                </foreach>
+            </if>
+            <if test="startDate != null">
+                and u.delivery_date <![CDATA[>=]]> #{startDate}
+            </if>
+            <if test="endDate != null">
+                and u.delivery_date <![CDATA[<=]]> #{endDate}
+            </if>
+        </where>
+        order by u.delivery_date desc
+    </select>
+
+    <insert id="add">
+        insert into cd_downlink_task_log(id, concentrator_id, concentrator_device_id, `type`, task_type, result, delivery_date, complete_date,
+         callable_param,result_data, success_num, fail_num, `desc`, enterprise_id, create_by, create_date)
+        values
+            (#{id}, #{concentrator.id}, #{concentratorDevice.id}, #{type}, #{taskType}, #{result},
+            #{deliveryDate},#{completeDate},#{callableParam}, #{resultData}, #{successNum}, #{failNum}, #{desc}, #{enterpriseid}, #{userBy}, #{curr})
+    </insert>
+
+
+    <update id="edit">
+        update cd_downlink_task_log
+        <set>
+            <if test="concentrator != null and concentrator.id != null and concentrator.id != '' ">
+                concentrator_id=#{concentrator.id},
+            </if>
+            <if test="concentratorDevice != null and concentratorDevice.id != null and concentratorDevice.id != '' ">
+                concentrator_device_id=#{concentratorDevice.id},
+            </if>
+            <if test="type != null and type != ''">
+                `type`=#{type},
+            </if>
+            <if test="taskType != null and taskType != ''">
+                task_type=#{taskType},
+            </if>
+            <if test="result != null and result != ''">
+                result=#{result},
+            </if>
+
+            <if test="deliveryDate != null">
+                delivery_date=#{deliveryDate},
+            </if>
+            <if test="completeDate != null">
+                complete_date=#{completeDate},
+            </if>
+            <if test="resultData != null and resultData != ''">
+                result_data=#{resultData},
+            </if>
+            <if test="successNum != null and successNum != ''">
+                success_num=#{successNum},
+            </if>
+            <if test="failNum != null and failNum != '' ">
+                fail_num=#{failNum},
+            </if>
+            <if test="desc != null and desc != '' ">
+                `desc`=#{desc}
+            </if>
+        </set>
+        where id=#{id}
+    </update>
+
+    <update id="recordSize">
+        update cd_downlink_task_log set success_num = #{successNum}, fail_num = #{failNum}
+        where id = #{id}
+    </update>
+
+
+</mapper>

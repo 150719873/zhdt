@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.dotop.smartwater.project.module.dao.revenue.ICouponDao">
+
+	<resultMap id="CouponVoMap"
+		type="com.dotop.smartwater.project.module.core.water.vo.CouponVo">
+		<result column="couponid" jdbcType="VARCHAR" property="couponid" />
+		<result column="no" jdbcType="VARCHAR" property="no" />
+		<result column="enterpriseid" jdbcType="VARCHAR" property="enterpriseid" />
+		<result column="communityid" jdbcType="VARCHAR" property="communityid" />
+		<result column="communityname" jdbcType="VARCHAR" property="communityname" />
+		<result column="type" jdbcType="VARCHAR" property="type" />
+		<result column="discountid" jdbcType="VARCHAR" property="discountname" />
+		<result column="starttime" jdbcType="VARCHAR" property="starttime" />
+		<result column="endtime" jdbcType="VARCHAR" property="endtime" />
+		<result column="facevalue" jdbcType="VARCHAR" property="facevalue" />
+		<result column="unit" jdbcType="VARCHAR" property="unit" />
+		<result column="bill" jdbcType="VARCHAR" property="bill" />
+		<result column="status" jdbcType="VARCHAR" property="status" />
+		<result column="userid" jdbcType="VARCHAR" property="userid" />
+		<result column="userno" jdbcType="VARCHAR" property="userno" />
+		<result column="username" jdbcType="VARCHAR" property="username" />
+		<result column="remarks" jdbcType="VARCHAR" property="remarks" />
+		<result column="delflag" jdbcType="VARCHAR" property="delflag" />
+		<result column="createuser" jdbcType="VARCHAR" property="createuser" />
+		<result column="createusername" jdbcType="VARCHAR" property="createBy" />
+		<result column="createtime" jdbcType="VARCHAR" property="createtime" />
+		<result column="updateuser" jdbcType="VARCHAR" property="updateuser" />
+		<result column="updateusername" jdbcType="VARCHAR" property="lastBy" />
+		<result column="updatetime" jdbcType="VARCHAR" property="updatetime" />
+	</resultMap>
+
+	<insert id="addCoupon">
+		INSERT INTO coupon (
+			couponid,
+			no,name,enterpriseid,communityid,communityname,type,discountid,discountname,
+			starttime,endtime,facevalue,unit,bill,status,userid,userno,username, 
+			remarks,delflag,createuser,createusername,createtime,updateuser,updateusername,updatetime)
+		VALUES (
+			#{couponid},
+			#{no},#{name},#{enterpriseid},#{communityid},#{communityname},#{type},#{discountid},#{discountname},
+			#{starttime},#{endtime},#{facevalue},#{unit},#{bill},#{status},#{userid},#{userno},#{username},
+			#{remarks},#{delflag},#{createuser},#{createusername},#{createtime},#{updateuser},#{updateusername},#{updatetime})
+	</insert>
+	
+	<update id="delete">
+		UPDATE coupon SET updateuser=#{updateuser},updateusername=#{updateusername},updatetime=#{updatetime},delflag=#{delflag} 
+		WHERE couponid = #{couponid} AND enterpriseid=#{enterpriseid}
+	</update>
+	
+	<update id="disable">
+		UPDATE coupon SET updateuser=#{updateuser},updateusername=#{updateusername},updatetime=#{updatetime},status=#{status} 
+		WHERE couponid = #{couponid} AND enterpriseid=#{enterpriseid}
+	</update>
+
+	<select id="list" resultMap="CouponVoMap">
+		SELECT 
+			a.couponid,
+			a.no,a.name,a.enterpriseid,a.communityid,a.communityname,a.type,a.discountid,a.discountname,
+			a.starttime,a.endtime,a.facevalue,a.unit,a.bill,a.status,a.userid,a.userno,a.username, 
+			a.remarks,a.delflag,a.createuser,a.createusername,a.createtime,a.updateuser,a.updateusername,a.updatetime
+		FROM coupon AS a 
+		WHERE 
+		a.delflag=0
+		<if test="communityids != null and communityids != ''">
+			and a.communityid in 
+			<!-- ( #{communityids} ) -->
+			<foreach item="item" index="index" collection="communityids.split(',')" open="(" separator="," close=")">'${item}'</foreach>  
+		</if>
+		<if test="userno != null and userno != ''">
+			AND a.userno like concat('%',#{userno},'%')
+		</if>
+		<if test="no != null and no != ''">
+			AND a.no like concat('%',#{no},'%')
+		</if>
+		<if test="name != null and name != ''">
+			AND a.name like concat('%',#{name},'%')
+		</if>
+		<if test="status != null">
+			AND a.status = #{status}
+		</if>
+		<if test="userid != null and userid != ''">
+			AND a.userid = #{userid}
+		</if>
+		<if test="statuss != null">
+			AND a.status IN
+			<foreach collection="statuss" index="index" item="item" open="(" separator="," close=")">
+				#{item}
+			</foreach>
+		</if>
+		<if test="enterpriseid != null and enterpriseid != ''">
+			AND a.enterpriseid =#{enterpriseid}
+		</if>
+		order by a.endtime DESC 
+	</select>
+
+	<select id="getCoupon" resultMap="CouponVoMap">
+		SELECT 
+			a.couponid,
+			a.no,a.name,a.enterpriseid,a.communityid,a.communityname,a.type,a.discountid,a.discountname,
+			a.starttime,a.endtime,a.facevalue,a.unit,a.bill,a.status,a.userid,a.userno,a.username, 
+			a.remarks,a.delflag,a.createuser,a.createusername,a.createtime,a.updateuser,a.updateusername,a.updatetime
+		FROM coupon AS a WHERE a.delflag=0
+		
+		<if test="couponid != null and couponid != ''">
+			AND a.couponid = #{couponid}
+		</if>
+		<if test="no != null and no != ''">
+			AND a.no like concat('%',#{no},'%')
+		</if>
+		<if test="enterpriseid != null and enterpriseid != ''">
+			AND a.enterpriseid =#{enterpriseid}
+		</if>
+	</select>
+	
+	<update id="edit">
+		UPDATE coupon SET 
+			status=#{status},updateuser=#{updateuser},updateusername=#{updateusername},updatetime=#{updatetime} 
+		WHERE 
+			couponid = #{couponid}
+	</update>
+	
+</mapper>

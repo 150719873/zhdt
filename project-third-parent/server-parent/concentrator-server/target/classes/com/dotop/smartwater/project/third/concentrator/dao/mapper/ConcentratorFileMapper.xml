@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.dotop.smartwater.project.third.concentrator.dao.IConcentratorFileDao">
+
+    <resultMap id="BaseResultMap"
+               type="com.dotop.smartwater.project.third.concentrator.core.vo.ConcentratorFileVo">
+
+        <result column="id" jdbcType="VARCHAR" property="id"/>
+        <result column="concentrator_code" jdbcType="VARCHAR" property="concentratorCode"/>
+        <result column="no" jdbcType="VARCHAR" property="no"/>
+        <result column="collector_code" jdbcType="VARCHAR" property="collectorCode"/>
+        <result column="device_code" jdbcType="VARCHAR" property="devno"/>
+        <result column="enterprise_id" jdbcType="VARCHAR" property="enterpriseid"/>
+    </resultMap>
+
+
+    <select id="findByConcentratorCode" resultMap="BaseResultMap">
+
+        SELECT id, concentrator_code, no, collector_code, device_code, enterprise_id
+        FROM cd_concentrator_file WHERE concentrator_code = #{concentratorCode} AND enterprise_id = #{enterpriseid}
+
+    </select>
+
+
+    <delete id="delBatch">
+        delete from cd_concentrator_file where id in
+        <foreach collection="oldConcentratorFileList" open="(" item="ele" separator="," close=")">
+            #{ele.id}
+        </foreach>
+        and enterprise_id = #{enterpriseid}
+    </delete>
+
+    <insert id="insertBatch">
+        insert into cd_concentrator_file (id, concentrator_code, no, collector_code, device_code,
+        enterprise_id,create_date) values
+        <foreach collection="list" item="item" index="index" separator=",">
+            (#{item.id},
+            #{item.concentratorCode},
+            #{item.no},
+            #{item.collectorCode},
+            #{item.devno},
+            #{item.enterpriseid},#{item.curr})
+        </foreach>
+    </insert>
+
+</mapper>

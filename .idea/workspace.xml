@@ -1,0 +1,628 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="6608308d-6773-4537-834d-c3ed9a94bfd1" name="Default Changelist" comment="" />
+    <ignored path="$PROJECT_DIR$/dependence-parent/dependence-cache/target/" />
+    <ignored path="$PROJECT_DIR$/dependence-parent/dependence-lock/target/" />
+    <ignored path="$PROJECT_DIR$/dependence-parent/dependence-core/target/" />
+    <ignored path="$PROJECT_DIR$/dependence-parent/target/" />
+    <ignored path="$PROJECT_DIR$/dependence-parent/dependence-eureka/target/" />
+    <ignored path="$PROJECT_DIR$/project-parent/module-parent/dao-module-parent/wechat-dao/target/" />
+    <ignored path="$PROJECT_DIR$/project-parent/module-parent/service-module-parent/pay-service/target/" />
+    <ignored path="$PROJECT_DIR$/project-pipe-parent/auth-parent/auth-service/target/" />
+    <ignored path="$PROJECT_DIR$/project-parent/module-parent/service-module-parent/wechat-service/target/" />
+    <ignored path="$PROJECT_DIR$/project-parent/module-parent/dao-module-parent/concentrator-dao/target/" />
+    <ignored path="$PROJECT_DIR$/project-parent/module-parent/api-module-parent/wechat-api/target/" />
+    <ignored path="$PROJECT_DIR$/project-parent/server-parent/water-schedule/target/" />
+    <ignored path="$PROJECT_DIR$/project-parent/auth-parent/cas-server/target/" />
+    <ignored path="$PROJECT_DIR$/project-parent/module-parent/api-module-parent/concentrator-api/target/" />
+    <ignored path="$PROJECT_DIR$/project-parent/module-parent/target/" />
+    <ignored path="$PROJECT_DIR$/project-parent/module-parent/api-module-parent/store-api/target/" />
+    <ignored path="$PROJECT_DIR$/project-parent/module-parent/dao-module-parent/store-dao/target/" />
+    <ignored path="$PROJECT_DIR$/project-parent/module-parent/cache-module-parent/water-cache/target/" />
+    <ignored path="$PROJECT_DIR$/project-parent/module-parent/dao-module-parent/workcenter-dao/target/" />
+    <ignored path="$PROJECT_DIR$/project-parent/module-parent/dao-module-parent/target/" />
+    <ignored path="$PROJECT_DIR$/project-parent/module-parent/service-module-parent/store-service/target/" />
+    <ignored path="$PROJECT_DIR$/project-pipe-parent/auth-parent/auth-web/target/" />
+    <ignored path="$PROJECT_DIR$/project-pipe-parent/module-parent/dao-module-parent/pipe-dao/target/" />
+    <ignored path="$PROJECT_DIR$/project-pipe-parent/auth-parent/auth-cache/target/" />
+    <ignored path="$PROJECT_DIR$/project-pipe-parent/server-parent/target/" />
+    <ignored path="$PROJECT_DIR$/project-parent/server-parent/target/" />
+    <ignored path="$PROJECT_DIR$/project-parent/module-parent/service-module-parent/target/" />
+    <ignored path="$PROJECT_DIR$/project-parent/module-parent/api-module-parent/mode-api/target/" />
+    <ignored path="$PROJECT_DIR$/project-pipe-parent/auth-parent/auth-dao/target/" />
+    <ignored path="$PROJECT_DIR$/project-pipe-parent/server-parent/web-server/target/" />
+    <ignored path="$PROJECT_DIR$/project-parent/module-parent/service-module-parent/demo-service/target/" />
+    <ignored path="$PROJECT_DIR$/project-parent/module-parent/service-module-parent/operation-service/target/" />
+    <ignored path="$PROJECT_DIR$/project-parent/module-parent/service-module-parent/tool-service/target/" />
+    <ignored path="$PROJECT_DIR$/project-parent/module-parent/service-module-parent/device-service/target/" />
+    <ignored path="$PROJECT_DIR$/project-parent/module-parent/api-module-parent/workcenter-api/target/" />
+    <ignored path="$PROJECT_DIR$/project-pipe-parent/module-parent/dao-module-parent/target/" />
+    <ignored path="$PROJECT_DIR$/project-parent/module-parent/service-module-parent/concentrator-service/target/" />
+    <ignored path="$PROJECT_DIR$/project-parent/module-parent/service-module-parent/workcenter-service/target/" />
+    <ignored path="$PROJECT_DIR$/project-pipe-parent/module-parent/cache-module-parent/target/" />
+    <ignored path="$PROJECT_DIR$/project-pipe-parent/auth-parent/auth-cas/target/" />
+    <ignored path="$PROJECT_DIR$/project-parent/module-parent/client-module-parent/auth-client/target/" />
+    <ignored path="$PROJECT_DIR$/project-parent/module-parent/cache-module-parent/app-cache/target/" />
+    <ignored path="$PROJECT_DIR$/project-pipe-parent/module-parent/service-module-parent/target/" />
+    <ignored path="$PROJECT_DIR$/project-parent/server-parent/water-server/target/" />
+    <ignored path="$PROJECT_DIR$/project-parent/server-parent/water-pay/target/" />
+    <ignored path="$PROJECT_DIR$/project-parent/module-parent/core-module-parent/pay-core/target/" />
+    <ignored path="$PROJECT_DIR$/project-parent/module-parent/core-module-parent/water-core/target/" />
+    <ignored path="$PROJECT_DIR$/project-parent/module-parent/core-module-parent/auth-core/target/" />
+    <ignored path="$PROJECT_DIR$/project-parent/module-parent/api-module-parent/tool-api/target/" />
+    <ignored path="$PROJECT_DIR$/project-pipe-parent/module-parent/core-module-parent/third-core/target/" />
+    <ignored path="$PROJECT_DIR$/project-pipe-parent/module-parent/cache-module-parent/pipe-cache/target/" />
+    <ignored path="$PROJECT_DIR$/project-parent/module-parent/api-module-parent/revenue-api/target/" />
+    <ignored path="$PROJECT_DIR$/project-parent/module-parent/service-module-parent/water-service/target/" />
+    <ignored path="$PROJECT_DIR$/project-pipe-parent/module-parent/service-module-parent/data-receiver-service/target/" />
+    <ignored path="$PROJECT_DIR$/project-pipe-parent/module-parent/cache-module-parent/data-receiver-cache/target/" />
+    <ignored path="$PROJECT_DIR$/project-pipe-parent/module-parent/core-module-parent/data-receiver-core/target/" />
+    <ignored path="$PROJECT_DIR$/project-parent/module-parent/dao-module-parent/operation-dao/target/" />
+    <ignored path="$PROJECT_DIR$/project-parent/module-parent/api-module-parent/demo-api/target/" />
+    <ignored path="$PROJECT_DIR$/project-pipe-parent/module-parent/client-module-parent/water-client/target/" />
+    <ignored path="$PROJECT_DIR$/project-parent/module-parent/api-module-parent/water-api/target/" />
+    <ignored path="$PROJECT_DIR$/project-parent/module-parent/dao-module-parent/revenue-dao/target/" />
+    <ignored path="$PROJECT_DIR$/project-parent/module-parent/dao-module-parent/water-dao/target/" />
+    <ignored path="$PROJECT_DIR$/project-parent/module-parent/service-module-parent/revenue-service/target/" />
+    <ignored path="$PROJECT_DIR$/project-parent/module-parent/core-module-parent/demo-core/target/" />
+    <ignored path="$PROJECT_DIR$/project-parent/module-parent/core-module-parent/target/" />
+    <ignored path="$PROJECT_DIR$/project-pipe-parent/auth-parent/target/" />
+    <ignored path="$PROJECT_DIR$/project-pipe-parent/module-parent/core-module-parent/pipe-core/target/" />
+    <ignored path="$PROJECT_DIR$/project-pipe-parent/module-parent/core-module-parent/target/" />
+    <ignored path="$PROJECT_DIR$/project-parent/target/" />
+    <ignored path="$PROJECT_DIR$/project-parent/module-parent/api-module-parent/app-api/target/" />
+    <ignored path="$PROJECT_DIR$/project-parent/server-parent/deyang-web/target/" />
+    <ignored path="$PROJECT_DIR$/project-parent/module-parent/core-module-parent/app-core/target/" />
+    <ignored path="$PROJECT_DIR$/project-parent/module-parent/api-module-parent/receiver-api/target/" />
+    <ignored path="$PROJECT_DIR$/project-pipe-parent/module-parent/target/" />
+    <ignored path="$PROJECT_DIR$/project-pipe-parent/module-parent/api-module-parent/pipe-web/target/" />
+    <ignored path="$PROJECT_DIR$/project-parent/auth-parent/auth-tool/target/" />
+    <ignored path="$PROJECT_DIR$/project-pipe-parent/target/" />
+    <ignored path="$PROJECT_DIR$/project-pipe-parent/server-parent/view-server/target/" />
+    <ignored path="$PROJECT_DIR$/project-pipe-parent/module-parent/api-module-parent/data-report-factory/target/" />
+    <ignored path="$PROJECT_DIR$/project-parent/server-parent/water-wechat/target/" />
+    <ignored path="$PROJECT_DIR$/project-parent/module-parent/cache-module-parent/target/" />
+    <ignored path="$PROJECT_DIR$/project-parent/module-parent/core-module-parent/third-core/target/" />
+    <ignored path="$PROJECT_DIR$/project-parent/module-parent/client-module-parent/third-client-fegin/target/" />
+    <ignored path="$PROJECT_DIR$/project-parent/module-parent/api-module-parent/pay-api/target/" />
+    <ignored path="$PROJECT_DIR$/project-pipe-parent/module-parent/core-module-parent/data-report-core/target/" />
+    <ignored path="$PROJECT_DIR$/project-pipe-parent/module-parent/service-module-parent/data-report-service/target/" />
+    <ignored path="$PROJECT_DIR$/project-parent/module-parent/api-module-parent/operation-api/target/" />
+    <ignored path="$PROJECT_DIR$/project-parent/module-parent/dao-module-parent/tool-dao/target/" />
+    <ignored path="$PROJECT_DIR$/project-parent/module-parent/api-module-parent/device-api/target/" />
+    <ignored path="$PROJECT_DIR$/project-pipe-parent/module-parent/api-module-parent/target/" />
+    <ignored path="$PROJECT_DIR$/project-pipe-parent/module-parent/service-module-parent/pipe-service/target/" />
+    <ignored path="$PROJECT_DIR$/project-pipe-parent/module-parent/api-module-parent/data-receiver-factory/target/" />
+    <ignored path="$PROJECT_DIR$/project-pipe-parent/module-parent/client-module-parent/target/" />
+    <ignored path="$PROJECT_DIR$/project-pipe-parent/module-parent/dao-module-parent/data-receiver-dao/target/" />
+    <ignored path="$PROJECT_DIR$/project-parent/module-parent/dao-module-parent/pay-dao/target/" />
+    <ignored path="$PROJECT_DIR$/project-pipe-parent/auth-parent/auth-core/target/" />
+    <ignored path="$PROJECT_DIR$/project-parent/module-parent/dao-module-parent/device-dao/target/" />
+    <ignored path="$PROJECT_DIR$/project-pipe-parent/module-parent/dao-module-parent/data-report-dao/target/" />
+    <ignored path="$PROJECT_DIR$/project-parent/module-parent/client-module-parent/target/" />
+    <ignored path="$PROJECT_DIR$/project-parent/module-parent/dao-module-parent/demo-dao/target/" />
+    <ignored path="$PROJECT_DIR$/project-parent/module-parent/api-module-parent/target/" />
+    <ignored path="$PROJECT_DIR$/project-parent/auth-parent/target/" />
+    <ignored path="$PROJECT_DIR$/project-pipe-parent/module-parent/cache-module-parent/data-report-cache/target/" />
+    <ignored path="$PROJECT_DIR$/project-third-parent/module-parent/dao-module-parent/target/" />
+    <ignored path="$PROJECT_DIR$/project-third-parent/server-parent/meterread-webservice/target/" />
+    <ignored path="$PROJECT_DIR$/project-third-parent/server-parent/meterread-client/target/" />
+    <ignored path="$PROJECT_DIR$/project-third-parent/module-parent/service-module-parent/meter-service/target/" />
+    <ignored path="$PROJECT_DIR$/project-third-parent/module-parent/client-module-parent/meter-client/target/" />
+    <ignored path="$PROJECT_DIR$/project-third-parent/module-parent/target/" />
+    <ignored path="$PROJECT_DIR$/project-third-parent/module-parent/dao-module-parent/meter-dao/target/" />
+    <ignored path="$PROJECT_DIR$/project-third-parent/server-parent/meter-server/target/" />
+    <ignored path="$PROJECT_DIR$/project-third-parent/server-parent/meterread-client2/target/" />
+    <ignored path="$PROJECT_DIR$/project-third-parent/server-parent/meterread-server/target/" />
+    <ignored path="$PROJECT_DIR$/project-third-parent/module-parent/api-module-parent/meter-api/target/" />
+    <ignored path="$PROJECT_DIR$/project-third-parent/module-parent/core-module-parent/meter-core/target/" />
+    <ignored path="$PROJECT_DIR$/project-third-parent/module-parent/client-module-parent/target/" />
+    <ignored path="$PROJECT_DIR$/project-third-parent/server-parent/meterread-client3/target/" />
+    <ignored path="$PROJECT_DIR$/project-third-parent/server-parent/concentrator-server/target/" />
+    <ignored path="$PROJECT_DIR$/project-third-parent/module-parent/core-module-parent/target/" />
+    <ignored path="$PROJECT_DIR$/project-third-parent/target/" />
+    <ignored path="$PROJECT_DIR$/project-third-parent/module-parent/cache-module-parent/meter-cache/target/" />
+    <ignored path="$PROJECT_DIR$/project-third-parent/module-parent/cache-module-parent/target/" />
+    <ignored path="$PROJECT_DIR$/project-third-parent/module-parent/api-module-parent/target/" />
+    <ignored path="$PROJECT_DIR$/project-third-parent/module-parent/service-module-parent/target/" />
+    <ignored path="$PROJECT_DIR$/project-third-parent/server-parent/target/" />
+    <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="CodeInsightWorkspaceSettings">
+    <option name="optimizeImportsOnTheFly" value="true" />
+  </component>
+  <component name="CompilerWorkspaceConfiguration">
+    <option name="MAKE_PROJECT_ON_SAVE" value="true" />
+    <option name="PARALLEL_COMPILATION" value="true" />
+  </component>
+  <component name="FUSProjectUsageTrigger">
+    <session id="1871815535">
+      <usages-collector id="statistics.lifecycle.project">
+        <counts>
+          <entry key="project.closed" value="3" />
+          <entry key="project.open.time.0" value="1" />
+          <entry key="project.open.time.4" value="1" />
+          <entry key="project.open.time.7" value="1" />
+          <entry key="project.opened" value="3" />
+        </counts>
+      </usages-collector>
+      <usages-collector id="statistics.file.extensions.open">
+        <counts>
+          <entry key="java" value="9" />
+          <entry key="xml" value="2" />
+          <entry key="yml" value="5" />
+        </counts>
+      </usages-collector>
+      <usages-collector id="statistics.file.types.open">
+        <counts>
+          <entry key="JAVA" value="9" />
+          <entry key="XML" value="2" />
+          <entry key="YAML" value="5" />
+        </counts>
+      </usages-collector>
+      <usages-collector id="statistics.file.extensions.edit">
+        <counts>
+          <entry key="java" value="1" />
+        </counts>
+      </usages-collector>
+      <usages-collector id="statistics.file.types.edit">
+        <counts>
+          <entry key="JAVA" value="1" />
+        </counts>
+      </usages-collector>
+    </session>
+  </component>
+  <component name="FileEditorManager">
+    <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/project-pipe-parent/server-parent/web-server/src/test/java/ToolMain.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="114">
+              <caret line="14" column="29" selection-start-line="14" selection-start-column="29" selection-end-line="14" selection-end-column="29" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/project-parent/server-parent/water-wechat/src/main/java/com/dotop/smartwater/project/server/wechat/rest/service/BalanceChangeController.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="589">
+              <caret line="49" column="49" lean-forward="true" selection-start-line="49" selection-start-column="49" selection-end-line="49" selection-end-column="49" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+    </leaf>
+  </component>
+  <component name="FindInProjectRecents">
+    <findStrings>
+      <find>Application {</find>
+      <find>BaseInf</find>
+      <find>ToolMain</find>
+      <find>@CrossO</find>
+      <find>@CrossOrigin(origins = &quot;*&quot;,maxAge = 3600)</find>
+    </findStrings>
+    <replaceStrings>
+      <replace />
+    </replaceStrings>
+  </component>
+  <component name="IdeDocumentHistory">
+    <option name="CHANGED_PATHS">
+      <list>
+        <option value="$PROJECT_DIR$/project-parent/server-parent/water-wechat/src/main/java/com/dotop/smartwater/project/server/wechat/rest/service/BalanceChangeController.java" />
+      </list>
+    </option>
+  </component>
+  <component name="JsBuildToolGruntFileManager" detection-done="true" sorting="DEFINITION_ORDER" />
+  <component name="JsBuildToolPackageJson" detection-done="true" sorting="DEFINITION_ORDER" />
+  <component name="JsGulpfileManager">
+    <detection-done>true</detection-done>
+    <sorting>DEFINITION_ORDER</sorting>
+  </component>
+  <component name="MavenProjectNavigator">
+    <treeState>
+      <expand />
+      <select />
+    </treeState>
+  </component>
+  <component name="ProjectFrameBounds" extendedState="6">
+    <option name="x" value="-9" />
+    <option name="y" value="-9" />
+    <option name="width" value="1937" />
+    <option name="height" value="1057" />
+  </component>
+  <component name="ProjectInspectionProfilesVisibleTreeState">
+    <entry key="Project Default">
+      <profile-state>
+        <expanded-state>
+          <State />
+        </expanded-state>
+        <selected-state>
+          <State>
+            <id>Android</id>
+          </State>
+        </selected-state>
+      </profile-state>
+    </entry>
+  </component>
+  <component name="ProjectView">
+    <navigator proportions="" version="1">
+      <foldersAlwaysOnTop value="true" />
+    </navigator>
+    <panes>
+      <pane id="PackagesPane" />
+      <pane id="Scope" />
+      <pane id="ProjectPane">
+        <subPane>
+          <expand>
+            <path>
+              <item name="zhdt" type="b2602c69:ProjectViewProjectNode" />
+              <item name="zhdt" type="462c0819:PsiDirectoryNode" />
+            </path>
+          </expand>
+          <select />
+        </subPane>
+      </pane>
+    </panes>
+  </component>
+  <component name="PropertiesComponent">
+    <property name="RequestMappingsPanelOrder0" value="0" />
+    <property name="RequestMappingsPanelOrder1" value="1" />
+    <property name="RequestMappingsPanelWidth0" value="75" />
+    <property name="RequestMappingsPanelWidth1" value="75" />
+    <property name="SearchEverywhereHistoryKey" value="CrossOriginConfig&#9;PSI&#9;JAVA://com.dotop.smartwater.project.server.wechat.config.CrossOriginConfig&#10;application-dev.ym&#9;FILE&#9;file://C:/Users/imisf/Desktop/zhdt/project-parent/auth-parent/cas-server/src/main/resources/application-dev.yml&#10;application-dev.yml&#9;FILE&#9;file://C:/Users/imisf/Desktop/zhdt/dependence-parent/dependence-eureka/src/main/resources/application-dev.yml" />
+    <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="aspect.path.notification.shown" value="true" />
+    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1599225379789" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/project-third-parent/pom.xml" />
+    <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
+    <property name="nodejs_npm_path_reset_for_default_project" value="true" />
+    <property name="project.structure.last.edited" value="SDKs" />
+    <property name="project.structure.proportion" value="0.0" />
+    <property name="project.structure.side.proportion" value="0.2" />
+    <property name="settings.editor.selected.configurable" value="preferences.keymap" />
+  </component>
+  <component name="RunDashboard">
+    <option name="configurationTypes">
+      <set>
+        <option value="SpringBootApplicationConfigurationType" />
+      </set>
+    </option>
+    <option name="ruleStates">
+      <list>
+        <RuleState>
+          <option name="name" value="ConfigurationTypeDashboardGroupingRule" />
+        </RuleState>
+        <RuleState>
+          <option name="name" value="StatusDashboardGroupingRule" />
+        </RuleState>
+      </list>
+    </option>
+  </component>
+  <component name="RunManager" selected="Application.ToolMain">
+    <configuration name="ToolMain" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="ToolMain" />
+      <module name="web-server" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="CasServerApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" temporary="true" nameIsGenerated="true">
+      <module name="cas-server" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="com.dotop.smartwater.project.auth.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="SPRING_BOOT_MAIN_CLASS" value="com.dotop.smartwater.project.auth.CasServerApplication" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="DependenceEurekaApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" temporary="true" nameIsGenerated="true">
+      <module name="dependence-eureka" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="com.dotop.smartwater.dependence.eureka.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="SPRING_BOOT_MAIN_CLASS" value="com.dotop.smartwater.dependence.eureka.DependenceEurekaApplication" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="PipeServerApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot">
+      <module name="web-server" />
+      <option name="SPRING_BOOT_MAIN_CLASS" value="com.dotop.pipe.server.web.PipeServerApplication" />
+      <option name="ALTERNATIVE_JRE_PATH" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="ViewServerApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot">
+      <module name="view-server" />
+      <option name="SPRING_BOOT_MAIN_CLASS" value="com.dotop.smartwater.view.server.ViewServerApplication" />
+      <option name="ALTERNATIVE_JRE_PATH" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="WaterServerApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot">
+      <module name="water-server" />
+      <option name="SPRING_BOOT_MAIN_CLASS" value="com.dotop.smartwater.project.server.water.WaterServerApplication" />
+      <option name="ALTERNATIVE_JRE_PATH" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <list>
+      <item itemvalue="Spring Boot.WaterServerApplication" />
+      <item itemvalue="Spring Boot.PipeServerApplication" />
+      <item itemvalue="Spring Boot.ViewServerApplication" />
+      <item itemvalue="Spring Boot.DependenceEurekaApplication" />
+      <item itemvalue="Spring Boot.CasServerApplication" />
+      <item itemvalue="Application.ToolMain" />
+    </list>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Application.ToolMain" />
+        <item itemvalue="Spring Boot.CasServerApplication" />
+        <item itemvalue="Spring Boot.DependenceEurekaApplication" />
+      </list>
+    </recent_temporary>
+  </component>
+  <component name="SvnConfiguration">
+    <configuration />
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="6608308d-6773-4537-834d-c3ed9a94bfd1" name="Default Changelist" comment="" />
+      <created>1599218834104</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1599218834104</updated>
+      <workItem from="1599218835605" duration="5196000" />
+      <workItem from="1599224653007" duration="759000" />
+      <workItem from="1599225850012" duration="744000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TimeTrackingManager">
+    <option name="totallyTimeSpent" value="6699000" />
+  </component>
+  <component name="ToolWindowManager">
+    <frame x="-8" y="-8" width="1936" height="1056" extended-state="6" />
+    <editor active="true" />
+    <layout>
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.23294243" />
+      <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
+      <window_info id="Designer" order="2" />
+      <window_info id="Image Layers" order="3" />
+      <window_info id="UI Designer" order="4" />
+      <window_info id="Favorites" order="5" side_tool="true" />
+      <window_info id="Capture Tool" order="6" />
+      <window_info id="Web" order="7" side_tool="true" />
+      <window_info anchor="bottom" id="Message" order="0" />
+      <window_info anchor="bottom" id="Find" order="1" />
+      <window_info anchor="bottom" id="Run" order="2" weight="0.54454345" />
+      <window_info anchor="bottom" id="Debug" order="3" weight="0.4" />
+      <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
+      <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
+      <window_info anchor="bottom" id="TODO" order="6" />
+      <window_info anchor="bottom" id="Spring" order="7" />
+      <window_info anchor="bottom" id="Terminal" order="8" />
+      <window_info anchor="bottom" id="Event Log" order="9" side_tool="true" />
+      <window_info anchor="bottom" id="Statistic" order="10" />
+      <window_info anchor="bottom" id="Problems" order="11" />
+      <window_info anchor="bottom" id="Java Enterprise" order="12" />
+      <window_info anchor="bottom" id="Database Changes" order="13" show_stripe_button="false" />
+      <window_info anchor="bottom" id="Version Control" order="14" show_stripe_button="false" />
+      <window_info anchor="bottom" id="MyBatis Log" order="15" />
+      <window_info anchor="bottom" id="Messages" order="16" weight="0.5" />
+      <window_info anchor="bottom" id="Run Dashboard" order="17" weight="0.55345213" />
+      <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
+      <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
+      <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
+      <window_info anchor="right" id="Palette" order="3" />
+      <window_info anchor="right" id="Capture Analysis" order="4" />
+      <window_info anchor="right" id="Word Book" order="5" side_tool="true" />
+      <window_info anchor="right" id="Database" order="6" />
+      <window_info anchor="right" id="Maven Projects" order="7" weight="0.27010724" />
+      <window_info anchor="right" id="Palette&#9;" order="8" />
+      <window_info anchor="right" id="Theme Preview" order="9" />
+      <window_info anchor="right" id="Bean Validation" order="10" />
+    </layout>
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="1" />
+  </component>
+  <component name="VcsContentAnnotationSettings">
+    <option name="myLimit" value="2678400000" />
+  </component>
+  <component name="editorHistoryManager">
+    <entry file="file://$PROJECT_DIR$/dependence-parent/dependence-eureka/src/main/java/com/dotop/smartwater/dependence/eureka/DependenceEurekaApplication.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="133">
+          <caret line="10" selection-start-line="10" selection-end-line="10" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/project-parent/module-parent/client-module-parent/third-client-fegin/pom.xml">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/project-parent/module-parent/client-module-parent/third-client-fegin/src/main/java/com/dotop/smartwater/project/module/client/third/impl/CommunityServiceImpl.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="106">
+          <caret line="6" column="35" selection-start-line="6" selection-start-column="35" selection-end-line="6" selection-end-column="35" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/project-parent/auth-parent/auth-tool/src/main/java/com/dotop/water/tool/service/BaseInf.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="171">
+          <caret line="35" column="28" selection-start-line="35" selection-start-column="28" selection-end-line="35" selection-end-column="28" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/project-parent/auth-parent/auth-tool/pom.xml">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/project-parent/module-parent/dao-module-parent/wechat-dao/src/main/java/com/dotop/smartwater/project/module/dao/wechat/IWechatRechargeDao.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="228">
+          <caret line="12" column="34" selection-start-line="12" selection-start-column="34" selection-end-line="12" selection-end-column="34" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/project-parent/auth-parent/cas-server/src/main/java/com/dotop/smartwater/project/auth/CasServerApplication.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="190">
+          <caret line="14" column="41" selection-start-line="14" selection-start-column="41" selection-end-line="14" selection-end-column="41" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/dependence-parent/dependence-eureka/src/main/resources/application-dev.yml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state>
+          <caret line="3" column="18" selection-start-line="3" selection-start-column="18" selection-end-line="3" selection-end-column="18" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/project-parent/auth-parent/cas-server/src/main/resources/application-dev.yml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="285">
+          <caret line="15" column="13" selection-start-line="15" selection-start-column="13" selection-end-line="15" selection-end-column="13" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/project-pipe-parent/server-parent/view-server/src/main/resources/application-dev.yml">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/project-pipe-parent/server-parent/web-server/src/main/resources/application-dt.yml">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/project-pipe-parent/server-parent/web-server/src/main/resources/application-dev.yml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="228">
+          <caret line="12" column="47" selection-start-line="12" selection-start-column="47" selection-end-line="12" selection-end-column="47" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/project-parent/auth-parent/auth-tool/src/test/java/com/dotop/water/tool/ToolMain.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="275">
+          <caret line="18" column="16" selection-start-line="18" selection-start-column="16" selection-end-line="18" selection-end-column="16" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/project-pipe-parent/server-parent/web-server/src/test/java/ToolMain.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="114">
+          <caret line="14" column="29" selection-start-line="14" selection-start-column="29" selection-end-line="14" selection-end-column="29" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/project-parent/server-parent/water-wechat/src/main/java/com/dotop/smartwater/project/server/wechat/rest/service/BalanceChangeController.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="589">
+          <caret line="49" column="49" lean-forward="true" selection-start-line="49" selection-start-column="49" selection-end-line="49" selection-end-column="49" />
+        </state>
+      </provider>
+    </entry>
+  </component>
+  <component name="masterDetails">
+    <states>
+      <state key="ArtifactsStructureConfigurable.UI">
+        <settings>
+          <artifact-editor />
+          <splitter-proportions>
+            <option name="proportions">
+              <list>
+                <option value="0.2" />
+              </list>
+            </option>
+          </splitter-proportions>
+        </settings>
+      </state>
+      <state key="FacetStructureConfigurable.UI">
+        <settings>
+          <last-edited>Spring</last-edited>
+          <splitter-proportions>
+            <option name="proportions">
+              <list>
+                <option value="0.2" />
+              </list>
+            </option>
+          </splitter-proportions>
+        </settings>
+      </state>
+      <state key="GlobalLibrariesConfigurable.UI">
+        <settings>
+          <splitter-proportions>
+            <option name="proportions">
+              <list>
+                <option value="0.2" />
+              </list>
+            </option>
+          </splitter-proportions>
+        </settings>
+      </state>
+      <state key="JdkListConfigurable.UI">
+        <settings>
+          <last-edited>1.8</last-edited>
+          <splitter-proportions>
+            <option name="proportions">
+              <list>
+                <option value="0.2" />
+              </list>
+            </option>
+          </splitter-proportions>
+        </settings>
+      </state>
+      <state key="ModuleStructureConfigurable.UI">
+        <settings>
+          <last-edited>api-module-parent</last-edited>
+          <splitter-proportions>
+            <option name="proportions">
+              <list>
+                <option value="0.2" />
+                <option value="0.6" />
+              </list>
+            </option>
+          </splitter-proportions>
+        </settings>
+      </state>
+      <state key="ProjectJDKs.UI">
+        <settings>
+          <last-edited>1.8</last-edited>
+          <splitter-proportions>
+            <option name="proportions">
+              <list>
+                <option value="0.2" />
+              </list>
+            </option>
+          </splitter-proportions>
+        </settings>
+      </state>
+      <state key="ProjectLibrariesConfigurable.UI">
+        <settings>
+          <last-edited>Maven: antlr:antlr:2.7.7</last-edited>
+          <splitter-proportions>
+            <option name="proportions">
+              <list>
+                <option value="0.2" />
+              </list>
+            </option>
+          </splitter-proportions>
+        </settings>
+      </state>
+    </states>
+  </component>
+</project>

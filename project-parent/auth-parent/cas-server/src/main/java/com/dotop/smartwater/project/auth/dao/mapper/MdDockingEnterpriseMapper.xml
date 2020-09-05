@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.dotop.smartwater.project.auth.dao.IMdDockingEnterpriseDao">
+    <resultMap id="BaseResultMap" type="com.dotop.smartwater.project.module.core.auth.vo.MdDockingEnterpriseVo">
+        <id column="id" jdbcType="VARCHAR" property="id" />
+        <result column="enterpriseid" jdbcType="VARCHAR" property="enterpriseid" />
+        <result column="code" jdbcType="VARCHAR" property="code" />
+        <result column="water_host" jdbcType="VARCHAR" property="waterHost" />
+        <result column="factory_id" jdbcType="VARCHAR" property="factoryId" />
+        <result column="status" jdbcType="BIT" property="status" />
+        <result column="is_del" jdbcType="BIT" property="isDel" />
+        <result column="create_by" jdbcType="VARCHAR" property="createBy" />
+        <result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
+        <result column="last_by" jdbcType="VARCHAR" property="lastBy" />
+        <result column="last_date" jdbcType="TIMESTAMP" property="lastDate" />
+
+        <result column="enterpriseName" jdbcType="VARCHAR" property="enterpriseName" />
+    </resultMap>
+    <select id="get" parameterType="com.dotop.smartwater.project.module.core.auth.dto.MdDockingEnterpriseDto"
+            resultMap="BaseResultMap">
+        select *
+        from md_docking_enterprise
+        where id = #{id,jdbcType=VARCHAR}
+    </select>
+    <delete id="del" parameterType="com.dotop.smartwater.project.module.core.auth.dto.MdDockingEnterpriseDto">
+    delete from md_docking_enterprise
+    where id = #{id,jdbcType=VARCHAR}
+  </delete>
+    <insert id="add" parameterType="com.dotop.smartwater.project.module.core.auth.dto.MdDockingEnterpriseDto">
+    insert into md_docking_enterprise (id, enterpriseid, code,
+      water_host, factory_id, status,
+      is_del, create_by, create_date,
+      last_by, last_date)
+    values (#{id,jdbcType=VARCHAR}, #{enterpriseid,jdbcType=VARCHAR}, #{code,jdbcType=VARCHAR},
+      #{waterHost,jdbcType=VARCHAR}, #{factoryId,jdbcType=VARCHAR}, #{status,jdbcType=BIT},
+      #{isDel,jdbcType=BIT}, #{createBy,jdbcType=VARCHAR}, #{createDate,jdbcType=TIMESTAMP},
+      #{lastBy,jdbcType=VARCHAR}, #{lastDate,jdbcType=TIMESTAMP})
+  </insert>
+    <update id="edit" parameterType="com.dotop.smartwater.project.module.core.auth.dto.MdDockingEnterpriseDto">
+        update md_docking_enterprise
+        <set>
+            <if test="enterpriseid != null and enterpriseid != '' ">
+                enterpriseid = #{enterpriseid,jdbcType=VARCHAR},
+            </if>
+            <if test="code != null and code != '' ">
+                code = #{code,jdbcType=VARCHAR},
+            </if>
+            <if test="waterHost != null and waterHost != '' ">
+                water_host = #{waterHost,jdbcType=VARCHAR},
+            </if>
+            <if test="factoryId != null and factoryId != '' ">
+                factory_id = #{factoryId,jdbcType=VARCHAR},
+            </if>
+            <if test="status != null">
+                status = #{status,jdbcType=BIT},
+            </if>
+            <if test="isDel != null">
+                is_del = #{isDel,jdbcType=BIT},
+            </if>
+            <if test="createBy != null and createBy != '' ">
+                create_by = #{createBy,jdbcType=VARCHAR},
+            </if>
+            <if test="createDate != null ">
+                create_date = #{createDate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="lastBy != null and lastBy != '' ">
+                last_by = #{lastBy,jdbcType=VARCHAR},
+            </if>
+            <if test="lastDate != null">
+                last_date = #{lastDate,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where id = #{id,jdbcType=VARCHAR}
+    </update>
+
+
+    <select id="list" parameterType="com.dotop.smartwater.project.module.core.auth.dto.MdDockingEnterpriseDto"
+            resultMap="BaseResultMap">
+        select a.*,b.name as enterpriseName
+        from md_docking_enterprise a inner join enterprise as b on a.enterpriseid = b.enterpriseid
+        <where>
+            <if test="enterpriseid != null and enterpriseid != ''">
+                and a.enterpriseid = #{enterpriseid}
+            </if>
+        </where>
+        order by a.enterpriseid asc
+    </select>
+
+    <select id="enterpriseList" resultMap="com.dotop.smartwater.project.auth.dao.IEnterpriseDao.EnterpriseVoMap">
+        select * from enterprise
+        where enterpriseid not in (select enterpriseid from md_docking_enterprise)
+    </select>
+</mapper>

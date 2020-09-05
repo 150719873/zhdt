@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dotop.smartwater.project.module.dao.revenue.IPaymentTradeResultDao">
+    <resultMap id="BaseResultMap" type="com.dotop.smartwater.project.module.core.water.vo.PaymentTradeResultVo">
+        <id column="transactionid" jdbcType="VARCHAR" property="transactionid"/>
+        <result column="tradeid" jdbcType="VARCHAR" property="tradeid"/>
+        <result column="transaction_number" jdbcType="VARCHAR" property="transactionNumber"/>
+        <result column="amount" jdbcType="VARCHAR" property="amount"/>
+        <result column="mode" jdbcType="VARCHAR" property="mode"/>
+        <result column="status" jdbcType="VARCHAR" property="status"/>
+        <result column="description" jdbcType="VARCHAR" property="description"/>
+        <result column="enterpriseid" jdbcType="VARCHAR" property="enterpriseid"/>
+        <result column="pay_time" jdbcType="TIMESTAMP" property="payTime"/>
+        <result column="third_party_msg" jdbcType="VARCHAR" property="thirdPartyMsg"/>
+        <result column="create_date" jdbcType="TIMESTAMP" property="createDate"/>
+        <result column="openid" jdbcType="VARCHAR" property="openid"/>
+        <result column="pay_card" jdbcType="VARCHAR" property="payCard"/>
+    </resultMap>
+
+    <select id="get" resultMap="BaseResultMap">
+    select transactionid, tradeid, transaction_number, amount, mode, status, description, enterpriseid,
+    pay_time, third_party_msg, create_date, openid, pay_card
+    from payment_trade_result
+    where transactionid = #{transactionid,jdbcType=VARCHAR}
+  </select>
+    <delete id="del">
+    delete from payment_trade_result
+    where transactionid = #{transactionid,jdbcType=VARCHAR}
+  </delete>
+
+    <insert id="add" parameterType="com.dotop.smartwater.project.module.core.water.dto.PaymentTradeResultDto">
+    insert into payment_trade_result (transactionid, tradeid, transaction_number, 
+      amount, mode, status, 
+      description, enterpriseid, pay_time, 
+      third_party_msg, create_date, openid, 
+      pay_card)
+    values (#{transactionid,jdbcType=VARCHAR}, #{tradeid,jdbcType=VARCHAR}, #{transactionNumber,jdbcType=VARCHAR}, 
+      #{amount,jdbcType=VARCHAR}, #{mode,jdbcType=VARCHAR}, #{status,jdbcType=VARCHAR}, 
+      #{description,jdbcType=VARCHAR}, #{enterpriseid,jdbcType=VARCHAR}, #{payTime,jdbcType=TIMESTAMP}, 
+      #{thirdPartyMsg,jdbcType=VARCHAR}, #{createDate,jdbcType=TIMESTAMP}, #{openid,jdbcType=VARCHAR}, 
+      #{payCard,jdbcType=VARCHAR})
+  </insert>
+    <update id="edit" parameterType="com.dotop.smartwater.project.module.core.water.dto.PaymentTradeResultDto">
+        update payment_trade_result
+        <set>
+            <if test="tradeid != null and tradeid != '' ">
+                tradeid = #{tradeid,jdbcType=VARCHAR},
+            </if>
+            <if test="transactionNumber != null and transactionNumber != '' ">
+                transaction_number = #{transactionNumber,jdbcType=VARCHAR},
+            </if>
+            <if test="amount != null and amount != '' ">
+                amount = #{amount,jdbcType=VARCHAR},
+            </if>
+            <if test="mode != null and mode != '' ">
+                mode = #{mode,jdbcType=VARCHAR},
+            </if>
+            <if test="status != null and status != '' ">
+                status = #{status,jdbcType=VARCHAR},
+            </if>
+            <if test="description != null and description != '' ">
+                description = #{description,jdbcType=VARCHAR},
+            </if>
+            <if test="enterpriseid != null and enterpriseid != '' ">
+                enterpriseid = #{enterpriseid,jdbcType=VARCHAR},
+            </if>
+            <if test="payTime != null ">
+                pay_time = #{payTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="thirdPartyMsg != null and thirdPartyMsg != '' ">
+                third_party_msg = #{thirdPartyMsg,jdbcType=VARCHAR},
+            </if>
+            <if test="createDate != null ">
+                create_date = #{createDate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="openid != null and openid != '' ">
+                openid = #{openid,jdbcType=VARCHAR},
+            </if>
+            <if test="payCard != null and payCard != '' ">
+                pay_card = #{payCard,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where transactionid = #{transactionid,jdbcType=VARCHAR}
+    </update>
+
+    <select id="list" resultMap="BaseResultMap">
+        select transactionid, tradeid, transaction_number, amount, mode, status, description, enterpriseid,
+        pay_time, third_party_msg, create_date, openid, pay_card
+        from payment_trade_result
+        <where>
+            1=1
+            <if test="tradeid != null and tradeid != '' ">
+                and tradeid = #{tradeid,jdbcType=VARCHAR}
+            </if>
+            <if test="status != null and status != '' ">
+                and status = #{status,jdbcType=VARCHAR}
+            </if>
+            <if test="mode != null and mode != '' ">
+                and mode = #{mode,jdbcType=VARCHAR}
+            </if>
+            <if test="enterpriseid != null and enterpriseid != '' ">
+                and enterpriseid = #{enterpriseid,jdbcType=VARCHAR}
+            </if>
+        </where>
+    </select>
+
+    <select id="findByTradeId" resultMap="BaseResultMap">
+    select * from payment_trade_result where tradeid = #{tradeid}
+  </select>
+
+</mapper>

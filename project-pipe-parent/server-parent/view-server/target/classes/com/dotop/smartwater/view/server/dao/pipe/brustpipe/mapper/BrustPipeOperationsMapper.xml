@@ -1,0 +1,215 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.dotop.smartwater.view.server.dao.pipe.brustpipe.IBrustPipeOperationsDao">
+
+    <resultMap id="BaseResultMap"
+               type="com.dotop.smartwater.view.server.core.brustpipe.vo.BrustPipeOperationsVo">
+        <result column="num" jdbcType="VARCHAR" property="operationsNum"/>
+        <result column="filler" jdbcType="VARCHAR" property="operationsPeole"/>
+        <result column="brust_pipe_id" jdbcType="VARCHAR" property="brustPipeId"/>
+        <result column="work_order_id" jdbcType="VARCHAR" property="workOrderId"/>
+        <result column="work_order_create_date" jdbcType="VARCHAR" property="workOrderCreateDate"/>
+        <result column="work_order_status" jdbcType="VARCHAR" property="workOrderstatus"/>
+        <result column="record_data" jdbcType="VARCHAR" property="recordData"/>
+        <result column="work_order_process_id" jdbcType="VARCHAR" property="processId"/>
+    </resultMap>
+
+    <resultMap id="brustPipeResultMap"
+               type="com.dotop.pipe.core.vo.brustpipe.BrustPipeVo">
+
+        <result column="brust_pipe_id" jdbcType="VARCHAR" property="brustPipeId"/>
+        <result column="code" jdbcType="VARCHAR" property="code"/>
+        <result column="brust_pipe_name" jdbcType="VARCHAR" property="brustPipeName"/>
+        <result column="reporter" jdbcType="VARCHAR" property="reporter"/>
+        <result column="place" jdbcType="VARCHAR" property="place"/>
+        <result column="occurrence_time" jdbcType="TIMESTAMP" property="occurrenceTime"/>
+        <result column="write_time" jdbcType="TIMESTAMP" property="writeTime"/>
+        <result column="filler" jdbcType="VARCHAR" property="filler"/>
+        <result column="device_ids" jdbcType="VARCHAR" property="deviceIds"/>
+        <result column="status" jdbcType="VARCHAR" property="status"/>
+        <result column="create_date" jdbcType="VARCHAR" property="createDate"/>
+        <result column="last_date" jdbcType="TIMESTAMP" property="lastDate"/>
+    </resultMap>
+
+    <resultMap id="deviceResultMap"
+               type="com.dotop.pipe.core.vo.device.DeviceVo">
+        <result column="code" jdbcType="VARCHAR" property="code"/>
+        <result column="device_id" jdbcType="VARCHAR" property="deviceId"/>
+    </resultMap>
+
+    <resultMap id="BaseResultMap2"
+               type="com.dotop.pipe.core.vo.brustpipe.BrustPipeVo">
+
+        <result column="brust_pipe_id" jdbcType="VARCHAR" property="brustPipeId"/>
+        <result column="code" jdbcType="VARCHAR" property="code"/>
+        <result column="brust_pipe_name" jdbcType="VARCHAR" property="brustPipeName"/>
+        <result column="reporter" jdbcType="VARCHAR" property="reporter"/>
+        <result column="place" jdbcType="VARCHAR" property="place"/>
+        <result column="occurrence_time" jdbcType="TIMESTAMP" property="occurrenceTime"/>
+        <result column="write_time" jdbcType="TIMESTAMP" property="writeTime"/>
+        <result column="filler" jdbcType="VARCHAR" property="filler"/>
+        <result column="device_ids" jdbcType="VARCHAR" property="deviceIds"/>
+        <result column="status" jdbcType="VARCHAR" property="status"/>
+    </resultMap>
+
+    <sql id="selectbrustPipeColumns">
+        b.brust_pipe_id,
+        b.`code`,
+        b.brust_pipe_name,
+        b.reporter,
+        b.place,
+        b.occurrence_time,
+        b.write_time,
+        b.filler,
+        b.device_ids,
+        b.status,
+        b.enterprise_id,
+        b.create_by,
+        b.create_date,
+        b.is_del,
+        b.last_by,
+        b.last_date
+	</sql>
+
+    <sql id="selectColumns">
+        b.brust_pipe_id,
+        b.`code`,
+        b.brust_pipe_name,
+        b.reporter,
+        b.place,
+        b.occurrence_time,
+        b.write_time,
+        b.filler,
+        b.device_ids,
+        b.status,
+        b.enterprise_id,
+        b.create_by,
+        b.create_date,
+        b.is_del,
+        b.last_by,
+        b.last_date
+	</sql>
+
+
+    <select id="getNumByDeviceId" resultMap="BaseResultMap">
+     SELECT COUNT(brust_pipe_id) AS num FROM pls_brust_pipe
+        <where>
+        <if test="deviceId != null and deviceId != ''">
+            and device_ids like CONCAT('%',#{deviceId},'%')
+        </if>
+        <if test="enterpriseId != null and enterpriseId != ''">
+            and enterprise_id = #{enterpriseId}
+        </if>
+        </where>
+    </select>
+
+    <select id="getBrustPipe" resultMap="BaseResultMap">
+                SELECT brust_pipe_id FROM pls_brust_pipe
+        <where>
+            <if test="deviceId != null and deviceId != ''">
+                and device_ids like CONCAT('%',#{deviceId},'%')
+            </if>
+            <if test="enterpriseId != null and enterpriseId != ''">
+                and enterprise_id = #{enterpriseId}
+            </if>
+        </where>
+        ORDER BY
+            occurrence_time DESC
+    </select>
+
+    <select id="getWorkOrderByBrustPipeId" resultMap="BaseResultMap">
+        SELECT work_order_id, create_date as work_order_create_date, status as work_order_status, record_data,
+        process_id as work_order_process_id FROM pls_work_order
+        <where>
+            <if test="brustPipeId != null and brustPipeId != ''">
+                and record_data like CONCAT('%',#{brustPipeId},'%')
+            </if>
+            <if test="enterpriseId != null and enterpriseId != ''">
+                and enterprise_id = #{enterpriseId}
+            </if>
+        </where>
+    </select>
+
+    <select id="getBrustPipeById" resultMap="BaseResultMap">
+        SELECT filler FROM pls_brust_pipe
+        <where>
+            <if test="brustPipeId != null and brustPipeId != ''">
+                and brust_pipe_id = #{brustPipeId}
+            </if>
+            <if test="enterpriseId != null and enterpriseId != ''">
+                and enterprise_id = #{enterpriseId}
+            </if>
+        </where>
+    </select>
+
+    <select id="listBrustPipe" resultMap="brustPipeResultMap">
+        SELECT
+        <include refid="selectbrustPipeColumns"/>
+        FROM
+        pls_brust_pipe b
+        <where>
+            <if test="status != null and status != ''">
+                and b.status = #{status}
+            </if>
+            <if test="brustPipeId != null and brustPipeId != ''">
+                and b.brust_pipe_id = #{brustPipeId}
+            </if>
+            <if test="code != null and code != ''">
+                and b.`code` like CONCAT('%',#{code},'%')
+            </if>
+            <if test="brustPipeName != null and brustPipeName != ''">
+                and b.brust_pipe_name like CONCAT('%',#{brustPipeName},'%')
+            </if>
+            <if test="startDate != null">
+                and b.occurrence_time <![CDATA[>=]]> #{startDate}
+            </if>
+            <if test="endDate != null">
+                and b.occurrence_time <![CDATA[<=]]> #{endDate}
+            </if>
+
+            <if test="enterpriseId != null and enterpriseId != ''">
+                and b.enterprise_id = #{enterpriseId}
+            </if>
+            and b.is_del = 0
+        </where>
+        ORDER BY  b.create_date desc
+    </select>
+
+    <select id="listDevice" resultMap="deviceResultMap">
+        SELECT `code`, device_id FROM pls_device
+        <where>
+            <if test="deviceIds != null and deviceIds.size() > 0">
+                AND device_id in
+                <foreach collection="deviceIds" open="(" item="ele" separator="," close=")">
+                    #{ele}
+                </foreach>
+            </if>
+            <if test="enterpriseId != null and enterpriseId != ''">
+                AND enterprise_id = #{enterpriseId}
+            </if>
+        </where>
+    </select>
+
+    <select id="getBrustPipeByIdList" resultMap="BaseResultMap2">
+        SELECT
+        <include refid="selectColumns"/>
+        FROM
+        pls_brust_pipe b
+        <where>
+
+            <if test="brustPipelist != null and brustPipelist.size() > 0">
+                AND b.brust_pipe_id in
+                <foreach collection="brustPipelist" open="(" item="ele" separator="," close=")">
+                    #{ele}
+                </foreach>
+            </if>
+            <if test="enterpriseId != null and enterpriseId != ''">
+                and b.enterprise_id = #{enterpriseId}
+            </if>
+            and b.is_del = 0
+        </where>
+        ORDER BY  b.create_date desc
+    </select>
+
+
+</mapper>

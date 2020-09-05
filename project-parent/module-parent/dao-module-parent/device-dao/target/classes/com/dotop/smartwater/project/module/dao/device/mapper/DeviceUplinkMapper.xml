@@ -1,0 +1,349 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.dotop.smartwater.project.module.dao.device.IDeviceUplinkDao">
+    <resultMap id="DeviceUplinkVo" type="com.dotop.smartwater.project.module.core.water.vo.DeviceUplinkVo">
+
+        <id property="id" column="id"/>
+        <result property="deveui" column="deveui"/>
+        <result property="devid" column="devid"/>
+        <result property="uplink_data" column="uplinkData"/>
+        <result property="confirmed" column="confirmed"/>
+        <result property="tapstatus" column="tapstatus"/>
+        <result property="water" column="water"/>
+        <result property="rssi" column="rssi"/>
+        <result property="lsnr" column="lsnr"/>
+        <result property="rxtime" column="rxtime"/>
+        <result property="devno" column="devno"/>
+        <result property="mode" column="mode"/>
+        <result property="status" column="status"/>
+        <result column="anhydrous_abnormal" jdbcType="VARCHAR" property="anhydrousAbnormal" />
+        <result column="disconnection_abnormal" jdbcType="VARCHAR" property="disconnectionAbnormal" />
+        <result column="pressure_exception" jdbcType="VARCHAR" property="pressureException" />
+        <result column="factory" jdbcType="VARCHAR" property="factory" />
+        <result column="flow_rate" jdbcType="VARCHAR" property="flowRate" />
+        <result column="pressure" jdbcType="VARCHAR" property="pressure" />
+        <result column="total_work_time" jdbcType="VARCHAR" property="totalWorkTime" />
+        <result column="temperature" jdbcType="VARCHAR" property="temperature" />
+        <result column="internal_clock" jdbcType="VARCHAR" property="internalClock" />
+    </resultMap>
+    
+    <resultMap id="OriginalMap" type="com.dotop.smartwater.project.module.core.water.vo.customize.OriginalVo">
+        <id property="id" column="id"/>   
+        <result column="devno" jdbcType="VARCHAR" property="devno" />
+        <result column="deveui" jdbcType="VARCHAR" property="deveui" />
+        <result column="uplink_data" jdbcType="VARCHAR" property="upLinkData" />
+        <result column="taptype" property="tapType" />
+        <result column="tapstatus" property="tapStatus" />
+        <result column="water" property="water" />
+        <result column="rssi" jdbcType="VARCHAR" property="rssi" />
+        <result column="lsnr" jdbcType="VARCHAR" property="lsnr" />
+        <result column="rxtime" jdbcType="VARCHAR" property="rxtime" />
+        <result column="mode" jdbcType="VARCHAR" property="mode" />
+        <result column="status" jdbcType="VARCHAR" property="status" />
+        
+        <result column="measure_method" jdbcType="VARCHAR" property="measureMethod" />
+        <result column="measure_value" jdbcType="VARCHAR" property="measureValue" />
+        <result column="measure_type" jdbcType="VARCHAR" property="measureType" />
+        <result column="measure_unit" jdbcType="VARCHAR" property="measureUnit" />
+        <result column="network_interval" jdbcType="VARCHAR" property="networkInterval" />
+        
+        <result column="up_count" jdbcType="VARCHAR" property="upCount" />
+        <result column="down_rssi" jdbcType="VARCHAR" property="downRssi" />
+        
+        <result column="act_devtyp" jdbcType="VARCHAR" property="actDevtyp" />
+        <result column="act_devmod" jdbcType="VARCHAR" property="actDevmod" />
+        <result column="act_devver" jdbcType="VARCHAR" property="actDevver" />
+        <result column="iccid" jdbcType="VARCHAR" property="iccid" />
+        
+        <result column="signal_power" jdbcType="VARCHAR" property="signalPower" />
+        <result column="total_power" jdbcType="VARCHAR" property="totalPower" />
+        <result column="tx_power" jdbcType="VARCHAR" property="txPower" />
+        <result column="tx_time" jdbcType="VARCHAR" property="txTime" />
+        <result column="cell_id" jdbcType="VARCHAR" property="cellId" />
+        <result column="ecl" jdbcType="VARCHAR" property="ecl" />
+        <result column="snr" jdbcType="VARCHAR" property="snr" />
+        <result column="earfcn" jdbcType="VARCHAR" property="earfcn" />
+        <result column="pci" jdbcType="VARCHAR" property="pci" />
+        <result column="rsrq" jdbcType="VARCHAR" property="rsrq" />
+        <result column="operator_mode" jdbcType="VARCHAR" property="operatorMode" />
+        <result column="imsi" jdbcType="VARCHAR" property="imsi" />
+        <result column="ver" jdbcType="VARCHAR" property="ver" />
+        
+        <result column="wmid" jdbcType="VARCHAR" property="wmid" />
+        <result property="caliber" jdbcType="VARCHAR" column="caliber"/>
+        <result column="water_consumption" jdbcType="VARCHAR" property="waterConsumption" />
+        <result column="abnormal_current" jdbcType="VARCHAR" property="abnormalCurrent" />
+        <result column="time_sync" jdbcType="VARCHAR" property="timeSync" />
+        <result column="abnormal_power" jdbcType="VARCHAR" property="abnormalPower" />
+        <result column="magnetic_attack" jdbcType="VARCHAR" property="magneticAttack" />
+        <result column="serial_abnormal" jdbcType="VARCHAR" property="serialAbnormal" />
+        <result column="reset_type" jdbcType="VARCHAR" property="resetType" />
+        <result column="life_status" jdbcType="VARCHAR" property="lifeStatus" />
+        <result column="time" jdbcType="VARCHAR" property="time" />
+        <result column="reset_period" jdbcType="VARCHAR" property="resetPeriod" />
+        <result column="reason" jdbcType="VARCHAR" property="reason" />
+    </resultMap>
+
+    <select id="findLastUplinkWater"
+            resultType="com.dotop.smartwater.project.module.core.water.vo.DeviceUplinkVo">
+		select * from device_uplink${date} where devid = #{devid} order by rxtime desc limit 1
+	</select>
+
+    <select id="findDownLinkData">
+      select * from device_downlink where deveui=#{deveui}
+			and (gentime between #{start} and #{end})
+			order by gentime desc
+    </select>
+
+    <select id="findOriginal"
+            resultType="com.dotop.smartwater.project.module.core.water.vo.customize.OriginalVo">
+        select 
+		up.id,d.devno ,d.deveui, d.taptype as taptype, d.mode, d.caliber,if(dc.child_name is null, '-',dc.child_name) as modeName,
+		up.water as water,up.rxtime as rxtime,up.rssi as rssi,up.lsnr as lsnr,
+		up.measure_method as measureMethod, up.measure_value as measureValue,
+		up.measure_type as measureType, up.measure_unit as measureUnit, up.network_interval as networkInterval,
+        up.iccid,up.reason,up.url, up.uplink_data as `upLinkData`,
+		(case up.tapstatus when 0 then '关' when 1 then '开' else '' end ) as status
+        from device_uplink${systime} up
+        inner join device d on d.devid = up.devid
+        left join dictionary_child dc on d.mode = dc.child_id
+        <where>
+            1=1 and d.enterpriseid = #{enterpriseid}
+            <if test="devno != null and devno !=  '' ">
+                and d.devno like '%${devno}%'
+            </if>
+            <if test="deveui != null and deveui !=  '' ">
+                and d.deveui like '%${deveui}%'
+            </if>
+            <if test="start != null and start != '' ">
+                and up.rxtime &gt;= #{start}
+            </if>
+            <if test="end != null and end != '' ">
+                and up.rxtime &lt; #{end}
+            </if>
+        </where>
+        order by up.rxtime desc
+
+    </select>
+
+    <select id="findOriginalCrossMonth"
+            resultType="com.dotop.smartwater.project.module.core.water.vo.customize.OriginalVo">
+        select * from
+        (select 
+			up.id,d.devno ,d.deveui, d.taptype as taptype, d.mode, d.caliber,if(dc.child_name is null, '-',dc.child_name) as modeName,
+			up.water as water,up.rxtime as rxtime,up.rssi as rssi,up.lsnr as lsnr,
+			up.measure_method as measureMethod, up.measure_value as measureValue,
+			up.measure_type as measureType, up.measure_unit as measureUnit, up.network_interval as networkInterval,
+            up.iccid,up.reason, up.url, up.uplink_data as `upLinkData`,
+			(case up.tapstatus when 0 then '关' when 1 then '开' else '' end )as status
+        from device_uplink${startMonth} up
+        inner join device d on d.devid = up.devid
+        left join dictionary_child dc on d.mode = dc.child_id
+        where up.rxtime &gt;= #{start} and up.rxtime &lt; #{end}
+        <if test="devno != null and devno !=  '' ">
+            and d.devno like '%${devno}%'
+        </if>
+        <if test="deveui != null and deveui !=  '' ">
+            and d.deveui like '%${deveui}%'
+        </if>
+        and d.enterpriseid = #{enterpriseid}
+        union all
+        select up.id,d.devno ,d.deveui, d.taptype as taptype, d.mode, d.caliber,if(dc.child_name = null, '-',dc.child_name) as modeName,
+			up.water as water,up.rxtime as rxtime,up.rssi as rssi,up.lsnr as lsnr,
+			up.measure_method as measureMethod, up.measure_value as measureValue,
+			up.measure_type as measureType, up.measure_unit as measureUnit, up.network_interval as networkInterval,
+            up.iccid,up.reason,up.url, up.uplink_data as `upLinkData`,
+			(case up.tapstatus when 0 then '关' when 1 then '开' else '' end )as status
+        from device_uplink${endMonth} up
+        inner join device d on d.devid = up.devid
+        left join dictionary_child dc on d.mode = dc.child_id
+        where up.rxtime &gt;= #{start} and up.rxtime &lt; #{end}
+        <if test="devno != null and devno !=  '' ">
+            and d.devno like '%${devno}%'
+        </if>
+        <if test="deveui != null and deveui !=  '' ">
+            and d.deveui like '%${deveui}%'
+        </if>
+        and d.enterpriseid = #{enterpriseid}
+        ) as t
+        ORDER BY t.rxtime desc
+    </select>
+    
+    <!-- 导出上报信息查询 -->
+    <select id="exportFindOriginal" resultMap="OriginalMap">
+        select up.*, 
+		d.devno, d.taptype, d.mode, if(dc.child_name is null, '-',dc.child_name) as `modeName`,
+		(case up.tapstatus when 0 then '关' when 1 then '开' else '' end ) as `status`
+        from device_uplink${systime} up
+        inner join device d on d.devid = up.devid
+        left join dictionary_child dc on d.mode = dc.child_id
+        <where>
+            d.enterpriseid = #{enterpriseid}
+            <if test="devno != null and devno !=  '' ">
+                and d.devno like '%${devno}%'
+            </if>
+            <if test="deveui != null and deveui !=  '' ">
+                and d.deveui like '%${deveui}%'
+            </if>
+            <if test="start != null and start != '' ">
+                and up.rxtime &gt;= #{start}
+            </if>
+            <if test="end != null and end != '' ">
+                and up.rxtime &lt; #{end}
+            </if>
+        </where>
+        order by up.rxtime desc
+    </select>
+    
+    <!-- 导出上报信息跨月查询 -->
+    <select id="exportFindOriginalCrossMonth" resultMap="OriginalMap">
+        select * from
+        (select up.*, 
+		d.devno, d.taptype, d.mode, if(dc.child_name is null, '-',dc.child_name) as `modeName`,
+		(case up.tapstatus when 0 then '关' when 1 then '开' else '' end ) as `status`
+        from device_uplink${startMonth} up
+        inner join device d on d.devid = up.devid
+        left join dictionary_child dc on d.mode = dc.child_id
+        where up.rxtime &gt;= #{start} and up.rxtime &lt; #{end}
+        <if test="devno != null and devno !=  '' ">
+            and d.devno like '%${devno}%'
+        </if>
+        <if test="deveui != null and deveui !=  '' ">
+            and d.deveui like '%${deveui}%'
+        </if>
+        and d.enterpriseid = #{enterpriseid}
+        union all
+        select up.*, 
+		d.devno, d.taptype, d.mode, if(dc.child_name is null, '-',dc.child_name) as `modeName`,
+		(case up.tapstatus when 0 then '关' when 1 then '开' else '' end ) as `status`
+        from device_uplink${endMonth} up
+        inner join device d on d.devid = up.devid
+        left join dictionary_child dc on d.mode = dc.child_id
+        where up.rxtime &gt;= #{start} and up.rxtime &lt; #{end}
+        <if test="devno != null and devno !=  '' ">
+            and d.devno like '%${devno}%'
+        </if>
+        <if test="deveui != null and deveui !=  '' ">
+            and d.deveui like '%${deveui}%'
+        </if>
+        and d.enterpriseid = #{enterpriseid}
+        )
+        as t
+        <where>
+            1=1
+        </where>
+        ORDER BY t.rxtime desc
+    </select>
+    
+    <select id="findUplinkData" resultType="com.dotop.smartwater.project.module.core.water.vo.customize.OriginalVo">
+        select u.deveui ,u.rxtime,u.water,u.rssi,u.lsnr from device_uplink${systime} u
+        where u.deveui in (${deveuis}) and u.rxtime &gt;= #{start} and u.rxtime &lt; #{end} and u.water is not null
+        GROUP BY u.deveui , DATE_FORMAT(u.rxtime , '%Y-%d-%m')
+    </select>
+    
+    <select id="findCrossMonthUplinkData" resultType="com.dotop.smartwater.project.module.core.water.vo.customize.OriginalVo">
+        SELECT u.deveui ,u.rxtime,u.water,u.rssi,u.lsnr FROM (
+			select 
+				deveui,rxtime,water,rssi,lsnr from device_uplink${startMonth} 
+				WHERE deveui in (${deveuis})
+			union all
+			select 
+				deveui,rxtime,water,rssi,lsnr from device_uplink${endMonth} 
+				WHERE deveui in (${deveuis})
+		) u WHERE u.rxtime &gt;= #{start} and u.rxtime &lt; #{end} and u.water is not null
+		GROUP BY u.deveui , DATE_FORMAT(u.rxtime , '%Y-%d-%m')
+    </select>
+    
+
+    <insert id="add">
+        insert into device_uplink${date}
+        (id,uplink_data,confirmed,water,rxtime,devid,tapstatus,deveui,rssi,lsnr,measure_method,
+        measure_value,measure_type,measure_unit,network_interval,
+        act_devtyp, act_devmod, act_devver,
+          up_count, down_rssi, water_consumption,
+          valve_status, open_exception, close_exception,
+          abnormal_current, time_sync, abnormal_power,
+          magnetic_attack, life_status, caliber,
+          wmid, `time`, reset_period,
+          ver, cell_id, pci, signal_power,
+          total_power, tx_power, tx_time,
+          rx_time, ecl, snr, earfcn,
+          rsrq, operator_mode, imsi,reset_type,serial_abnormal,iccid,`reason`, `url`,
+          anhydrous_abnormal, disconnection_abnormal, pressure_exception,
+          factory, flow_rate, pressure, total_work_time, temperature, internal_clock)
+        values(#{id}, #{uplinkData},#{confirmed},#{water},#{rxtime},#{devid},#{tapstatus},#{deveui},#{rssi},#{lsnr},#{measureMethod},
+        #{measureValue},#{measureType},#{measureUnit},#{networkInterval},
+        #{actDevtyp}, #{actDevmod}, #{actDevver},
+      #{upCount}, #{downRssi}, #{waterConsumption},
+      #{valveStatus}, #{openException}, #{closeException},
+      #{abnormalCurrent}, #{timeSync}, #{abnormalPower},
+      #{magneticAttack}, #{lifeStatus}, #{caliber},
+      #{wmid}, #{time}, #{resetPeriod},
+      #{ver}, #{cellId}, #{pci}, #{signalPower},
+      #{totalPower}, #{txPower}, #{txTimeNb},
+      #{rxTimeNb}, #{ecl}, #{snr}, #{earfcn},
+      #{rsrq}, #{operatorMode}, #{imsi},#{resetType},#{serialAbnormal},
+      #{iccid},#{reason}, #{url},
+      #{anhydrousAbnormal,jdbcType=VARCHAR}, #{disconnectionAbnormal,jdbcType=VARCHAR},
+      #{pressureException,jdbcType=VARCHAR}, #{factory,jdbcType=VARCHAR}, #{flowRate,jdbcType=VARCHAR},
+      #{pressure,jdbcType=VARCHAR}, #{totalWorkTime,jdbcType=VARCHAR}, #{temperature,jdbcType=VARCHAR},
+      #{internalClock,jdbcType=VARCHAR}
+        )
+    </insert>
+
+    <!--  查询设备上行数据 -->
+    <select id="getUplinkData" resultType="com.dotop.smartwater.project.module.core.water.vo.DeviceVo">
+       select rxtime as uplinktime ,confirmed as confirmed ,water as water  
+       from device_uplink${month} 
+       where deveui=#{deveui} 
+       ORDER BY rxtime desc
+    </select>
+
+    <select id="getOriginalByIdAndDate"
+            resultType="com.dotop.smartwater.project.module.core.water.vo.customize.OriginalVo">
+       select uplink_data as upLinkData,iccid,reason,url,water
+       from device_uplink${month}
+       where id = #{id}
+    </select>
+
+    <insert id="insertBatch">
+        insert into device_uplink${thisMonth}
+            (id,uplink_data,confirmed,water,rxtime,devid,tapstatus,deveui,rssi,lsnr,measure_method,
+            measure_value,measure_type,measure_unit,network_interval,
+            act_devtyp, act_devmod, act_devver,
+            up_count, down_rssi, water_consumption,
+            valve_status, open_exception, close_exception,
+            abnormal_current, time_sync, abnormal_power,
+            magnetic_attack, life_status, caliber,
+            wmid, `time`, reset_period,
+            ver, cell_id, pci, signal_power,
+            total_power, tx_power, tx_time,
+            rx_time, ecl, snr, earfcn,
+            rsrq, operator_mode, imsi,reset_type,serial_abnormal,url)
+        values
+        <foreach collection="deviceUplinkDtoList" item="item" index="index" separator=",">
+            (#{id}, #{uplinkData},#{confirmed},#{water},#{rxtime},#{devid},#{tapstatus},#{deveui},#{rssi},#{lsnr},#{measureMethod},
+            #{measureValue},#{measureType},#{measureUnit},#{networkInterval},
+            #{actDevtyp}, #{actDevmod}, #{actDevver},
+            #{upCount}, #{downRssi}, #{waterConsumption},
+            #{valveStatus}, #{openException}, #{closeException},
+            #{abnormalCurrent}, #{timeSync}, #{abnormalPower},
+            #{magneticAttack}, #{lifeStatus}, #{caliber},
+            #{wmid}, #{time}, #{resetPeriod},
+            #{ver}, #{cellId}, #{pci}, #{signalPower},
+            #{totalPower}, #{txPower}, #{txTimeNb},
+            #{rxTimeNb}, #{ecl}, #{snr}, #{earfcn},
+            #{rsrq}, #{operatorMode}, #{imsi},#{resetType},#{serialAbnormal},#{url}
+            )
+        </foreach>
+    </insert>
+    
+    <select id="batchFindWaterByDeveuis" resultType="com.dotop.smartwater.project.module.core.water.vo.DeviceUplinkVo">
+		select a.deveui, a.water, a.rxtime from 
+		(select deveui, water, rxtime from device_uplink${systime} 
+		where DATE_FORMAT(rxtime, '%Y-%m-%d') = #{rxtime} and deveui in ${deveuis}
+		order by deveui, rxtime desc limit 999999) a 
+		group by a.deveui, DATE_FORMAT(a.rxtime, '%Y-%m-%d')
+	</select>
+
+</mapper>

@@ -1,0 +1,23 @@
+
+param.config.enterprises: 8186ed5c-b4b8-40f3-ab3e-015042232189,4
+param.config.enterpriseName: 收费系统
+
+druid:
+  datasource-weter:
+    name: datasource-weter
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://rm-wz91y5du7xqr0aot9.mysql.rds.aliyuncs.com/water?useSSL=false&useUnicode=true&characterEncoding=utf-8&useLegacyDatetimeCode=false&useTimezone=true&serverTimezone=GMT%2B8&allowMultiQueries=true
+    username: water
+    password: 02f471eFBb6
+
+redis:
+  cache:
+    database: 1
+    host: r-wz9ewh0547c5u7eugl.redis.rds.aliyuncs.com
+    password: 6DCC6abA6CcE7
+    port: 6379
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://localhost:8761/eureka/

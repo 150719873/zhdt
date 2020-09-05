@@ -1,0 +1,4 @@
+com\dotop\smartwater\project\module\dao\store\IInventoryDao.class
+com\dotop\smartwater\project\module\dao\store\IStorageDao.class
+com\dotop\smartwater\project\module\dao\store\IStoreProductDao.class
+com\dotop\smartwater\project\module\dao\store\IOutStorageDao.class

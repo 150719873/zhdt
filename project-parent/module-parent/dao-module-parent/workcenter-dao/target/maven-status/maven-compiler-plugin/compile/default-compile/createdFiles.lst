@@ -1,0 +1,13 @@
+com\dotop\smartwater\project\module\dao\workcenter\IProcessDbFieldDao.class
+com\dotop\smartwater\project\module\dao\workcenter\IProcessDbDao.class
+com\dotop\smartwater\project\module\dao\workcenter\ITmplNodeEdgeDao.class
+com\dotop\smartwater\project\module\dao\workcenter\ITmplNodeDao.class
+com\dotop\smartwater\project\module\dao\workcenter\IProcessMsgDao.class
+com\dotop\smartwater\project\module\dao\workcenter\IProcessDao.class
+com\dotop\smartwater\project\module\dao\workcenter\IProcessFormDao.class
+com\dotop\smartwater\project\module\dao\workcenter\IDbDao.class
+com\dotop\smartwater\project\module\dao\workcenter\IProcessNodeDao.class
+com\dotop\smartwater\project\module\dao\workcenter\ITmplDao.class
+com\dotop\smartwater\project\module\dao\workcenter\IFormDao.class
+com\dotop\smartwater\project\module\dao\workcenter\IDbFieldDao.class
+com\dotop\smartwater\project\module\dao\workcenter\ITmplNodePointDao.class

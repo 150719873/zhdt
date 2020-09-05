@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper
+        namespace="com.dotop.smartwater.project.auth.dao.IPlatformRoleDao">
+
+    <insert id="insert">
+		insert into `platform_role` (`proleid`,`name`,`description`,`createuser`,`createtime`)
+              values (#{proleid}, #{name}, #{description}, #{createuser}, #{createtime})
+	</insert>
+
+
+    <select id="findMenuidsByProleId" resultType="java.lang.String">
+		select menuid from platform_role_permission where proleid = #{proleid}
+	</select>
+
+    <select id="getPlatformRoleList"
+            resultType="com.dotop.smartwater.project.module.core.auth.vo.PlatformRoleVo">
+        select * from `platform_role`
+        <where>
+            <if test="name != null and name != ''">
+                and `name` like concat('%',#{name},'%')
+            </if>
+        </where>
+        order by createtime desc
+    </select>
+
+    <select id="findPlatformRoleByName"
+            resultType="com.dotop.smartwater.project.module.core.auth.vo.PlatformRoleVo">
+		select * from `platform_role` where `name` = #{name} limit 1
+	</select>
+
+    <select id="selectById"
+            resultType="com.dotop.smartwater.project.module.core.auth.vo.PlatformRoleVo">
+		select * from `platform_role` where `proleid` = #{proleid}
+	</select>
+
+    <select id="getCount" resultType="java.lang.Integer">
+		select count(*) from `enterprise` where proleid = #{proleid}
+	</select>
+
+    <delete id="delPlatformRolePermissionByProleid">
+		delete from platform_role_permission where proleid=#{proleid}
+	</delete>
+
+    <delete id="delPlatformRolePermission">
+        delete from platform_role_permission where menuid=#{menuid}
+    </delete>
+
+    <delete id="deleteById">
+		delete from `platform_role` where `proleid` = #{proleid}
+	</delete>
+
+    <select id="findPlatformRoleByNameAndProleid"
+            resultType="com.dotop.smartwater.project.module.core.auth.vo.PlatformRoleVo">
+		select * from `platform_role` where `name` = #{name} and proleid != #{proleid} limit 1
+	</select>
+
+    <update id="updateById" parameterType="com.dotop.smartwater.project.module.core.auth.dto.PlatformRoleDto">
+        update `platform_role`
+        <set>
+            <if test="name != null and name != '' ">
+                name = #{name,jdbcType=VARCHAR},
+            </if>
+            <if test="description != null and description != '' ">
+                description = #{description,jdbcType=VARCHAR},
+            </if>
+            <if test="createuser != null and createuser != '' ">
+                createuser = #{createuser,jdbcType=VARCHAR},
+            </if>
+            <if test="createtime != null">
+                createtime = #{createtime,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where proleid = #{proleid,jdbcType=VARCHAR}
+    </update>
+
+    <select id="getPermissionByRoleId" resultType="com.dotop.smartwater.project.module.core.auth.vo.PermissionVo">
+        SELECT a.menuid as `id`, a.parentid as pId,a.`name` as name,a.isTrue as `checked`,a.type as type,
+        CASE a.level WHEN 1 THEN true ELSE false END as `open` from
+        (select menuid,name,false as isTrue,type,parentid,`level` from `menu` WHERE menuid not in (SELECT menuid from platform_role_permission where proleid=#{proleid})
+        UNION all
+        select menuid,name,true as isTrue,type,parentid,`level` from `menu` WHERE menuid in (SELECT menuid from platform_role_permission where proleid=#{proleid})) a
+        ORDER BY a.menuid ASC
+    </select>
+    <select id="findPermissionByProleid"
+            resultType="com.dotop.smartwater.project.module.core.auth.vo.AreaNodeVo">
+		SELECT a.menuid as `key`, a.parentid as pId,a.`name` as title,a.isTrue as `checked`,a.type as systype,case a.parentid when '0' then false else true end as isLeaf,
+        CASE a.level WHEN 1 THEN true ELSE false END as `expanded` from
+        (select menuid,name,false as isTrue,type,parentid,`level` from `menu` WHERE menuid not in (SELECT menuid from platform_role_permission where proleid=#{proleid})
+        UNION all
+        select menuid,name,true as isTrue,type,parentid,`level` from `menu` WHERE menuid in (SELECT menuid from platform_role_permission where proleid=#{proleid})) a
+        ORDER BY a.menuid ASC
+	</select>
+
+    <insert id="addPlatformRolePermission">
+        insert into platform_role_permission (id, proleid, menuid) values
+        <foreach collection="list" item="item1" index="index" separator=",">
+            (UUID(), #{proleid}, #{item1})
+        </foreach>
+    </insert>
+
+    <select id="loadRoleArea" resultType="com.dotop.smartwater.project.module.core.auth.vo.AreaNodeVo">
+        SELECT a.id as `key`, a.pId as pId,a.`name` as title,a.isTrue as `checked`,true as `expanded`,case a.pId when '0' then false else true end as isLeaf
+        from
+        (select id,name,false as isTrue,pId from `area` WHERE
+         id not in (SELECT area_id from role_area where role_id=#{roleId})
+        <if test="enterpriseid != null and enterpriseid != ''">
+            and enterpriseid=#{enterpriseid}
+        </if>
+        UNION all
+        select id,name,true as isTrue,pId from `area` WHERE
+        id in (SELECT area_id from role_area where role_id=#{roleId})
+        <if test="enterpriseid != null and enterpriseid != ''">
+            and enterpriseid=#{enterpriseid}
+        </if>
+        ) a
+        ORDER BY a.id ASC
+    </select>
+
+
+    <delete id="deleteRoleArea">
+      delete from `role_area` where `role_id` = #{roleId}
+    </delete>
+
+    <insert id="addRoleArea">
+        insert into role_area (id, role_id, area_id) values
+        <foreach collection="list" item="item1" index="index" separator=",">
+            (UUID(), #{roleId}, #{item1})
+        </foreach>
+    </insert>
+
+    <select id="loadMenuDataByType" parameterType="java.lang.String"
+            resultType="com.dotop.smartwater.project.module.core.auth.vo.AreaNodeVo">
+        select menuid as `key`,`name` as title,parentid as pId, true as isLeaf, systype
+            FROM
+                <if test="type == '0'.toString()">
+                    `admin_menu`
+                </if>
+                <if test="type == '1'.toString()">
+                    `menu`
+                </if>
+            where type != 2
+            ORDER BY menuid ASC
+	</select>
+</mapper>

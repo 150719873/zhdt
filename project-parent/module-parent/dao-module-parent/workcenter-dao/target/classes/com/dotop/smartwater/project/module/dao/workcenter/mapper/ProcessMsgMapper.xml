@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dotop.smartwater.project.module.dao.workcenter.IProcessMsgDao">
+
+   <resultMap id="WorkCenterProcessMsgVoMap" type="com.dotop.smartwater.project.module.core.water.vo.WorkCenterProcessMsgVo">
+		<result column="id" jdbcType="VARCHAR" property="id" />
+		<result column="process_id" jdbcType="VARCHAR" property="processId" />
+		<result column="status" jdbcType="VARCHAR" property="status" />
+		<result column="process_node_id" jdbcType="VARCHAR" property="processNodeId" />
+		<result column="upload_photos"   jdbcType="VARCHAR" property="uploadPhotos" />
+		<result column="upload_files" jdbcType="VARCHAR" property="uploadFiles" />
+		<result column="opinion_content" property="opinionContent" />
+		<result column="completer" property="completer" />
+		<result column="completer_name" property="completerName" />
+		<result column="complete_date" property="completeDate" />
+		<result column="coordinates" property="coordinates" />
+		<result column="handlers" property="handlers" /> 
+		<result column="carbon_copyers" property="carbonCopyers" /> 
+		<result column="handler_roles" property="handlerRoles" /> 
+		<result column="carbon_copyer_roles" property="carbonCopyerRoles" /> 
+		<result column="noticers" property="noticers" /> 
+		<result column="noticer_roles" property="noticerRoles" /> 
+		<result column="last_by" jdbcType="VARCHAR" property="lastBy" />
+		<result column="last_date" jdbcType="VARCHAR" property="lastDate" />
+		<result column="create_by" jdbcType="VARCHAR" property="createBy" />
+		<result column="create_date" jdbcType="VARCHAR" property="createDate" />
+		<result column="enterpriseid" jdbcType="VARCHAR" property="enterpriseid" />
+		<association property="handleDictChild" javaType="com.dotop.smartwater.project.module.core.water.vo.DictionaryChildVo">
+			<result column="handle_dict_child_id" jdbcType="VARCHAR" property="childId" />
+		</association>
+	</resultMap>
+	
+	<select id="list" resultMap="WorkCenterProcessMsgVoMap">
+		SELECT a.id,a.process_id,a.status,a.process_node_id,a.handle_dict_child_id,a.upload_photos,a.upload_files,a.opinion_content,
+		a.completer,a.completer_name,a.complete_date,a.coordinates
+		,a.is_del,a.create_by,a.create_date,a.last_by,a.last_date,a.enterpriseid
+        FROM wc_process_msg AS a 
+		<where>
+			<if test="enterpriseid != null and enterpriseid != ''">
+				AND a.enterpriseid=#{enterpriseid}
+			</if>
+			<if test="isDel != null">
+				AND a.is_del=#{isDel}
+			</if>
+			<if test="processId != null and processId != ''">
+				AND a.process_id=#{processId}
+			</if>
+		</where>
+		<if test="ifSort">
+			ORDER BY a.last_date ASC
+		</if>
+		<if test="limit!=null and offset!=null">
+			LIMIT #{limit} OFFSET #{offset}
+		</if>
+	</select>
+	
+	<select id="get" resultMap="WorkCenterProcessMsgVoMap">
+		SELECT a.id,a.process_id,a.status,a.process_node_id,a.handle_dict_child_id,a.upload_photos,a.upload_files,a.opinion_content,
+		a.completer,a.completer_name,a.complete_date,a.coordinates
+		,a.is_del,a.create_by,a.create_date,a.last_by,a.last_date,a.enterpriseid
+        FROM wc_process_msg AS a 
+		<where>
+			<if test="enterpriseid != null and enterpriseid != ''">
+				AND a.enterpriseid=#{enterpriseid}
+			</if>
+			<if test="isDel != null">
+				AND a.is_del=#{isDel}
+			</if>
+			<if test="id != null and id != ''">
+				AND a.id=#{id}
+			</if>
+		</where>
+	</select>
+	
+	<insert id="add">
+		INSERT INTO wc_process_msg
+		(id,process_id,status,process_node_id,handle_dict_child_id,upload_photos,upload_files,opinion_content,
+		completer,completer_name,complete_date,coordinates
+		,handlers,carbon_copyers,handler_roles,carbon_copyer_roles,noticers,noticer_roles
+		,is_del,create_by,create_date,last_by,last_date,enterpriseid)
+		VALUES
+		(#{id},#{processId},#{status},#{processNodeId},#{handleDictChild.childId},
+		#{uploadPhotos,javaType=java.util.List,jdbcType=VARCHAR},
+		#{uploadFiles,javaType=java.util.List,jdbcType=VARCHAR},
+		#{opinionContent},
+		#{completer},#{completerName},#{completeDate},#{coordinates,javaType=java.util.List,jdbcType=VARCHAR},
+		#{handlers,javaType=java.util.List,jdbcType=VARCHAR},
+		#{carbonCopyers,javaType=java.util.List,jdbcType=VARCHAR},
+		#{handlerRoles,javaType=java.util.List,jdbcType=VARCHAR},
+		#{carbonCopyerRoles,javaType=java.util.List,jdbcType=VARCHAR},
+		#{noticers,javaType=java.util.List,jdbcType=VARCHAR},
+		#{noticerRoles,javaType=java.util.List,jdbcType=VARCHAR}
+		,#{isDel},#{userBy},#{curr},#{userBy},#{curr},#{enterpriseid})
+	</insert>
+	
+	<update id="edit">
+		UPDATE wc_process_msg
+		<trim prefix="set" suffixOverrides=",">
+			<if test="uploadPhotos != null">
+				uploadPhotos=#{uploadPhotos,javaType=java.util.List,jdbcType=VARCHAR},
+			</if>
+			<if test="uploadFiles != null">
+				uploadFiles=#{uploadFiles,javaType=java.util.List,jdbcType=VARCHAR},
+			</if>
+			<if test="userBy != null and userBy != ''">
+				last_by=#{userBy},
+			</if>
+			<if test="curr != null">
+				last_date=#{curr},
+			</if>
+		</trim>
+		WHERE enterpriseid=#{enterpriseid} AND id=#{id} AND is_del=#{isDel}
+	</update>
+	
+	<update id="del">
+		UPDATE wc_process_msg
+		<trim prefix="set" suffixOverrides=",">
+			<if test="newIsDel != null and newIsDel != ''">
+				is_del=#{newIsDel},
+			</if>
+			<if test="userBy != null and userBy != ''">
+				last_by=#{userBy},
+			</if>
+			<if test="curr != null">
+				last_date=#{curr}, 
+			</if>
+		</trim>
+		WHERE enterpriseid=#{enterpriseid} AND id=#{id} AND is_del=#{isDel}
+	</update>
+	
+	<select id="listProcessId" resultType="java.lang.String">
+		SELECT distinct(a.process_id)
+        FROM wc_process_msg AS a 
+		<where>
+			<if test="enterpriseid != null and enterpriseid != ''">
+				AND a.enterpriseid=#{enterpriseid}
+			</if>
+			<if test="isDel != null">
+				AND a.is_del=#{isDel}
+			</if>
+			<if test="handlers != null or carbonCopyers != null or handlerRoles != null or carbonCopyerRoles != null">
+				AND (  1!=1 
+			</if>
+			<if test="handlers != null">
+				OR
+				<foreach collection="handlers" index="index" item="item" open="(" separator=" OR " close=")">
+					a.handlers LIKE CONCAT(CONCAT('%',#{item},'%'))
+				</foreach>
+			</if>
+			<if test="carbonCopyers != null">
+				OR
+				<foreach collection="carbonCopyers" index="index" item="item" open="(" separator=" OR " close=")">
+					a.carbon_copyers LIKE CONCAT(CONCAT('%',#{item},'%'))
+				</foreach>
+			</if>
+			<if test="handlerRoles != null">
+				OR
+				<foreach collection="handlerRoles" index="index" item="item" open="(" separator=" OR " close=")">
+					a.handler_roles LIKE CONCAT(CONCAT('%',#{item},'%'))
+				</foreach>
+			</if>
+			<if test="carbonCopyerRoles != null">
+				OR
+				<foreach collection="carbonCopyerRoles" index="index" item="item" open="(" separator=" OR " close=")">
+					a.carbon_copyer_roles LIKE CONCAT(CONCAT('%',#{item},'%'))
+				</foreach>
+			</if>
+			<if test="completer != null or completer !='' ">
+				OR a.completer=#{completer}
+			</if>
+			
+			<if test="handlers != null or carbonCopyers != null or handlerRoles != null or carbonCopyerRoles != null">
+				)
+			</if>
+		</where>
+	</select>
+    
+</mapper>

@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper
+        namespace="com.dotop.smartwater.project.module.dao.device.IDeviceWarningSettingDao">
+    <resultMap id="DeviceWarningSettingVo"
+               type="com.dotop.smartwater.project.module.core.water.vo.DeviceWarningSettingVo">
+        <id property="id" column="id"/>
+        <result property="warningType" column="warning_type"/>
+        <result property="warningNum" column="warning_num"/>
+        <result property="notifyType" column="notify_type"/>
+        <result property="modelType" column="model_type"/>
+        <result property="notifyUserType" column="notify_user_type"/>
+        <result property="notifyUser" column="notify_user"/>
+        <result property="createBy" column="create_by"/>
+        <result property="createDate" column="create_date"/>
+        <result property="lastBy" column="last_by"/>
+        <result property="lastDate" column="last_date"/>
+        <result property="isDel" column="is_del"/>
+        <result property="enterpriseid" column="enterpriseid"/>
+        <result property="tmplId" column="tmpl_id"/>
+    </resultMap>
+
+
+    <select id="list" resultMap="DeviceWarningSettingVo">
+        SELECT id,warning_type,warning_num,notify_type,model_type,notify_user_type,notify_user,create_by,create_date,last_by,last_date,is_del,enterpriseid,tmpl_id
+        FROM device_warning_setting WHERE is_del!=1
+        <if test="id != null and id != ''">
+            AND id=#{id}
+        </if>
+        <if test="warningType != null and warningType != -1">
+            AND warning_type=#{warningType}
+        </if>
+        <if test="notifyType != null and notifyType != -1">
+            AND notify_type=#{notifyType}
+        </if>
+        <if test="enterpriseid != null and enterpriseid != ''">
+            AND enterpriseid=#{enterpriseid}
+        </if>
+    </select>
+
+    <insert id="edit">
+        INSERT INTO device_warning_setting
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null and id != ''">
+                id,
+            </if>
+            <if test="warningType != null and warningType != -1">
+                warning_type,
+            </if>
+            <if test="warningNum != null and warningNum != -1">
+                warning_num,
+            </if>
+            <if test="notifyType != null and notifyType != -1">
+                notify_type,
+            </if>
+            <if test="modelType != null and modelType != ''">
+                model_type,
+            </if>
+            <if test="notifyUserType != null and notifyUserType != ''">
+                notify_user_type,
+            </if>
+            <if test="notifyUser != null and notifyUser != ''">
+                notify_user,
+            </if>
+            <if test="createBy != null and createBy != ''">
+                create_by,
+            </if>
+            <if test="createDate != null">
+                create_date,
+            </if>
+            <if test="lastBy != null and lastBy != ''">
+                last_by,
+            </if>
+            <if test="lastDate != null">
+                last_date,
+            </if>
+            <if test="isDel != null and isDel != -1">
+                is_del,
+            </if>
+            <if test="enterpriseid != null and enterpriseid != ''">
+                enterpriseid,
+            </if>
+            <if test="tmplId != null">
+                tmpl_id,
+            </if>
+        </trim>
+        VALUES
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null and id != ''">
+                #{id},
+            </if>
+            <if test="warningType != null and warningType != -1">
+                #{warningType},
+            </if>
+            <if test="warningNum != null and warningNum != -1">
+                #{warningNum},
+            </if>
+            <if test="notifyType != null and notifyType != -1">
+                #{notifyType},
+            </if>
+            <if test="modelType != null and modelType != ''">
+                #{modelType},
+            </if>
+            <if test="notifyUserType != null and notifyUserType != ''">
+                #{notifyUserType},
+            </if>
+            <if test="notifyUser != null and notifyUser != ''">
+                #{notifyUser},
+            </if>
+            <if test="createBy != null and createBy != ''">
+                #{createBy},
+            </if>
+            <if test="createDate != null">
+                #{createDate},
+            </if>
+            <if test="lastBy != null and lastBy != ''">
+                #{lastBy},
+            </if>
+            <if test="lastDate != null">
+                #{lastDate},
+            </if>
+            <if test="isDel != null and isDel != -1">
+                #{isDel},
+            </if>
+            <if test="enterpriseid != null and enterpriseid != ''">
+                #{enterpriseid},
+            </if>
+            <if test="tmplId != null">
+                #{tmplId},
+            </if>
+        </trim>
+        ON DUPLICATE KEY UPDATE
+        <trim suffixOverrides=",">
+            <if test="id != null and id != ''">
+                id=#{id},
+            </if>
+            <if test="warningType != null and warningType != -1">
+                warning_type=#{warningType},
+            </if>
+            <if test="warningNum != null and warningNum != -1">
+                warning_num=#{warningNum},
+            </if>
+            <if test="notifyType != null and notifyType != -1">
+                notify_type=#{notifyType},
+            </if>
+            <if test="modelType != null and modelType != ''">
+                model_type=#{modelType},
+            </if>
+            <if test="notifyUserType != null and notifyUserType != ''">
+                notify_user_type=#{notifyUserType},
+            </if>
+            <if test="notifyUser != null and notifyUser != ''">
+                notify_user=#{notifyUser},
+            </if>
+            <if test="createBy != null and createBy != ''">
+                create_by=#{createBy},
+            </if>
+            <if test="createDate != null">
+                create_date=#{createDate},
+            </if>
+            <if test="lastBy != null and lastBy != ''">
+                last_by=#{lastBy},
+            </if>
+            <if test="lastDate != null">
+                last_date=#{lastDate},
+            </if>
+            <if test="isDel != null and isDel != -1">
+                is_del=#{isDel},
+            </if>
+            <if test="enterpriseid != null and enterpriseid != ''">
+                enterpriseid=#{enterpriseid},
+            </if>
+            <if test="tmplId != null">
+                tmpl_id=#{tmplId},
+            </if>
+        </trim>
+    </insert>
+</mapper>

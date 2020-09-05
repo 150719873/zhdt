@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dotop.smartwater.project.module.dao.revenue.IOwnerExtDao">
+    <resultMap id="BaseResultMap" type="com.dotop.smartwater.project.module.core.water.vo.OwnerExtVo">
+        <id column="owner_id" jdbcType="VARCHAR" property="ownerId"/>
+        <result column="owner_type" jdbcType="VARCHAR" property="ownerType"/>
+        <result column="bank_name" jdbcType="VARCHAR" property="bankName"/>
+        <result column="bank_account" jdbcType="VARCHAR" property="bankAccount"/>
+        <result column="account_name" jdbcType="VARCHAR" property="accountName"/>
+        <result column="contact" jdbcType="VARCHAR" property="contact"/>
+        <result column="ownerTypeName" jdbcType="VARCHAR" property="ownerTypeName"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+    owner_id, owner_type, bank_name, bank_account, account_name, contact
+  </sql>
+    
+    <select id="get" parameterType="java.lang.String" resultMap="BaseResultMap">
+        select a.*, b.child_name as ownerTypeName
+        from owner_ext a left join dictionary_child b on a.owner_type = b.child_id
+        where a.owner_id = #{ownerId,jdbcType=VARCHAR}
+    </select>
+    
+    <delete id="del" parameterType="java.lang.String">
+    	delete from owner_ext where owner_id = #{ownerId,jdbcType=VARCHAR}
+  	</delete>
+  
+    <insert id="add" parameterType="com.dotop.smartwater.project.module.core.water.dto.OwnerExtDto">
+    	insert into owner_ext (owner_id, owner_type, bank_name, bank_account, account_name, contact)
+    	values (#{ownerId,jdbcType=VARCHAR}, #{ownerType,jdbcType=VARCHAR}, #{bankName,jdbcType=VARCHAR}, 
+      	#{bankAccount,jdbcType=VARCHAR}, #{accountName,jdbcType=VARCHAR}, #{contact,jdbcType=VARCHAR})
+  	</insert>
+  
+  	
+  	<insert id="batchAddExt" parameterType="com.dotop.smartwater.project.module.core.water.dto.OwnerExtDto">
+    	insert into owner_ext 
+    		(owner_id, owner_type, bank_name, bank_account, account_name, contact)
+    	values 
+    	<foreach collection="list" item="item" index="index" separator=",">
+         (#{item.ownerId}, #{item.ownerType}, #{item.bankName},
+    		#{item.bankAccount}, #{item.accountName}, #{item.contact})
+      </foreach>
+  	</insert>
+  
+  
+    <update id="edit" parameterType="com.dotop.smartwater.project.module.core.water.dto.OwnerExtDto">
+        update owner_ext
+        <set>
+            <if test="ownerType != null and ownerType != '' ">
+                owner_type = #{ownerType,jdbcType=VARCHAR},
+            </if>
+            <if test="bankName != null and bankName != '' ">
+                bank_name = #{bankName,jdbcType=VARCHAR},
+            </if>
+            <if test="bankAccount != null and bankAccount != '' ">
+                bank_account = #{bankAccount,jdbcType=VARCHAR},
+            </if>
+            <if test="accountName != null and accountName != '' ">
+                account_name = #{accountName,jdbcType=VARCHAR},
+            </if>
+            <if test="contact != null and contact != '' ">
+                contact = #{contact,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where owner_id = #{ownerId,jdbcType=VARCHAR}
+    </update>
+
+</mapper>

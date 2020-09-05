@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.dotop.smartwater.project.module.dao.store.IInventoryDao">
+
+	<resultMap id="InventoryVoMap" type="com.dotop.smartwater.project.module.core.water.vo.InventoryVo">
+		<result column="inTotal" jdbcType="VARCHAR" property="inTotal" />
+		<result column="outTotal" jdbcType="VARCHAR" property="outTotal" />
+		<result column="stockTotal" jdbcType="VARCHAR" property="stockTotal" />
+		<result column="productNo" jdbcType="VARCHAR" property="productNo" />
+		<result column="name" jdbcType="VARCHAR" property="name" />
+		<association property="product" javaType="com.dotop.smartwater.project.module.core.water.vo.StoreProductVo">
+			<result column="productId" jdbcType="VARCHAR" property="productId" />
+			<result column="productNo" jdbcType="VARCHAR" property="productNo" />
+			<result column="name" jdbcType="VARCHAR" property="name" />
+			<result column="price" jdbcType="VARCHAR" property="price" />
+			<result column="unit" jdbcType="VARCHAR" property="unit" />
+			<result column="model" jdbcType="VARCHAR" property="model" />
+			<result column="spec" jdbcType="VARCHAR" property="spec" />
+			<result column="material" jdbcType="VARCHAR" property="material" />
+			<result column="vender" jdbcType="VARCHAR" property="vender" />
+			<result column="produced" jdbcType="VARCHAR" property="produced" />
+			<result column="contacts" jdbcType="VARCHAR" property="contacts" />
+			<result column="phone" jdbcType="VARCHAR" property="phone" />
+		</association>
+	</resultMap>
+
+	<select id="getInventoryByCon" resultMap="InventoryVoMap">
+		SELECT b.productNo,b.productId, b.name, IFNULL(a.inTotal,0) as inTotal, IFNULL(a.stockTotal,0) as stockTotal, b.price, b.unit, b.model, b.spec,
+			b.vender, b.produced, b.contacts, b.phone, c.child_name as material
+			from store_product b 
+			left join (select productNo,SUM(stock) as inTotal, SUM(quantity) as stockTotal from store_storage where enterpriseId = #{enterpriseid} and `status` = 2 group by productNo) a 
+			on a.productNo = b.productNo left join dictionary_child c on b.material = c.dictionary_id
+			WHERE b.enterpriseId = #{enterpriseid} and b.`status` = 2
+		<if test="productNo != null and productNo != ''">
+			AND b.productNo like concat('%',#{productNo},'%')
+		</if>
+		<if test="name != null and name != ''">
+			AND b.name like concat('%',#{name},'%')
+		</if>
+	</select>
+	
+	<select id="getInventory" resultMap="InventoryVoMap">
+		SELECT b.productId, a.productNo, b.name, SUM(a.stock) as inTotal, SUM(a.quantity) as stockTotal
+			from store_product b left join store_storage a on a.productNo = b.productNo
+			WHERE a.`status` != -1 and a.enterpriseId = #{enterpriseid} and b.enterpriseId = #{enterpriseid}
+		<if test="productNo != null and productNo != ''">
+			AND a.productNo = #{productNo}
+		</if>
+		<if test="productId != null and productId != ''">
+			AND b.productId = #{productId}
+		</if>
+		group by a.productNo
+	</select>
+	
+	<select id="getOutCount" resultMap="InventoryVoMap">
+		select productNo, SUM(quantity) as outTotal from store_outstorage where
+		 `status` = 0 and enterpriseId = #{enterpriseid}
+		 <if test="productNo != null and productNo != ''">
+			AND productNo like concat('%',#{productNo},'%')
+		</if>
+		<if test="name != null and name != ''">
+			AND name like concat('%',#{name},'%')
+		</if>
+		group by productNo
+	</select>
+	
+</mapper>

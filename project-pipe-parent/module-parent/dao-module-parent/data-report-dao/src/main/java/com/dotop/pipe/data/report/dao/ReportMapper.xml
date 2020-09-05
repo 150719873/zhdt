@@ -1,0 +1,406 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper
+        namespace="com.dotop.pipe.data.report.api.dao.IReportDao">
+
+    <resultMap id="ReportVoMap"
+               type="com.dotop.pipe.data.report.core.vo.ReportVo">
+        <result column="deviceId" jdbcType="VARCHAR"
+                property="deviceId"/>
+        <result column="field" jdbcType="VARCHAR" property="field"/>
+        <result column="val" jdbcType="VARCHAR" property="val"/>
+        <result column="flw_measure" jdbcType="VARCHAR" property="flwMeasure"/>
+        <result column="flw_rate" jdbcType="VARCHAR" property="flwRate"/>
+        <result column="flw_total_value" jdbcType="VARCHAR" property="flwTotalValue"/>
+        <result column="pressure_value" jdbcType="VARCHAR" property="pressureValue"/>
+        <result column="quality_chlorine" jdbcType="VARCHAR" property="qualityChlorine"/>
+        <result column="quality_oxygen" jdbcType="VARCHAR" property="qualityOxygen"/>
+        <result column="quality_ph" jdbcType="VARCHAR" property="qualityPh"/>
+        <result column="quality_turbid" jdbcType="VARCHAR" property="qualityTurbid"/>
+        <result column="quality_tem_one" jdbcType="VARCHAR" property="qualityTemOne"/>
+        <result column="quality_tem_two" jdbcType="VARCHAR" property="qualityTemTwo"/>
+        <result column="quality_tem_three" jdbcType="VARCHAR" property="qualityTemThree"/>
+        <result column="quality_tem_four" jdbcType="VARCHAR" property="qualityTemFour"/>
+        <result column="sumVal" jdbcType="VARCHAR" property="sumVal"/>
+        <result column="minVal" jdbcType="VARCHAR" property="minVal"/>
+        <result column="maxVal" jdbcType="VARCHAR" property="maxVal"/>
+        <result column="avgVal" jdbcType="VARCHAR" property="avgVal"/>
+        <result column="sendYear" jdbcType="VARCHAR"
+                property="sendYear"/>
+        <result column="sendMonth" jdbcType="VARCHAR"
+                property="sendMonth"/>
+        <result column="sendDay" jdbcType="VARCHAR" property="sendDay"/>
+        <result column="sendHour" jdbcType="VARCHAR"
+                property="sendHour"/>
+        <result column="sendDate" jdbcType="VARCHAR"
+                property="sendDate"/>
+    </resultMap>
+
+    <resultMap id="ReportAreaGroupVoMap"
+               type="com.dotop.pipe.data.report.core.vo.ReportAreaGroupVo">
+        <result column="areaId" jdbcType="VARCHAR" property="areaId"/>
+        <result column="areaName" jdbcType="VARCHAR"
+                property="areaName"/>
+        <result column="areaCode" jdbcType="VARCHAR"
+                property="areaCode"/>
+        <collection property="reportAreas"
+                    ofType="com.dotop.pipe.data.report.core.vo.ReportAreaVo">
+            <result column="areaId" jdbcType="VARCHAR" property="areaId"/>
+            <result column="areaName" jdbcType="VARCHAR"
+                    property="areaName"/>
+            <result column="areaCode" jdbcType="VARCHAR"
+                    property="areaCode"/>
+            <result column="parentCode" jdbcType="VARCHAR"
+                    property="parentCode"/>
+            <result column="totalVal" jdbcType="VARCHAR"
+                    property="totalVal"/>
+            <result column="sendYear" jdbcType="VARCHAR"
+                    property="sendYear"/>
+            <result column="sendMonth" jdbcType="VARCHAR"
+                    property="sendMonth"/>
+            <result column="sendDay" jdbcType="VARCHAR" property="sendDay"/>
+            <result column="sendHour" jdbcType="VARCHAR"
+                    property="sendHour"/>
+        </collection>
+    </resultMap>
+
+    <resultMap id="RegionReportVoMap" type="com.dotop.pipe.data.report.core.vo.RegionReportVo">
+        <result column="region_id" jdbcType="VARCHAR" property="regionId"/>
+        <result column="region_code" jdbcType="VARCHAR" property="regionCode"/>
+        <result column="region_name" jdbcType="VARCHAR" property="regionName"/>
+        <result column="region_des" jdbcType="VARCHAR" property="regionDes"/>
+        <collection property="deviceList" ofType="com.dotop.pipe.data.report.core.vo.ReportVo"
+                    javaType="java.util.List" column="region_id" select="queryRegionDeviceList">
+            <result column="device_id" jdbcType="VARCHAR" property="deviceId"/>
+        </collection>
+    </resultMap>
+
+    <resultMap id="AreaReportVoMap"
+               type="com.dotop.pipe.data.report.core.vo.AreaReportVo">
+
+        <result column="field" jdbcType="VARCHAR" property="field"/>
+        <result column="totalVal" jdbcType="VARCHAR" property="totalVal"/>
+        <result column="count_time" jdbcType="VARCHAR" property="countTime"/>
+        <result column="area_name" jdbcType="VARCHAR" property="areaName"/>
+        <result column="area_des" jdbcType="VARCHAR" property="areaDes"/>
+        <result column="area_id" jdbcType="VARCHAR" property="areaId"/>
+        <result column="area_code" jdbcType="VARCHAR" property="areaCode"/>
+        <result column="area_sum_count" jdbcType="VARCHAR" property="areaSumCount"/>
+        <result column="area_deal_count" jdbcType="VARCHAR" property="areaDealCount"/>
+        <result column="create_by" jdbcType="VARCHAR" property="createBy"/>
+    </resultMap>
+
+    <resultMap id="deviceVoMap" type="com.dotop.pipe.data.report.core.vo.ReportVo">
+        <result column="device_id" jdbcType="VARCHAR" property="deviceId"/>
+    </resultMap>
+
+    <!-- 报表统计实时统计-->
+    <select id="getDeviceReport" resultMap="ReportVoMap">
+
+        <if test="dateType != null and dateType.code != 'REAL_TIME'">
+            select a.device_id as deviceId , '${fieldType[0].code}' as field ,0 AS val,
+            sum(CAST(a.${fieldType[0].lowcode} AS DECIMAL(10, 3))) AS sumVal,
+            MAX(CAST(a.${fieldType[0].lowcode} AS DECIMAL(10, 3))) AS maxVal,
+            MIN(CAST(a.${fieldType[0].lowcode} AS DECIMAL(10, 3))) AS minVal,
+            ROUND(AVG(a.${fieldType[0].lowcode}),2) AS avgVal ,
+            a.dev_send_year AS sendYear ,
+            a.dev_send_month AS sendMonth,a.dev_send_day AS sendDay,
+            a.dev_send_hour AS sendHour ,
+            DATE_FORMAT(MIN(a.dev_send_date),'%Y-%m-%d %H:%i:%s') AS sendDate
+        </if>
+        <if test="dateType != null and dateType.code == 'REAL_TIME'">
+            select a.device_id as deviceId ,
+            '${fieldType[0].code}' as field ,
+            CAST(a.${fieldType[0].lowcode} AS DECIMAL(10, 3)) AS val,
+            0 AS sumVal,
+            0 AS maxVal,
+            0 AS minVal,
+            0 AS avgVal ,
+            a.dev_send_year AS sendYear ,
+            a.dev_send_month AS sendMonth,a.dev_send_day AS sendDay,
+            a.dev_send_hour AS sendHour ,
+            DATE_FORMAT(a.dev_send_date,'%Y-%m-%d %H:%i:%s') AS sendDate
+
+        </if>
+        from pls_device_data_log as a
+        <where>
+            <if test="deviceIds != null">
+                AND a.device_id IN
+                <foreach collection="deviceIds" index="index"
+                         item="deviceId" open="(" separator="," close=")">
+                    #{deviceId}
+                </foreach>
+            </if>
+            <!-- <if test="fieldType != null">
+                AND a.field IN
+                <foreach collection="fieldType" index="index" item="field"
+                    open="(" separator="," close=")">
+                    #{field.code}
+                </foreach>
+            </if> -->
+            <if test="startDate != null ">
+                AND a.dev_send_date &gt;=
+                STR_TO_DATE(DATE_FORMAT(#{startDate},'%Y-%m-%d %H:%i:%s'),'%Y-%m-%d
+                %H:%i:%s')
+            </if>
+            <if test="endDate != null ">
+                AND a.dev_send_date
+                &lt;=STR_TO_DATE(DATE_FORMAT(#{endDate},'%Y-%m-%d
+                %H:%i:%s'),'%Y-%m-%d %H:%i:%s')
+            </if>
+            <if test="ctimes != null ">
+                and
+                <foreach collection="ctimes" separator="," item="item" index="index" open=" a.ctime in (" close=")">
+                    #{item}
+                </foreach>
+            </if>
+            <if test="isDel != null">
+                and a.is_del = #{isDel}
+            </if>
+            <if test="enterpriseId != null">
+                and a.enterprise_id = #{enterpriseId}
+            </if>
+        </where>
+        <if test="dateType != null and dateType.code != 'REAL_TIME'">
+            GROUP BY a.device_id <!-- , a.field -->
+            <if test="dateType != null and dateType.code == 'YEAR'">
+                ,a.dev_send_year
+                order by a.dev_send_date ASC
+            </if>
+            <if test="dateType != null and dateType.code == 'MONTH'">
+                ,a.dev_send_year,a.dev_send_month
+                order by a.dev_send_date ASC
+            </if>
+            <if test="dateType != null and dateType.code == 'DAY'">
+                ,a.dev_send_year,a.dev_send_month,a.dev_send_day
+                order by a.dev_send_date ASC
+            </if>
+            <if test="dateType != null and dateType.code == 'HOUR'">
+                ,a.dev_send_year,a.dev_send_month,a.dev_send_day,a.dev_send_hour
+                order by a.dev_send_date ASC
+            </if>
+        </if>
+        <if test="dateType != null and dateType.code == 'REAL_TIME'">
+            order by a.dev_send_date ASC
+        </if>
+    </select>
+
+    <select id="getDeviceRealTime" resultMap="ReportVoMap">
+        SELECT device_id AS deviceId,
+        flw_measure,flw_rate,flw_total_value,pressure_value,quality_chlorine,quality_oxygen,quality_ph,quality_turbid,
+        quality_tem_one,quality_tem_two,quality_tem_three,quality_tem_four,
+        dev_send_date as sendDate
+        FROM
+        pls_device_data
+        <where>
+            <if test="deviceIds != null">
+                AND device_id IN
+                <foreach collection="deviceIds" index="index"
+                         item="deviceId" open="(" separator="," close=")">
+                    #{deviceId}
+                </foreach>
+            </if>
+            <if test="isDel != null">
+                and is_del = #{isDel}
+            </if>
+            <if test="enterpriseId != null">
+                and enterprise_id = #{enterpriseId}
+            </if>
+        </where>
+    </select>
+
+    <!-- 报表区域统计 -->
+    <select id="getAreaReport" resultMap="ReportAreaGroupVoMap">
+        SELECT c.area_id AS areaId , c.area_code AS areaCode,c.name AS areaName,c.parent_code AS
+        parentCode,ROUND(SUM(a.flw_measure),3) AS totalVal ,
+        a.dev_send_year AS sendYear,a.dev_send_month AS sendMonth,
+        a.dev_send_day AS sendDay,a.dev_send_hour AS sendHour
+        FROM pls_device_data_log a
+        JOIN pls_device b ON a.device_id=b.device_id
+        JOIN pls_area c ON b.area_id=c.area_id
+        WHERE a.enterprise_id = #{enterpriseId} AND b.enterprise_id = #{enterpriseId}
+        <!--  AND  a.field= '${@PropertyConstants@TYPE_FM_FLWMEASURE}'  -->
+        <if test="areaIds != null">
+            AND b.area_id IN
+            <foreach collection="areaIds" index="index" item="areaId"
+                     open="(" separator="," close=")">
+                #{areaId}
+            </foreach>
+        </if>
+        <if test="startDate != null ">
+            AND a.dev_send_date &gt;=
+            STR_TO_DATE(DATE_FORMAT(#{startDate},'%Y-%m-%d
+            %H:%i:%s'),'%Y-%m-%d
+            %H:%i:%s')
+        </if>
+        <if test="endDate != null ">
+            AND a.dev_send_date &lt;=STR_TO_DATE(DATE_FORMAT(#{endDate},'%Y-%m-%d
+            %H:%i:%s'),'%Y-%m-%d %H:%i:%s')
+        </if>
+        <if test="ctimes != null ">
+            and
+            <foreach collection="ctimes" separator="," item="item" index="index" open=" a.ctime in (" close=")">
+                #{item}
+            </foreach>
+        </if>
+        GROUP BY
+        c.area_id,c.area_code,c.name,c.parent_code
+        <if test="dateType != null and dateType.code == 'YEAR'">
+            ,a.dev_send_year
+        </if>
+        <if test="dateType != null and dateType.code == 'MONTH'">
+            ,a.dev_send_year,a.dev_send_month
+        </if>
+        <if test="dateType != null and dateType.code == 'DAY'">
+            ,a.dev_send_year,a.dev_send_month,a.dev_send_day
+        </if>
+        <if test="dateType != null and dateType.code == 'HOUR'">
+            ,a.dev_send_year,a.dev_send_month,a.dev_send_day,a.dev_send_hour
+        </if>
+        order by a.dev_send_date ASC
+    </select>
+
+    <!-- 解决不支持子查询问题  报表 虚拟流量汇总-->
+    <select id="getVirtualFlow" resultMap="ReportVoMap">
+
+        <if test="positiveIds != null ">
+            SELECT
+            SUM(c.flw_measure) AS sumVal,
+            DATE_FORMAT(MAX(c.dev_send_date),'%Y-%m-%d %H:%i:%s') AS sendDate
+            FROM
+            pls_device_data_log as c
+            WHERE
+            <!-- c.FIELD='${@PropertyConstants@TYPE_FM_FLWMEASURE}' AND -->
+            c.device_id IN
+            <foreach collection="positiveIds" index="index"
+                     item="deviceId" open="(" separator="," close=")">
+                #{deviceId}
+            </foreach>
+            <if test="startDate != null ">
+                AND c.dev_send_date &gt;=
+                STR_TO_DATE(DATE_FORMAT(#{startDate,jdbcType=TIMESTAMP},'%Y-%m-%d %H:%i:%s'),'%Y-%m-%d %H:%i:%s')
+            </if>
+            <if test="endDate != null ">
+                AND c.dev_send_date
+                &lt;=STR_TO_DATE(DATE_FORMAT(#{endDate,jdbcType=TIMESTAMP},'%Y-%m-%d %H:%i:%s'),'%Y-%m-%d %H:%i:%s')
+            </if>
+            <if test="ctimes != null ">
+                and
+                <foreach collection="ctimes" separator="," item="item" index="index" open=" c.ctime in (" close=")">
+                    #{item}
+                </foreach>
+            </if>
+            <if test="isDel != null">
+                and c.is_del = #{isDel}
+            </if>
+            <if test="enterpriseId != null">
+                and c.enterprise_id = #{enterpriseId}
+            </if>
+            <!-- 	<if test="enterpriseId != null">
+                 and enterprise_id = #{enterpriseId}
+                </if> -->
+        </if>
+        <if test="reverseIds != null ">
+            SELECT
+            SUM(d.flw_measure) AS sumVal ,
+            DATE_FORMAT(MAX(d.dev_send_date),'%Y-%m-%d %H:%i:%s') AS sendDate
+            FROM
+            pls_device_data_log as d
+            WHERE
+            <!--  d.FIELD= '${@PropertyConstants@TYPE_FM_FLWMEASURE}' AND -->
+            d.device_id IN
+            <foreach collection="reverseIds" index="index"
+                     item="deviceId" open="(" separator="," close=")">
+                #{deviceId}
+            </foreach>
+            <if test="startDate != null ">
+                AND d.dev_send_date &gt;=
+                STR_TO_DATE(DATE_FORMAT(#{startDate,jdbcType=TIMESTAMP},'%Y-%m-%d %H:%i:%s'),'%Y-%m-%d %H:%i:%s')
+            </if>
+            <if test="endDate != null ">
+                AND d.dev_send_date
+                &lt;=STR_TO_DATE(DATE_FORMAT(#{endDate,jdbcType=TIMESTAMP},'%Y-%m-%d %H:%i:%s'),'%Y-%m-%d %H:%i:%s')
+            </if>
+            <if test="ctimes != null ">
+                and
+                <foreach collection="ctimes" separator="," item="item" index="index" open=" d.ctime in (" close=")">
+                    #{item}
+                </foreach>
+            </if>
+            <if test="isDel != null">
+                and d.is_del = #{isDel}
+            </if>
+            <if test="enterpriseId != null">
+                and d.enterprise_id = #{enterpriseId}
+            </if>
+        </if>
+    </select>
+
+    <select id="getRegionReportPage" resultMap="RegionReportVoMap">
+		 select a.device_id as region_id ,a.name as region_name , a.code as region_code , a.des as region_des 
+		 from pls_device as a
+		 join pls_area as b on a.area_id = b.area_id and b.is_del = 0
+		 join pls_product as c on a.product_id = c.product_id
+		 where a.product_category = 'region' and a.enterprise_id = #{enterpriseId} and a.is_del = 0
+	</select>
+
+    <select id="getAreaReportPage" resultMap="AreaReportVoMap">
+		select a.area_id  as area_id ,  a.area_code as area_code ,a.`name`  as area_name 
+		from pls_area as a
+		where a.enterprise_id = #{enterpriseId} and a.is_del = 0   
+	</select>
+
+    <select id="queryRegionDeviceList" resultMap="deviceVoMap">
+		 select c.device_id as device_id
+		 from pls_device_map as b
+		 LEFT join pls_device as c on b.other_id = c.device_id
+		 where b.device_id = #{region_id} and  c.is_del = 0 
+	</select>
+
+    <select id="queryDeviceDateLog" parameterType="java.lang.String" resultMap="ReportVoMap">
+        SELECT max(e.flw_total_value+0) as flw_total_value ,e.device_id as deviceId from pls_device_data_log as e
+        <where>
+            <if test="startDate != null ">
+                AND e.dev_send_date &gt;= STR_TO_DATE(DATE_FORMAT(#{startDate},'%Y-%m-%d %H:%i:%s'),'%Y-%m-%d %H:%i:%s')
+            </if>
+            <if test="endDate != null ">
+                AND e.dev_send_date &lt;= STR_TO_DATE(DATE_FORMAT(#{endDate},'%Y-%m-%d %H:%i:%s'),'%Y-%m-%d %H:%i:%s')
+            </if>
+            <if test="ctimes != null ">
+                and
+                <foreach collection="ctimes" separator="," item="item" index="index" open=" e.ctime in (" close=")">
+                    #{item}
+                </foreach>
+            </if>
+        </where>
+        group by e.device_code ORDER BY e.dev_send_date DESC
+    </select>
+
+    <select id="queryDeviceDateLogs" parameterType="java.lang.String" resultMap="ReportVoMap">
+        select e.flw_measure,e.flw_total_value,e.pressure_value ,e.dev_send_date as sendDate ,e.device_id as deviceId
+        from pls_device_data_log as e
+        <where>
+            <if test="startDate != null ">
+                AND e.dev_send_date &gt;= STR_TO_DATE(DATE_FORMAT(#{startDate},'%Y-%m-%d %H:%i:%s'),'%Y-%m-%d %H:%i:%s')
+            </if>
+            <if test="endDate != null ">
+                AND e.dev_send_date &lt;= STR_TO_DATE(DATE_FORMAT(#{endDate},'%Y-%m-%d %H:%i:%s'),'%Y-%m-%d %H:%i:%s')
+            </if>
+            <if test="ctimes != null ">
+                and
+                <foreach collection="ctimes" separator="," item="item" index="index" open=" e.ctime in (" close=")">
+                    #{item}
+                </foreach>
+            </if>
+            <if test="deviceIds != null">
+                and
+                <foreach collection="deviceIds" separator="," item="item" index="index" open=" e.device_id in ("
+                         close=")">
+                    #{item}
+                </foreach>
+            </if>
+        </where>
+        order by e.dev_send_date ASC
+    </select>
+
+</mapper>

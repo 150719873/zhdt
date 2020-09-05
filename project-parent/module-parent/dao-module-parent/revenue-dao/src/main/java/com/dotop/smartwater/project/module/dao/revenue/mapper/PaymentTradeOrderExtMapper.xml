@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dotop.smartwater.project.module.dao.revenue.IPaymentTradeOrderExtDao">
+    <resultMap id="BaseResultMap"
+               type="com.dotop.smartwater.project.module.core.water.vo.PaymentTradeOrderExtVo">
+        <id column="id" jdbcType="VARCHAR" property="id"/>
+        <result column="tradeid" jdbcType="VARCHAR" property="tradeid"/>
+        <result column="couponid" jdbcType="VARCHAR" property="couponid"/>
+        <result column="coupon_money" jdbcType="VARCHAR" property="couponMoney"/>
+        <result column="balance" jdbcType="VARCHAR" property="balance"/>
+        <result column="actualamount" jdbcType="VARCHAR" property="actualamount"/>
+        <result column="change" jdbcType="VARCHAR" property="change"/>
+        <result column="cost" jdbcType="VARCHAR" property="cost"/>
+        <result column="penalty" jdbcType="VARCHAR" property="penalty"/>
+        <result column="mode" jdbcType="VARCHAR" property="mode"/>
+        <result column="detail" jdbcType="VARCHAR" property="detail"/>
+    </resultMap>
+
+    <select id="get" resultMap="BaseResultMap">
+    select id, tradeid, couponid, coupon_money, balance, actualamount, change, cost, penalty,
+    mode, detail
+    from payment_trade_orderext
+    where id = #{id}
+  </select>
+    <delete id="del">
+    delete from payment_trade_orderext
+    where id = #{id}
+  </delete>
+    <insert id="add" parameterType="com.dotop.smartwater.project.module.core.water.dto.PaymentTradeOrderExtDto">
+    insert into payment_trade_orderext (id, tradeid, couponid, 
+      coupon_money, balance, actualamount, 
+      `change`, `cost`, penalty,
+      mode, `detail`)
+    values (#{id}, #{tradeid}, #{couponid}, 
+      #{couponMoney}, #{balance}, #{actualamount}, 
+      #{change}, #{cost}, #{penalty}, 
+      #{mode}, #{detail,jdbcType=LONGVARCHAR})
+  </insert>
+
+    <insert id="addList" >
+    insert into payment_trade_orderext (id, tradeid, couponid, 
+      coupon_money, balance, actualamount, 
+      `change`, `cost`, penalty,
+      mode, `detail`)
+    values
+        <foreach collection ="list" item="item" index= "index" separator =",">
+            (#{item.id}, #{item.tradeid}, #{item.couponid},
+            #{item.couponMoney}, #{item.balance}, #{item.actualamount},
+            #{item.change}, #{item.cost}, #{item.penalty},
+            #{item.mode}, #{item.detail})
+        </foreach >
+  </insert>
+    
+    
+    
+    <update id="edit" parameterType="com.dotop.smartwater.project.module.core.water.dto.PaymentTradeOrderExtDto">
+        update payment_trade_orderext
+        <set>
+            <if test="tradeid != null and tradeid != '' ">
+                tradeid = #{tradeid},
+            </if>
+            <if test="couponid != null and couponid != '' ">
+                couponid = #{couponid},
+            </if>
+            <if test="couponMoney != null and couponMoney != '' ">
+                coupon_money = #{couponMoney},
+            </if>
+            <if test="balance != null and balance != '' ">
+                balance = #{balance},
+            </if>
+            <if test="actualamount != null and actualamount != '' ">
+                actualamount = #{actualamount},
+            </if>
+            <if test="change != null and change != '' ">
+                `change` = #{change},
+            </if>
+            <if test="cost != null and cost != '' ">
+                `cost` = #{cost},
+            </if>
+            <if test="penalty != null and penalty != '' ">
+                penalty = #{penalty},
+            </if>
+            <if test="mode != null and mode != '' ">
+                `mode` = #{mode},
+            </if>
+            <if test="detail != null and detail != '' ">
+                `detail` = #{detail},
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+
+    <select id="list" resultMap="BaseResultMap">
+        select id, tradeid, couponid, coupon_money, balance, actualamount, `change`, `cost`, penalty,
+        mode, detail
+        from payment_trade_orderext
+        <where>
+            1=1
+            <if test="tradeid != null and tradeid != '' ">
+                and tradeid = #{tradeid},
+            </if>
+        </where>
+    </select>
+    <select id="findNotPayListByTradeIds" resultMap="BaseResultMap">
+        select a.* from payment_trade_orderext a
+        INNER JOIN payment_trade_order b on a.tradeid = b.tradeid
+        <where>
+            a.tradeid in
+            <foreach collection="tradeIds" item="tradeid" index="index"
+                     open="(" close=")" separator=",">
+                #{tradeid}
+            </foreach>
+            and b.`status` = 0 and b.enterpriseid = #{enterpriseid}
+        </where>
+    </select>
+
+    <update id="handleExtError">
+        update payment_trade_orderext
+        <set>
+            `coupon_money` = '0.0' ,
+            `couponid` = null ,
+            `balance` = '0.0' ,
+            `change` = null ,
+            `mode` = null ,
+            `actualamount` = null ,
+        </set>
+        <where>
+            tradeid in
+            <foreach collection="tradeIds" item="tradeid" index="index"
+                     open="(" close=")" separator=",">
+                #{tradeid}
+            </foreach>
+        </where>
+    </update>
+
+    <select id="findByTradeid" resultMap="BaseResultMap">
+        select * from payment_trade_orderext
+        where tradeid = #{tradeid}
+    </select>
+</mapper>

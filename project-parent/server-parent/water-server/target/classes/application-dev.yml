@@ -1,0 +1,61 @@
+logging:
+  config: classpath:log4j2-dev.xml
+
+druid:
+  datasource:
+    url: jdbc:mysql://222.20.83.207:3306/water?useUnicode=true&characterEncoding=UTF8&useSSL=false&serverTimezone=Asia/Shanghai&allowMultiQueries=true
+    username: root
+    password: 123456
+  dbbackup:
+    host: 192.168.10.93
+    port: 3306
+    dbname: water_2.5
+    mysqldump: d:\\mysql-5.7.22-winx64\\bin\\mysqldump
+    outputpath: D:\\home\\meter\\
+
+redis:
+  cache:
+    database: 4
+    listdb: 5
+    host: 222.20.83.207
+#    hosts: 192.168.10.170,192.168.10.171,192.168.10.172
+#    hosts:222.20.83.207,
+    password:
+    port: 6379
+#    ports: 26379
+
+oss:
+  AccessKeyId:
+  AccessKeySecret:
+  endpoint:
+  bucketName:
+  fileDir: water-cas/
+
+mybatis:
+  configLocation: classpath:mybatis-config-dev.xml
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://localhost:8761/eureka/
+
+#spring.servlet.multipart.location: D:\\Java\\upload_temp\\
+spring.servlet.multipart.location: E:\\Java\\upload_temp\\
+
+ajaxUpload:
+  tempUrl: D:\\Java\\upload_temp\\
+  MEMORY_THRESHOLD: 2097152
+  MAX_FILE_SIZE: 2097152
+  MAX_REQUEST_SIZE: 2097152
+
+param:
+  revenue:
+    excelTempUrl: d:/logs/water/temp
+    uploadUrl: D:\\Java\\upload\\
+  config:
+    version: 2.5
+    userinvalidtime: 7
+    serverhost: #下发指令地址
+    weixindebug: true
+    authserverurl: http://222.20.83.207:39999/water-cas
+    paycallbackurl: http://localhost:38888/water-server/payment/callback

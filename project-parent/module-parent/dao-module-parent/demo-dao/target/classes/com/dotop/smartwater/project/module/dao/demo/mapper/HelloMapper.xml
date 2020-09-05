@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.dotop.smartwater.project.module.dao.demo.IHelloDao">
+
+	<resultMap id="HelloVoMap"
+		type="com.dotop.smartwater.project.module.core.demo.vo.HelloVo">
+		<result column="name" jdbcType="VARCHAR" property="name" />
+	</resultMap>
+
+	<select id="get" resultMap="HelloVoMap">
+		select version() as name;
+	</select>
+
+	
+</mapper>

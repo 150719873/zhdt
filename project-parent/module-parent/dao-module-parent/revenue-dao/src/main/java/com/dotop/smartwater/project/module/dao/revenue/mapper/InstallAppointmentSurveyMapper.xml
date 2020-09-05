@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper
+	namespace="com.dotop.smartwater.project.module.dao.revenue.IInstallAppointmentSurveyDao">
+
+	<resultMap id="InstallSurveyVo"
+		type="com.dotop.smartwater.project.module.core.water.vo.InstallSurveyVo">
+		
+		<!-- 主键 -->
+		<result column="id" jdbcType="VARCHAR" property="id" />
+		<result column="number" jdbcType="VARCHAR" property="number" />
+		<result column="survey_id" jdbcType="VARCHAR" property="surveyId" />
+		<result column="survey_name" jdbcType="VARCHAR" property="surveyName" />
+		<result column="end_time" jdbcType="VARCHAR" property="endTime" />
+		<result column="survey_time" jdbcType="VARCHAR" property="surveyTime" />
+		<result column="status" jdbcType="VARCHAR" property="status" />
+		<result column="submit_status" jdbcType="VARCHAR" property="submitStatus" />
+		<result column="addr" jdbcType="VARCHAR" property="addr" />
+		<result column="place" jdbcType="VARCHAR" property="place" />
+		<result column="explan" jdbcType="VARCHAR" property="explan"/>
+		<result column="upload_file" jdbcType="VARCHAR" property="uploadFile" />
+		<result column="enterprise_id" jdbcType="VARCHAR" property="enterpriseid" />
+		<result column="create_by" jdbcType="VARCHAR" property="createBy" />
+		<result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
+		<result column="last_by" jdbcType="VARCHAR" property="lastBy" />
+		<result column="last_date" jdbcType="TIMESTAMP" property="lastDate" />
+		
+		<result column="purpose_id" jdbcType="VARCHAR" property="purposeId" />
+		<result column="purpose_name" jdbcType="VARCHAR" property="purposeName" />
+		<result column="community_id" jdbcType="VARCHAR" property="communityId" />
+		<result column="community_name" jdbcType="VARCHAR" property="communityName" />
+		<result column="phone" jdbcType="VARCHAR" property="phone" />
+		<result column="apply_name" jdbcType="VARCHAR" property="applyName" />
+		<result column="type_id" jdbcType="VARCHAR" property="typeId" />
+		<result column="type_name" jdbcType="VARCHAR" property="typeName" />
+	</resultMap>
+
+
+	<select id="getList" resultMap="InstallSurveyVo">
+		SELECT 
+			s.* ,a.purpose_id , a.purpose_name , a.community_id , a.community_name ,a.phone , a.apply_name , a.type_id ,a.type_name
+		FROM install_survey s LEFT JOIN install_appointment a ON s.`number` = a.`number`
+		<where>
+		s.enterprise_id = #{enterpriseid} and s.survey_id = #{surveyId}
+			<if test="submitStatus != null and submitStatus != ''">
+				and s.submit_status = #{submitStatus}
+			</if>
+			<if test="status != null and status != ''">
+				and s.`status` = #{status}
+			</if>
+		</where>
+		order by s.create_date desc
+		<if test="limit!=null and offset!=null">
+			LIMIT #{limit} OFFSET #{offset}
+		</if>
+	</select>
+
+
+	<select id="get" resultMap="InstallSurveyVo">
+		SELECT * FROM install_survey where number = #{number} and enterprise_id = #{enterpriseid} 
+	</select>
+	
+	<insert id="submitSurvey">
+		 INSERT INTO `install_survey` (
+		 	id,number,survey_id,survey_name,end_time, addr,submit_status,
+		 	`status`,survey_time,`place`,`explan`,upload_file,
+		 enterprise_id,create_by,create_date)
+		VALUES (
+			#{id}, #{number}, #{surveyId}, #{surveyName}, #{endTime} , #{addr}, #{submitStatus},
+			#{status}, #{surveyTime},#{place},#{explan},#{uploadFile},
+			#{enterpriseid}, #{userBy}, #{curr})
+	</insert>
+	
+	<update id="updateSurvey">
+		UPDATE `install_survey` SET survey_id=#{surveyId} , `survey_name`=#{surveyName} , `end_time`=#{endTime} ,`addr` = #{addr} ,
+		`status`=#{status} ,survey_time=#{surveyTime},`place`=#{place},`explan` = #{explan},upload_file=#{uploadFile}
+		,last_date=#{curr},last_by=#{userBy} 
+		WHERE enterprise_id = #{enterpriseid} and number=#{number}
+	</update>
+	
+	<update id="survey">
+		UPDATE `install_survey` SET survey_time=#{surveyTime} , `status`=#{status} , submit_status=#{submitStatus}, `place`=#{place} ,
+		`explan` = #{explan} , upload_file=#{uploadFile} ,last_date=#{curr},last_by=#{userBy} 
+		WHERE enterprise_id = #{enterpriseid} and number=#{number} and survey_id = #{surveyId}
+	</update>
+	
+</mapper>

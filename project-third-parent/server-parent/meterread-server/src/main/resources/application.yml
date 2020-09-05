@@ -1,0 +1,89 @@
+#debug: true
+spring.profiles.active: dev
+
+logging:
+  config: classpath:log4j2-prod.xml
+
+server:
+  port: 35552
+  servlet:
+    context-path: /meterread-server
+
+spring.servlet.multipart.max-file-size: 50MB
+spring.servlet.multipart.max-request-size: 50MB
+
+druid:
+  datasource:
+    type: com.alibaba.druid.pool.DruidDataSource
+    filters: stat
+    maxActive: 200
+    initialSize: 1
+    maxWait: 30000
+    minIdle: 1
+    timeBetweenEvictionRunsMillis: 30000
+    minEvictableIdleTimeMillis: 300000
+    validationQuery: select 'x'
+    testWhileIdle: true
+    testOnBorrow: false
+    testOnReturn: false
+    poolPreparedStatements: true
+    maxOpenPreparedStatements: 20
+
+spring:
+  application:
+    name: meterread-server
+
+param.config.version: 2.5
+param.config.findPageSize: 100
+param.config.times: 24
+param.config.expire: 86400
+
+mybatis:
+  configLocation: classpath:mybatis-config.xml
+
+eureka:
+  instance:
+    prefer-ip-address: true
+    lease-expiration-duration-in-seconds: 30
+    lease-renewal-interval-in-seconds: 10
+  client:
+    registry-fetch-interval-seconds: 30
+    registerWithEureka: true
+    fetchRegistry: true
+
+feign:
+  httpclient:
+    enabled: false
+  okhttp:
+    enabled: true
+  hystrix:
+    enabled: true
+
+ribbon:
+  httpclient:
+    enabled: false
+  okhttp:
+    enabled: true
+  eureka:
+    enabled: true
+  ReadTimeout: 60000
+  ConnectTimeout: 60000
+  MaxAutoRetries: 0
+  MaxAutoRetriesNextServer: 0
+  OkToRetryOnAllOperations: false
+
+hystrix:
+  threadpool:
+    default:
+      coreSize: 1000
+      maxQueueSize: 1000
+      queueSizeRejectionThreshold: 500
+  command:
+    default:
+      execution:
+        isolation:
+          thread:
+            timeoutInMilliseconds: 60000
+
+
+     

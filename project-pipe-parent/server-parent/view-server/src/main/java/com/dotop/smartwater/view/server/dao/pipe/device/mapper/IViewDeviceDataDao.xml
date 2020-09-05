@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.dotop.smartwater.view.server.dao.pipe.device.IViewDeviceDataDao">
+
+    <sql id="selectColumns">
+		dd.device_id,
+		dd.device_code,
+		dd.flw_measure,
+		dd.dev_send_date,
+		dd.flw_total_value,
+		dd.create_by,
+		dd.create_date,
+		dd.last_by,
+		dd.last_date,
+		dd.is_del,
+		dd.enterprise_id,
+		dd.pressure_value
+	</sql>
+
+    <resultMap id="DeviceDataVoMap"
+               type="com.dotop.smartwater.view.server.core.device.vo.DeviceDataVo">
+        <result column="device_id" jdbcType="VARCHAR"	property="deviceId" />
+        <result column="device_code" jdbcType="VARCHAR"	property="deviceCode" />
+        <result column="flw_measure" jdbcType="VARCHAR" property="flwMeasure" />
+        <result column="pressure_value" jdbcType="VARCHAR" property="pressureValue" />
+        <result column="flw_total_value" jdbcType="VARCHAR" property="flwTotalValue" />
+        <result column="dev_send_date" jdbcType="TIMESTAMP" property="devSendDate" />
+        <result column="enterprise_id" jdbcType="VARCHAR" property="enterpriseId" />
+        <result column="product_category" jdbcType="VARCHAR" property="productCategory" />
+        <result column="product_type" jdbcType="VARCHAR" property="productType" />
+        <result column="create_by" jdbcType="VARCHAR" property="createBy"/>
+        <result column="create_date" jdbcType="TIMESTAMP" property="createDate"/>
+        <result column="last_by" jdbcType="VARCHAR" property="lastBy"/>
+        <result column="last_date" jdbcType="TIMESTAMP" property="lastDate"/>
+        <result column="is_del" jdbcType="INTEGER" property="isDel"/>
+    </resultMap>
+
+    <select id="list" resultMap="DeviceDataVoMap">
+        select
+        <include refid="selectColumns"/>, d.product_category, d.product_type
+        from pls_device_data dd
+        inner join pls_device d on dd.device_id = d.device_id
+        <where>
+            dd.enterprise_id = #{enterpriseId}
+            and dd.is_del = #{isDel}
+            <if test="searchDate != null">
+                AND MONTH(dd.dev_send_date) = MONTH(#{searchDate})
+                AND YEAR(dd.dev_send_date) = YEAR(#{searchDate})
+            </if>
+        </where>
+    </select>
+
+</mapper>

@@ -1,0 +1,315 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper
+	namespace="com.dotop.smartwater.project.module.dao.tool.IDeviceParametersDao">
+	<resultMap id="DeviceParametersVoMap"
+		type="com.dotop.smartwater.project.module.core.water.vo.DeviceParametersVo">
+
+		<result column="device_par_id" jdbcType="VARCHAR"
+			property="deviceParId" />
+		<result column="serial_number" jdbcType="VARCHAR"
+			property="serialNumber" />
+		<result column="device_name" jdbcType="VARCHAR"
+			property="deviceName" />
+		<!-- <result column="mode" jdbcType="VARCHAR" property="mode" /> -->
+		<result column="valve_type" jdbcType="VARCHAR"
+			property="valveType" />
+		<result column="valve_status" jdbcType="VARCHAR"
+			property="valveStatus" />
+		<result column="status" jdbcType="VARCHAR" property="status" />
+		<result column="last_by" jdbcType="VARCHAR" property="lastBy" />
+		<result column="last_date" jdbcType="TIMESTAMP"
+			property="lastDate" />
+		
+		<result column="product_id" jdbcType="VARCHAR"
+			property="productId" />	
+		<result column="product_name" jdbcType="VARCHAR"
+			property="productName" />
+		<result column="caliber" jdbcType="INTEGER"
+			property="caliber" />		
+		<result column="nfc_init_pwd" jdbcType="VARCHAR"
+			property="nfcInitPwd" />
+			<result column="nfc_com_pwd" jdbcType="VARCHAR"
+			property="nfcComPwd" />
+			<result column="modeName" jdbcType="VARCHAR"
+			property="modeName" />
+			<result column="unitName" jdbcType="VARCHAR"
+			property="unitName" />
+			<result column="sensorTypeName" jdbcType="VARCHAR"
+			property="sensorTypeName" />
+			<result column="valveTypeName" jdbcType="VARCHAR"
+			property="valveTypeName" />
+			<result column="valveStatusName" jdbcType="VARCHAR"
+			property="valveStatusName" />
+			
+
+		<association property="mode"
+			javaType="com.dotop.smartwater.project.module.core.water.vo.DictionaryChildVo">
+			<result column="mode_child_id" jdbcType="VARCHAR"
+				property="childId" />
+			<result column="mode_dictionary_id" jdbcType="VARCHAR"
+				property="dictionaryId" />
+			<result column="mode_child_name" jdbcType="VARCHAR"
+				property="childName" />
+			<result column="mode_child_value" jdbcType="VARCHAR"
+				property="childValue" />
+			<result column="mode_remark" jdbcType="VARCHAR"
+				property="remark" />
+		</association>
+		<association property="unit"
+			javaType="com.dotop.smartwater.project.module.core.water.vo.DictionaryChildVo">
+			<result column="unit_child_id" jdbcType="VARCHAR"
+				property="childId" />
+			<result column="unit_dictionary_id" jdbcType="VARCHAR"
+				property="dictionaryId" />
+			<result column="unit_child_name" jdbcType="VARCHAR"
+				property="childName" />
+			<result column="unit_child_value" jdbcType="VARCHAR"
+				property="childValue" />
+			<result column="unit_remark" jdbcType="VARCHAR"
+				property="remark" />
+		</association>
+		<association property="sensorType"
+			javaType="com.dotop.smartwater.project.module.core.water.vo.DictionaryChildVo">
+			<result column="sensor_child_id" jdbcType="VARCHAR"
+				property="childId" />
+			<result column="sensor_dictionary_id" jdbcType="VARCHAR"
+				property="dictionaryId" />
+			<result column="sensor_child_name" jdbcType="VARCHAR"
+				property="childName" />
+			<result column="sensor_child_value" jdbcType="VARCHAR"
+				property="childValue" />
+			<result column="sensor_remark" jdbcType="VARCHAR"
+				property="remark" />
+		</association>
+
+	</resultMap>
+	<insert id="add">
+		INSERT INTO device_parameters
+		(device_par_id,
+		serial_number, device_name, mode, valve_type, valve_status, unit,
+		sensor_type, status,is_del,create_by ,
+		create_date, last_by, last_date,
+		enterprise_id,product_id,product_name,caliber,nfc_init_pwd,nfc_com_pwd)
+		VALUES
+		(#{deviceParId},
+		#{serialNumber}, #{deviceName},
+		#{mode}, #{valveType},
+		#{valveStatus},#{unit}, #{sensorType},
+		#{status},#{isDel},#{userBy},
+		#{curr},#{userBy}, #{curr},
+		#{enterpriseid},#{productId},#{productName},#{caliber},#{nfcInitPwd},#{nfcComPwd})
+	</insert>
+
+	<select id="list" resultMap="DeviceParametersVoMap"
+		parameterType="java.util.Map">
+		select a.device_par_id ,a.device_name , a.serial_number
+		,a.mode,a.valve_type ,a.valve_status ,a.status ,a.last_by,a.last_date
+		,a.product_id,a.product_name,a.caliber,a.nfc_init_pwd,a.nfc_com_pwd
+		,
+		b.child_id as mode_child_id , b.dictionary_id as mode_dictionary_id,
+		b.child_name as mode_child_name , b.child_value as mode_child_value ,
+		b.remark as mode_remark,
+
+		c.child_id as unit_child_id , c.dictionary_id
+		as unit_dictionary_id,
+		c.child_name as unit_child_name , c.child_value
+		as unit_child_value ,
+		c.remark as unit_remark,
+
+		d.child_id as
+		sensor_child_id , d.dictionary_id as sensor_dictionary_id,
+		d.child_name as sensor_child_name , d.child_value as
+		sensor_child_value , d.remark as sensor_remark
+
+		from device_parameters
+		as a
+		left join dictionary_child as b on a.mode = b.child_id
+		left join
+		dictionary_child as c on a.unit = c.child_id
+		left join dictionary_child
+		as d on a.sensor_type = d.child_id
+		<where>
+			<if test="enterpriseid != null and enterpriseid != ''">
+				AND a.enterprise_id=#{enterpriseid}
+			</if>
+			<if test="isDel != null">
+				AND a.is_del=#{isDel}
+			</if>
+			<if test="deviceName != null and deviceName != ''">
+				AND a.device_name like CONCAT('%',#{deviceName},'%')
+			</if>
+			<if test="serialNumber != null and serialNumber != ''">
+				AND a.serial_number like CONCAT('%',#{serialNumber},'%')
+			</if>
+		</where>
+		ORDER BY a.last_date DESC
+	<!-- 	<if test="limit!=null and offset!=null">
+			LIMIT #{limit} OFFSET #{offset}
+		</if> -->
+	</select>
+	
+	
+	<select id="noEndList" resultMap="DeviceParametersVoMap"
+		parameterType="java.util.Map">
+		SELECT 
+			a.serial_number,a.product_id, a.product_name, a.product_caliber AS caliber,
+			b.device_par_id,b.device_name, 
+			b.mode,b.valve_type ,b.valve_status ,b.status,b.nfc_init_pwd,b.nfc_com_pwd,
+			c.child_id as mode_child_id,c.child_name as mode_child_name,
+			d.child_id as unit_child_id ,d.child_name as unit_child_name,
+			e.child_id as sensor_child_id,e.child_name as sensor_child_name 
+		FROM device_batch a
+		LEFT JOIN device_parameters b ON a.device_par_id = b.device_par_id AND b.enterprise_id = #{enterpriseid}
+		LEFT JOIN dictionary_child c ON b.mode = c.child_id
+		LEFT JOIN dictionary_child d ON b.unit = d.child_id
+		LEFT JOIN dictionary_child e ON b.sensor_type = e.child_id
+		<where>
+			a.enterprise_id=#{enterpriseid} AND a.`status` != 2
+		</where>
+		ORDER BY a.last_date DESC
+	</select>
+	
+
+	<update id="edit" parameterType="java.util.Map">
+		UPDATE device_parameters
+		<trim prefix="set" suffixOverrides=",">
+			<if test="deviceName != null and deviceName != ''">
+				device_name=#{deviceName},
+			</if>
+			<if test="serialNumber != null and serialNumber != ''">
+				serial_number=#{serialNumber},
+			</if>
+			<if test="mode != null and mode != ''">
+				mode=#{mode},
+			</if>
+			<if test="valveType != null and valveType != ''">
+				valve_type=#{valveType},
+			</if>
+			<if test="valveStatus != null and valveStatus != '' ">
+				valve_status=#{valveStatus},
+			</if>
+			<if test="unit != null and unit != ''  ">
+				unit=#{unit},
+			</if>
+			<if test="sensorType != null and sensorType != '' ">
+				sensor_type=#{sensorType},
+			</if>
+			<if test="status != null ">
+				status=#{status},
+			</if>
+			<if test="newIsDel != null and newIsDel != ''  ">
+				is_del=#{newIsDel},
+			</if>
+			<if test="userBy != null and userBy != ''">
+				last_by=#{userBy},
+			</if>
+			<if test="curr != null">
+				last_date=#{curr},
+			</if>
+			
+			<if test="productId != null">
+				product_id=#{productId},
+			</if>
+			<if test="productName != null">
+				product_name=#{productName},
+			</if>
+			<if test="caliber != null">
+				caliber=#{caliber},
+			</if>
+			<if test="nfcInitPwd != null">
+				nfc_init_pwd=#{nfcInitPwd},
+			</if>
+			<if test="nfcComPwd != null">
+				nfc_com_pwd=#{nfcComPwd}
+			</if>
+		</trim>
+		WHERE
+		enterprise_id=#{enterpriseid} AND device_par_id=#{deviceParId}
+		AND
+		is_del=#{isDel}
+	</update>
+
+	<select id="get" resultMap="DeviceParametersVoMap"
+		parameterType="java.util.Map">
+		select a.device_par_id ,a.device_name , a.serial_number
+		,a.mode,a.valve_type ,a.valve_status ,
+		a.unit,a.sensor_type,a.status,a.product_id,a.product_name,a.caliber,a.nfc_init_pwd,a.nfc_com_pwd
+		,a.last_by,a.last_date , c.child_name as modeName , d.child_name AS unitName,f.child_name AS sensorTypeName
+		from device_parameters as a 
+		LEFT JOIN dictionary_child c ON a.`mode` = c.child_id
+		LEFT JOIN dictionary_child d ON a.unit = d.child_id
+		LEFT JOIN dictionary_child f ON a.sensor_type = f.child_id
+		<where>
+			<if test="enterpriseid != null and enterpriseid != ''">
+				AND a.enterprise_id=#{enterpriseid}
+			</if>
+			<if test="isDel != null">
+				AND a.is_del=#{isDel}
+			</if>
+			<if test="deviceParId != null and deviceParId != ''">
+				AND a.device_par_id = #{deviceParId}
+			</if>
+		</where>
+	</select>
+	
+	<select id="getParams" resultMap="DeviceParametersVoMap"
+		parameterType="java.util.Map">
+		select a.device_par_id ,a.device_name , a.serial_number
+		,a.mode,a.valve_type ,a.valve_status ,
+		a.unit,a.sensor_type,a.status,a.product_id,a.product_name,a.caliber,a.nfc_init_pwd,a.nfc_com_pwd
+		,a.last_by,a.last_date , c.child_name as modeName , d.child_name AS unitName,f.child_name AS sensorTypeName,
+		(case a.valve_type when 0 then '不带阀' when 1 then '带阀' else '' end)as valveTypeName ,
+		(case a.valve_status when 0 then '关阀' when 1 then '开阀' else '' end)as valveStatusName 
+		from device_parameters as a 
+		LEFT JOIN dictionary_child c ON a.`mode` = c.child_id
+		LEFT JOIN dictionary_child d ON a.unit = d.child_id
+		LEFT JOIN dictionary_child f ON a.sensor_type = f.child_id
+		<where>
+			<if test="enterpriseid != null and enterpriseid != ''">
+				AND a.enterprise_id=#{enterpriseid}
+			</if>
+			<if test="isDel != null">
+				AND a.is_del=#{isDel}
+			</if>
+			<if test="deviceParId != null and deviceParId != ''">
+				AND a.device_par_id = #{deviceParId}
+			</if>
+		</where>
+	</select>
+	
+	
+
+	<select id="isExist" resultType="java.lang.Boolean">
+		SELECT EXISTS
+		(
+		SELECT device_par_id FROM device_parameters
+		<where>
+			AND is_del=#{isDel}
+			<if test="deviceParId != null and deviceParId != ''">
+				AND device_par_id=#{deviceParId}
+			</if>
+			<if test="deviceName != null">
+				AND device_name=#{deviceName}
+			</if>
+
+			<if test="enterpriseid != null and enterpriseid != ''">
+				AND enterprise_id=#{enterpriseid}
+			</if>
+		</where>
+		)
+	</select>
+
+	<select id="checkDeviceName" resultType="java.lang.Integer">
+        select count(device_par_id) as count from device_parameters 
+        where `device_name` = #{deviceName}
+        <if test="deviceParId != null and deviceParId != ''">
+            and device_par_id != #{deviceParId}
+        </if>
+        <if test="enterpriseid != null and enterpriseid != ''">
+            and enterprise_id = #{enterpriseid}
+        </if>
+    </select>
+
+
+</mapper>

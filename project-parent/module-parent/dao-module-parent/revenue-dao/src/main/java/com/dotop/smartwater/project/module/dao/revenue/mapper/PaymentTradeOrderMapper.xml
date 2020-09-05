@@ -1,0 +1,216 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dotop.smartwater.project.module.dao.revenue.IPaymentTradeOrderDao">
+    <resultMap id="BaseResultMap" type="com.dotop.smartwater.project.module.core.water.vo.PaymentTradeOrderVo">
+        <id column="tradeid" jdbcType="VARCHAR" property="tradeid"/>
+        <result column="trade_number" jdbcType="VARCHAR" property="tradeNumber"/>
+        <result column="trade_name" jdbcType="VARCHAR" property="tradeName"/>
+        <result column="amount" jdbcType="VARCHAR" property="amount"/>
+        <result column="userid" jdbcType="VARCHAR" property="userid"/>
+        <result column="user_name" jdbcType="VARCHAR" property="userName"/>
+        <result column="user_phone" jdbcType="VARCHAR" property="userPhone"/>
+        <result column="user_addr" jdbcType="VARCHAR" property="userAddr"/>
+        <result column="status" jdbcType="VARCHAR" property="status"/>
+        <result column="pay_time" jdbcType="TIMESTAMP" property="payTime"/>
+        <result column="create_date" jdbcType="TIMESTAMP" property="createDate"/>
+        <result column="merge" jdbcType="VARCHAR" property="merge"/>
+        <result column="enterpriseid" jdbcType="VARCHAR" property="enterpriseid"/>
+        <result column="extra" jdbcType="VARCHAR" property="extra"/>
+        <result column="callback_url" jdbcType="VARCHAR" property="callbackUrl"/>
+        <result column="business_id" jdbcType="VARCHAR" property="businessId"/>
+        <result column="operatorid" jdbcType="VARCHAR" property="operatorid"/>
+        <result column="userno" jdbcType="VARCHAR" property="userno"/>
+        <result column="penalty" jdbcType="VARCHAR" property="penalty"/>
+        <result column="mode" jdbcType="VARCHAR" property="mode"/>
+    </resultMap>
+
+    <select id="get" resultMap="BaseResultMap">
+    select  a.*,b.penalty, b.mode
+        from payment_trade_order a inner join payment_trade_orderext b on a.tradeid = b.tradeid
+    where a.tradeid = #{tradeid,jdbcType=VARCHAR}
+  </select>
+
+    <delete id="del">
+    delete from payment_trade_order
+    where tradeid = #{tradeid,jdbcType=VARCHAR}
+  </delete>
+
+    <insert id="add" parameterType="com.dotop.smartwater.project.module.core.water.dto.PaymentTradeOrderDto">
+    insert into payment_trade_order (tradeid, trade_number, trade_name, 
+      amount, userid, userno, user_name,
+      user_phone, user_addr, status, 
+      pay_time, create_date, merge, 
+      enterpriseid, extra, callback_url, 
+      business_id, operatorid)
+    values (#{tradeid,jdbcType=VARCHAR}, #{tradeNumber,jdbcType=VARCHAR}, #{tradeName,jdbcType=VARCHAR}, 
+      #{amount,jdbcType=VARCHAR}, #{userid,jdbcType=VARCHAR}, #{userno,jdbcType=VARCHAR}, #{userName,jdbcType=VARCHAR},
+      #{userPhone,jdbcType=VARCHAR}, #{userAddr,jdbcType=VARCHAR}, #{status,jdbcType=VARCHAR}, 
+      #{payTime,jdbcType=TIMESTAMP}, #{createDate,jdbcType=TIMESTAMP}, #{merge,jdbcType=VARCHAR}, 
+      #{enterpriseid,jdbcType=VARCHAR}, #{extra,jdbcType=VARCHAR}, #{callbackUrl,jdbcType=VARCHAR}, 
+      #{businessId,jdbcType=VARCHAR}, #{operatorid,jdbcType=VARCHAR})
+  </insert>
+
+    <insert id="addList">
+    insert into payment_trade_order (tradeid, trade_number, trade_name,
+      amount, userid, userno, user_name,
+      user_phone, user_addr, status,
+      pay_time, create_date, merge,
+      enterpriseid, extra, callback_url,
+      business_id, operatorid)
+    values
+        <foreach collection ="list" item="item" index= "index" separator =",">
+            (#{item.tradeid}, #{item.tradeNumber}, #{item.tradeName},
+            #{item.amount}, #{item.userid}, #{item.userno}, #{item.userName},
+            #{item.userPhone}, #{item.userAddr}, #{item.status},
+            #{item.payTime}, #{item.createDate}, #{item.merge},
+            #{item.enterpriseid}, #{item.extra}, #{item.callbackUrl},
+            #{item.businessId}, #{item.operatorid})
+        </foreach >
+  </insert>
+
+    <update id="edit" parameterType="com.dotop.smartwater.project.module.core.water.dto.PaymentTradeOrderDto">
+        update payment_trade_order
+        <set>
+            <if test="tradeNumber != null and tradeNumber != '' ">
+                trade_number = #{tradeNumber,jdbcType=VARCHAR},
+            </if>
+            <if test="tradeName != null and tradeName != '' ">
+                trade_name = #{tradeName,jdbcType=VARCHAR},
+            </if>
+            <if test="amount != null and amount != '' ">
+                amount = #{amount,jdbcType=VARCHAR},
+            </if>
+            <if test="userid != null and userid != '' ">
+                userid = #{userid,jdbcType=VARCHAR},
+            </if>
+            <if test="userno != null and userno != '' ">
+                userno = #{userno,jdbcType=VARCHAR},
+            </if>
+            <if test="userName != null and userName != '' ">
+                user_name = #{userName,jdbcType=VARCHAR},
+            </if>
+            <if test="userPhone != null and userPhone != '' ">
+                user_phone = #{userPhone,jdbcType=VARCHAR},
+            </if>
+            <if test="userAddr != null and userAddr != '' ">
+                user_addr = #{userAddr,jdbcType=VARCHAR},
+            </if>
+            <if test="status != null and status != '' ">
+                status = #{status,jdbcType=VARCHAR},
+            </if>
+            <if test="payTime != null">
+                pay_time = #{payTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="createDate != null">
+                create_date = #{createDate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="merge != null and merge != '' ">
+                merge = #{merge,jdbcType=VARCHAR},
+            </if>
+            <if test="enterpriseid != null and enterpriseid != '' ">
+                enterpriseid = #{enterpriseid,jdbcType=VARCHAR},
+            </if>
+            <if test="extra != null and extra != '' ">
+                extra = #{extra,jdbcType=VARCHAR},
+            </if>
+            <if test="callbackUrl != null and callbackUrl != '' ">
+                callback_url = #{callbackUrl,jdbcType=VARCHAR},
+            </if>
+            <if test="businessId != null and businessId != '' ">
+                business_id = #{businessId,jdbcType=VARCHAR},
+            </if>
+            <if test="operatorid != null and operatorid != '' ">
+                operatorid = #{operatorid,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where tradeid = #{tradeid,jdbcType=VARCHAR}
+    </update>
+
+    <select id="list" resultMap="BaseResultMap">
+        select a.*, b.penalty, b.mode
+        from payment_trade_order a inner join payment_trade_orderext b on a.tradeid = b.tradeid
+        <where>
+            1=1
+            <if test="tradeNumber != null and tradeNumber != '' ">
+                and a.trade_number = #{tradeNumber,jdbcType=VARCHAR}
+            </if>
+            <if test="tradeName != null and tradeName != '' ">
+                and a.trade_name = #{tradeName,jdbcType=VARCHAR}
+            </if>
+            <if test="userName != null and userName != '' ">
+                and a.user_name = #{userName,jdbcType=VARCHAR}
+            </if>
+            <if test="userPhone != null and userPhone != '' ">
+                and a.user_phone = #{userPhone,jdbcType=VARCHAR}
+            </if>
+            <if test="userAddr != null and userAddr != '' ">
+                and a.user_addr = #{userAddr,jdbcType=VARCHAR}
+            </if>
+            <if test="status != null and status != '' and status == 0 ">
+                and (a.status = '0' or a.status = '5')
+            </if>
+            <if test="status != null and status != '' and status != 0 ">
+                and a.status = #{status,jdbcType=VARCHAR}
+            </if>
+            <if test="merge != null and merge != '' ">
+                and a.merge = #{merge,jdbcType=VARCHAR}
+            </if>
+            <if test="enterpriseid != null and enterpriseid != '' ">
+                and a.enterpriseid = #{enterpriseid,jdbcType=VARCHAR}
+            </if>
+            <if test="businessId != null and businessId != '' ">
+                and a.business_id = #{businessId,jdbcType=VARCHAR}
+            </if>
+            <if test="userno != null and userno != '' ">
+                and a.userno = #{userno,jdbcType=VARCHAR}
+            </if>
+            <if test="userid != null and userid != '' ">
+                and a.userid = #{userid,jdbcType=VARCHAR}
+            </if>
+        </where>
+        order by create_date desc
+    </select>
+
+    <select id="findByEidAndTradeNum" resultMap="BaseResultMap">
+    select  *
+    from payment_trade_order
+    where enterpriseid = #{enterpriseid,jdbcType=VARCHAR}
+    and trade_number = #{tradeNumber,jdbcType=VARCHAR}
+  </select>
+    <select id="findListByIds" resultMap="BaseResultMap">
+        select *
+        from payment_trade_order
+        where tradeid in
+        <foreach collection="tradeIds" item="tradeid" index="index"
+                 open="(" close=")" separator=",">
+            #{tradeid}
+        </foreach>
+    </select>
+
+    <insert id="addExtra" parameterType="com.dotop.smartwater.project.module.core.water.dto.PaymentTradeExtraDto">
+        insert into payment_trade_extra (extraid, detail, ctime)
+        values (#{extraid}, #{detail}, NOW())
+  </insert>
+
+    <select id="getExtra" resultType="com.dotop.smartwater.project.module.core.water.vo.PaymentTradeExtraVo">
+        select *
+        from payment_trade_extra
+        where extraid = #{extraid}
+    </select>
+
+    <update id="handleError">
+        update payment_trade_order
+        <set>
+           `status` = '0' ,
+           `merge` = tradeid ,
+           `pay_time` = null ,
+        </set>
+        <where>
+           tradeid in
+            <foreach collection="tradeIds" item="tradeid" index="index"
+                     open="(" close=")" separator=",">
+                #{tradeid}
+            </foreach>
+        </where>
+    </update>
+</mapper>

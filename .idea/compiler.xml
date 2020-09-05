@@ -1,0 +1,235 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CompilerConfiguration">
+    <annotationProcessing>
+      <profile default="true" name="Default" enabled="true" />
+      <profile name="Maven default annotation processors profile" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <module name="app-api" />
+        <module name="app-cache" />
+        <module name="app-core" />
+        <module name="auth-cache" />
+        <module name="auth-cas" />
+        <module name="auth-client" />
+        <module name="auth-core (1) (com.dotop.smartwater.project.module.core)" />
+        <module name="auth-core (2) (com.dotop.pipe.auth)" />
+        <module name="auth-dao" />
+        <module name="auth-service" />
+        <module name="auth-tool" />
+        <module name="auth-web" />
+        <module name="cas-server" />
+        <module name="concentrator-api" />
+        <module name="concentrator-dao" />
+        <module name="concentrator-server" />
+        <module name="concentrator-service" />
+        <module name="data-receiver-cache" />
+        <module name="data-receiver-core" />
+        <module name="data-receiver-dao" />
+        <module name="data-receiver-factory" />
+        <module name="data-receiver-service" />
+        <module name="data-report-cache" />
+        <module name="data-report-core" />
+        <module name="data-report-dao" />
+        <module name="data-report-factory" />
+        <module name="data-report-service" />
+        <module name="demo-api" />
+        <module name="demo-core" />
+        <module name="demo-dao" />
+        <module name="demo-service" />
+        <module name="dependence-cache" />
+        <module name="dependence-core" />
+        <module name="dependence-eureka" />
+        <module name="dependence-lock" />
+        <module name="device-api" />
+        <module name="device-dao" />
+        <module name="device-service" />
+        <module name="deyang" />
+        <module name="meter-api" />
+        <module name="meter-cache" />
+        <module name="meter-client" />
+        <module name="meter-core" />
+        <module name="meter-dao" />
+        <module name="meter-server" />
+        <module name="meter-service" />
+        <module name="meterread-client" />
+        <module name="meterread-client2" />
+        <module name="meterread-client3" />
+        <module name="meterread-server" />
+        <module name="meterread-webservice" />
+        <module name="mode-api" />
+        <module name="operation-api" />
+        <module name="operation-dao" />
+        <module name="operation-service" />
+        <module name="pay-api" />
+        <module name="pay-core" />
+        <module name="pay-dao" />
+        <module name="pay-service" />
+        <module name="pipe-cache" />
+        <module name="pipe-core" />
+        <module name="pipe-dao" />
+        <module name="pipe-service" />
+        <module name="pipe-web" />
+        <module name="receiver-api" />
+        <module name="revenue-api" />
+        <module name="revenue-dao" />
+        <module name="revenue-service" />
+        <module name="store-api" />
+        <module name="store-dao" />
+        <module name="store-service" />
+        <module name="third-client-fegin" />
+        <module name="third-core (1) (com.dotop.smartwater.project.module.core)" />
+        <module name="third-core (2) (com.dotop.pipe)" />
+        <module name="tool-api" />
+        <module name="tool-dao" />
+        <module name="tool-service" />
+        <module name="view-server" />
+        <module name="water-api" />
+        <module name="water-cache" />
+        <module name="water-client" />
+        <module name="water-core" />
+        <module name="water-dao" />
+        <module name="water-pay" />
+        <module name="water-schedule" />
+        <module name="water-server" />
+        <module name="water-service" />
+        <module name="water-wechat" />
+        <module name="web-server" />
+        <module name="wechat-api" />
+        <module name="wechat-dao" />
+        <module name="wechat-service" />
+        <module name="workcenter-api" />
+        <module name="workcenter-dao" />
+        <module name="workcenter-service" />
+      </profile>
+    </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="api-module-parent" target="1.8" />
+      <module name="api-module-parent (1) (com.dotop.smartwater.project.module.api)" target="1.8" />
+      <module name="api-module-parent (2) (com.dotop.pipe)" target="1.8" />
+      <module name="app-api" target="1.8" />
+      <module name="app-cache" target="1.8" />
+      <module name="app-core" target="1.8" />
+      <module name="auth-cache" target="1.8" />
+      <module name="auth-cas" target="1.8" />
+      <module name="auth-client" target="1.8" />
+      <module name="auth-core (1) (com.dotop.smartwater.project.module.core)" target="1.8" />
+      <module name="auth-core (2) (com.dotop.pipe.auth)" target="1.8" />
+      <module name="auth-dao" target="1.8" />
+      <module name="auth-parent (1) (com.dotop.smartwater.project.auth)" target="1.8" />
+      <module name="auth-parent (2) (com.dotop.pipe.auth)" target="1.8" />
+      <module name="auth-service" target="1.8" />
+      <module name="auth-tool" target="1.8" />
+      <module name="auth-web" target="1.8" />
+      <module name="cache-module-parent" target="1.8" />
+      <module name="cache-module-parent (1) (com.dotop.smartwater.project.module.cache)" target="1.8" />
+      <module name="cache-module-parent (2) (com.dotop.pipe)" target="1.8" />
+      <module name="cas-server" target="1.8" />
+      <module name="client-module-parent" target="1.8" />
+      <module name="client-module-parent (1) (com.dotop.smartwater.project.module.client)" target="1.8" />
+      <module name="client-module-parent (2) (com.dotop.pipe)" target="1.8" />
+      <module name="concentrator-api" target="1.8" />
+      <module name="concentrator-dao" target="1.8" />
+      <module name="concentrator-server" target="1.8" />
+      <module name="concentrator-service" target="1.8" />
+      <module name="core-module-parent" target="1.8" />
+      <module name="core-module-parent (1) (com.dotop.smartwater.project.module.core)" target="1.8" />
+      <module name="core-module-parent (2) (com.dotop.pipe)" target="1.8" />
+      <module name="dao-module-parent" target="1.8" />
+      <module name="dao-module-parent (1) (com.dotop.smartwater.project.module.dao)" target="1.8" />
+      <module name="dao-module-parent (2) (com.dotop.pipe)" target="1.8" />
+      <module name="data-receiver-cache" target="1.8" />
+      <module name="data-receiver-core" target="1.8" />
+      <module name="data-receiver-dao" target="1.8" />
+      <module name="data-receiver-factory" target="1.8" />
+      <module name="data-receiver-service" target="1.8" />
+      <module name="data-report-cache" target="1.8" />
+      <module name="data-report-core" target="1.8" />
+      <module name="data-report-dao" target="1.8" />
+      <module name="data-report-factory" target="1.8" />
+      <module name="data-report-service" target="1.8" />
+      <module name="demo-api" target="1.8" />
+      <module name="demo-core" target="1.8" />
+      <module name="demo-dao" target="1.8" />
+      <module name="demo-service" target="1.8" />
+      <module name="dependence-cache" target="1.8" />
+      <module name="dependence-core" target="1.8" />
+      <module name="dependence-eureka" target="1.8" />
+      <module name="dependence-lock" target="1.8" />
+      <module name="dependence-parent" target="1.8" />
+      <module name="device-api" target="1.8" />
+      <module name="device-dao" target="1.8" />
+      <module name="device-service" target="1.8" />
+      <module name="deyang" target="1.8" />
+      <module name="meter-api" target="1.8" />
+      <module name="meter-cache" target="1.8" />
+      <module name="meter-client" target="1.8" />
+      <module name="meter-core" target="1.8" />
+      <module name="meter-dao" target="1.8" />
+      <module name="meter-server" target="1.8" />
+      <module name="meter-service" target="1.8" />
+      <module name="meterread-client" target="1.8" />
+      <module name="meterread-client2" target="1.8" />
+      <module name="meterread-client3" target="1.8" />
+      <module name="meterread-server" target="1.8" />
+      <module name="meterread-webservice" target="1.8" />
+      <module name="mode-api" target="1.8" />
+      <module name="module-parent" target="1.8" />
+      <module name="module-parent (1) (com.dotop.smartwater.project.module)" target="1.8" />
+      <module name="module-parent (2) (com.dotop.pipe)" target="1.8" />
+      <module name="operation-api" target="1.8" />
+      <module name="operation-dao" target="1.8" />
+      <module name="operation-service" target="1.8" />
+      <module name="pay-api" target="1.8" />
+      <module name="pay-core" target="1.8" />
+      <module name="pay-dao" target="1.8" />
+      <module name="pay-service" target="1.8" />
+      <module name="pipe-cache" target="1.8" />
+      <module name="pipe-core" target="1.8" />
+      <module name="pipe-dao" target="1.8" />
+      <module name="pipe-service" target="1.8" />
+      <module name="pipe-web" target="1.8" />
+      <module name="project-parent" target="1.8" />
+      <module name="project-pipe-parent" target="1.8" />
+      <module name="project-third-parent" target="1.8" />
+      <module name="receiver-api" target="1.8" />
+      <module name="revenue-api" target="1.8" />
+      <module name="revenue-dao" target="1.8" />
+      <module name="revenue-service" target="1.8" />
+      <module name="server-parent" target="1.8" />
+      <module name="server-parent (1) (com.dotop.smartwater.project.server)" target="1.8" />
+      <module name="server-parent (2) (com.dotop.pipe)" target="1.8" />
+      <module name="service-module-parent" target="1.8" />
+      <module name="service-module-parent (1) (com.dotop.smartwater.project.module.service)" target="1.8" />
+      <module name="service-module-parent (2) (com.dotop.pipe)" target="1.8" />
+      <module name="store-api" target="1.8" />
+      <module name="store-dao" target="1.8" />
+      <module name="store-service" target="1.8" />
+      <module name="third-client-fegin" target="1.8" />
+      <module name="third-core (1) (com.dotop.smartwater.project.module.core)" target="1.8" />
+      <module name="third-core (2) (com.dotop.pipe)" target="1.8" />
+      <module name="tool-api" target="1.8" />
+      <module name="tool-dao" target="1.8" />
+      <module name="tool-service" target="1.8" />
+      <module name="view-server" target="1.8" />
+      <module name="water-api" target="1.8" />
+      <module name="water-cache" target="1.8" />
+      <module name="water-client" target="1.8" />
+      <module name="water-core" target="1.8" />
+      <module name="water-dao" target="1.8" />
+      <module name="water-pay" target="1.8" />
+      <module name="water-schedule" target="1.8" />
+      <module name="water-server" target="1.8" />
+      <module name="water-service" target="1.8" />
+      <module name="water-wechat" target="1.8" />
+      <module name="web-server" target="1.8" />
+      <module name="wechat-api" target="1.8" />
+      <module name="wechat-dao" target="1.8" />
+      <module name="wechat-service" target="1.8" />
+      <module name="workcenter-api" target="1.8" />
+      <module name="workcenter-dao" target="1.8" />
+      <module name="workcenter-service" target="1.8" />
+    </bytecodeTargetLevel>
+  </component>
+</project>

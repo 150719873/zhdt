@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper
+        namespace="com.dotop.smartwater.project.module.dao.revenue.IEverydayWaterRecordDao">
+    <resultMap id="EverydayWaterRecordVo"
+               type="com.dotop.smartwater.project.module.core.water.vo.EverydayWaterRecordVo">
+
+        <id property="communityid" column="communityid"/>
+        <result property="enterpriseid" column="enterpriseid"/>
+        <result property="ctime" column="ctime"/>
+        <result property="water" column="water"/>
+        <result property="addWater" column="add_water"/>
+    </resultMap>
+
+    <resultMap id="CommunityWaterVo"
+               type="com.dotop.smartwater.project.module.core.water.vo.customize.CommunityWaterVo">
+        <result property="water" column="water"/>
+        <result property="waterMonth" column="water_month"/>
+    </resultMap>
+
+    <resultMap id="CommunityDeviceCountVo"
+               type="com.dotop.smartwater.project.module.core.water.vo.customize.CommunityDeviceCountVo">
+
+        <id property="communityid" column="communityid"/>
+        <result property="count" column="count"/>
+        <result property="name" column="name"/>
+    </resultMap>
+    
+    <resultMap id="StatisticsVo"
+               type="com.dotop.smartwater.project.module.core.water.vo.customize.StatisticsVo">
+        <result property="value" column="value"/>
+        <result property="name" column="name"/>
+    </resultMap>
+    
+
+    <resultMap id="CommunityOwnpayVo"
+               type="com.dotop.smartwater.project.module.core.water.vo.customize.CommunityOwnpayVo">
+
+        <id property="communityid" column="communityid"/>
+        <result property="ownpay" column="ownpay"/>
+        <result property="communityname" column="communityname"/>
+    </resultMap>
+
+
+    <select id="getWaterByMonth" resultMap="CommunityWaterVo">
+        SELECT SUM(ewr.add_water) AS water, DATE_FORMAT(ewr.ctime, '%Y-%m')
+        AS water_month FROM everyday_water_record ewr WHERE ewr.enterpriseid=#{enterpriseid}
+        AND DATE_FORMAT(ewr.ctime, '%Y-%m') > DATE_FORMAT(date_sub(curdate(),
+        interval 13 month),'%Y-%m') AND DATE_FORMAT(ewr.ctime, '%Y-%m') !=DATE_FORMAT(CURDATE(), '%Y-%m')
+        AND  ewr.communityid in 
+		<!-- (${ids}) -->
+		<foreach item="item" index="index" collection="ids.split(',')" open="(" separator="," close=")">'${item}'</foreach>  
+        GROUP BY DATE_FORMAT(ewr.ctime, '%Y-%m')
+    </select>
+
+    <select id="getDeviceCount" resultMap="CommunityDeviceCountVo">
+        SELECT o.communityid,COUNT(devid) AS count,o.enterpriseid FROM owner o
+			WHERE o.enterpriseid=#{enterpriseid} GROUP BY o.communityid
+    </select>
+
+	<select id="getDeviceModes" resultMap="StatisticsVo">
+        SELECT if(d.child_name is null,'未知的通讯方式',d.child_name)  AS `name` , `value` FROM (
+SELECT `mode` AS `name`, COUNT(devid) AS `value` FROM device WHERE enterpriseid = #{enterpriseid} AND `flag` != 4 GROUP BY `mode`
+) s LEFT JOIN dictionary_child d ON s.`name` = d.child_id
+    </select>
+    
+    
+    <select id="getDeviceModels" resultMap="StatisticsVo">
+       SELECT if(p.name is null,'未知的产品型号',p.name) AS `name` , `value` FROM (
+       SELECT `product_id` AS `name`, COUNT(devid) AS `value` FROM device WHERE enterpriseid = #{enterpriseid} AND `status` != 4 GROUP BY `product_id`
+) s LEFT JOIN store_product p ON s.`name` = p.productId
+    </select>
+    
+    <select id="getDevicePurposes" resultMap="StatisticsVo">
+        SELECT if(d.child_name is null,'未知的用水用途',d.child_name)  AS `name` , `value` FROM (
+	SELECT purposeid AS 'name', count(d.devid) as 'value' FROM device d
+		LEFT JOIN `owner` o ON d.devid = o.devid
+		WHERE d.enterpriseid = #{enterpriseid} AND d.`flag` != 4
+		GROUP BY o.purposeid
+) s LEFT JOIN dictionary_child d ON s.`name` = d.child_id
+    </select>
+    
+    
+    <select id="getDeviceWarns" resultMap="StatisticsVo">
+        SELECT DATE_FORMAT(d.daytime,'%m月%d日')  AS `name`, w.`count` as `value` FROM (
+			select date_add(curdate(), interval(cast(id as signed integer) - 30) day) daytime
+				from date_num
+			where id &lt; day(last_day(curdate()))
+			order by id
+		) d LEFT JOIN (
+			SELECT ctime , count(devid) AS `count` FROM (
+				SELECT DATE_FORMAT(ctime,'%Y-%m-%d') AS ctime , devid , count(id) AS `count` FROM device_warning 
+				WHERE 1 = 1 AND enterpriseid = #{enterpriseid} and DATE_FORMAT(ctime,'%Y-%m-%d')
+				BETWEEN DATE_FORMAT(date_sub(CURDATE(), interval 1 month),'%Y-%m-%d') and DATE_FORMAT(CURDATE(),'%Y-%m-%d')
+				GROUP BY DATE_FORMAT(ctime,'%Y-%m-%d') , devid 
+			) s GROUP BY ctime
+		) w ON DATE_FORMAT(d.daytime,'%Y-%m-%d') = DATE_FORMAT(w.ctime,'%Y-%m-%d') ORDER BY daytime
+    </select>
+    
+    
+
+    <select id="dailyGetStatisticsWater" resultType="com.dotop.smartwater.project.module.core.water.vo.customize.StatisticsWaterVo">
+        SELECT DATE_FORMAT(ctime,'%m月%d号') AS ctime , IFNULL(SUM(add_water),0) AS water FROM everyday_water_record
+        WHERE enterpriseid = #{enterpriseid} AND communityid IN (${communityids}) AND ctime > DATE_SUB(now(), INTERVAL 1 MONTH) GROUP BY ctime ORDER BY ctime ASC
+    </select>
+
+    <select id="monthGetStatisticsWater" resultType="com.dotop.smartwater.project.module.core.water.vo.customize.StatisticsWaterVo">
+        SELECT IFNULL(sum(a.add_water),0) AS `water`, DATE_FORMAT(a.ctime, '%Y-%m') AS searchDate,communityid
+		FROM everyday_water_record a WHERE 1=1
+		<if test="enterpriseid != null and enterpriseid != ''">
+            AND a.enterpriseid=#{enterpriseid}
+        </if>
+        <if test="communityids != null and communityids != ''">
+            AND a.communityid IN
+			<!-- (#{communityids}) -->
+            <foreach item="item" index="index" collection="communityids.split(',')" open="(" separator="," close=")">'${item}'</foreach> 
+        </if>
+        <if test="searchDate != null and searchDate != ''">
+            AND DATE_FORMAT(a.ctime, '%Y-%m')=#{searchDate}
+        </if>
+        GROUP BY a.communityid ORDER BY a.communityid ASC
+    </select>
+    
+    <select id="monthWater" resultType="java.lang.Double">
+        SELECT 
+        	IFNULL(sum(a.add_water),0) AS `water`
+		FROM everyday_water_record a 
+		WHERE a.enterpriseid=#{enterpriseid} AND DATE_FORMAT(a.ctime, '%Y-%m')=#{date}
+    </select>
+
+    <select id="getCommunityOwnpay" resultMap="CommunityOwnpayVo">
+        SELECT enterpriseid as enterpriseid , communityid as communityid ,sum(amount) as ownpay
+			FROM `order` where enterpriseid = #{enterpriseid} and paystatus = 0
+			GROUP BY enterpriseid , communityid
+    </select>
+
+    <insert id="insert">
+        INSERT INTO everyday_water_record (communityid, ctime, enterpriseid,water, add_water)
+        VALUES (#{communityid,jdbcType=BIGINT}, #{ctime,jdbcType=DATE}, #{enterpriseid,jdbcType=BIGINT},
+        #{water,jdbcType=DOUBLE}, #{addWater,jdbcType=DOUBLE})
+    </insert>
+
+    <insert id="addEveryDayWaterRecord">
+        REPLACE INTO `everyday_water_record` (`communityid`, `enterpriseid`, `ctime`, `water`)
+		SELECT o.communityid, d.enterpriseid, DATE_FORMAT(NOW(), '%Y-%m-%d') AS ctime , SUM(d.water) AS water
+		FROM `owner` o LEFT JOIN device d ON o.devid = d.devid WHERE o.`status` = 1 GROUP BY o.communityid
+    </insert>
+
+    <update id="updateEveryDayWaterRecord">
+        UPDATE everyday_water_record a, (SELECT re1.water + IFNULL(re2.water, 0.0) AS update_water,
+		re1.communityid , re1.enterpriseid, re1.ctime FROM
+		(SELECT r1.communityid, r1.enterpriseid, r1.ctime, r1.water
+		FROM everyday_water_record r1 WHERE TO_DAYS(r1.ctime) = TO_DAYS(NOW()) ) re1
+		LEFT JOIN ( SELECT r2.communityid, r2.enterpriseid, r2.ctime, 0 - r2.water AS water
+		FROM everyday_water_record r2 WHERE DATEDIFF(r2.ctime, NOW()) = -1 ) re2
+		ON re1.communityid = re2.communityid AND re1.enterpriseid = re2.enterpriseid
+		AND DATEDIFF(re2.ctime, re1.ctime) = -1 ) b SET a.add_water = b.update_water
+		WHERE a.communityid = b.communityid AND a.enterpriseid = b.enterpriseid AND a.ctime = b.ctime
+    </update>
+
+</mapper>

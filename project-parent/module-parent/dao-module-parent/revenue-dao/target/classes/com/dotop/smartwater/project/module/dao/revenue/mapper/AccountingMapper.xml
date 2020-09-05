@@ -1,0 +1,233 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper
+	namespace="com.dotop.smartwater.project.module.dao.revenue.IAccountingDao">
+
+	<resultMap id="OrderVoMap"
+		type="com.dotop.smartwater.project.module.core.water.vo.OrderVo">
+		<!-- 账单id -->
+		<result column="id" jdbcType="VARCHAR" property="id" />
+		<!-- 业主ID -->
+		<result column="ownerid" jdbcType="VARCHAR" property="ownerid" />
+		<result column="tradeno" jdbcType="VARCHAR" property="tradeno" />
+		<result column="year" jdbcType="VARCHAR" property="year" />
+		<result column="month" jdbcType="VARCHAR" property="month" />
+		<result column="communityid" jdbcType="VARCHAR"
+			property="communityid" />
+		<result column="communityno" jdbcType="VARCHAR"
+			property="communityno" />
+		<result column="communityname" jdbcType="VARCHAR"
+			property="communityname" />
+		<result column="userno" jdbcType="VARCHAR" property="userno" />
+		<result column="username" jdbcType="VARCHAR"
+			property="username" />
+		<result column="phone" jdbcType="VARCHAR" property="phone" />
+		<result column="cardid" jdbcType="VARCHAR" property="cardid" />
+		<result column="addr" jdbcType="VARCHAR" property="addr" />
+		<result column="deveui" jdbcType="VARCHAR" property="deveui" />
+		<result column="devno" jdbcType="VARCHAR" property="devno" />
+		<result column="devstatus" jdbcType="VARCHAR"
+			property="devstatus" />
+		<result column="explain" jdbcType="VARCHAR" property="explain" />
+		<result column="tapstatus" jdbcType="VARCHAR"
+			property="tapstatus" />
+		<result column="taptype" jdbcType="VARCHAR" property="taptype" />
+		<result column="upreadtime" jdbcType="VARCHAR"
+			property="upreadtime" />
+		<result column="upreadwater" jdbcType="VARCHAR"
+			property="upreadwater" />
+		<result column="readtime" jdbcType="VARCHAR"
+			property="readtime" />
+		<result column="readwater" jdbcType="VARCHAR"
+			property="readwater" />
+		<result column="day" jdbcType="VARCHAR" property="day" />
+		<result column="water" jdbcType="VARCHAR" property="water" />
+		<result column="payno" jdbcType="VARCHAR" property="payno" />
+		<result column="pricetypeid" jdbcType="VARCHAR"
+			property="pricetypeid" />
+		<result column="pricetypename" jdbcType="VARCHAR"
+			property="pricetypename" />
+		<result column="original" jdbcType="VARCHAR"
+			property="original" />
+		<result column="amount" jdbcType="VARCHAR" property="amount" />
+		<result column="balance" jdbcType="VARCHAR" property="balance" />
+		<result column="realamount" jdbcType="VARCHAR"
+			property="realamount" />
+		<result column="paytype" jdbcType="VARCHAR" property="paytype" />
+		<result column="paystatus" jdbcType="VARCHAR"
+			property="paystatus" />
+		<result column="paytime" jdbcType="VARCHAR" property="paytime" />
+		<result column="penalty" jdbcType="VARCHAR" property="penalty" />
+		<result column="operatorid" jdbcType="VARCHAR"
+			property="operatorid" />
+		<result column="operatorname" jdbcType="VARCHAR"
+			property="operatorname" />
+		<result column="operatortime" jdbcType="VARCHAR"
+			property="operatortime" />
+		<result column="tradestatus" jdbcType="VARCHAR"
+			property="tradestatus" />
+		<result column="describe" jdbcType="VARCHAR"
+			property="describe" />
+		<result column="errortype" jdbcType="VARCHAR"
+			property="errortype" />
+		<result column="generateuserid" jdbcType="VARCHAR"
+			property="generateuserid" />
+		<result column="generateusername" jdbcType="VARCHAR"
+			property="generateusername" />
+		<result column="generatetime" jdbcType="VARCHAR"
+			property="generatetime" />
+		<result column="reduceid" jdbcType="VARCHAR"
+			property="reduceid" />
+		<result column="purposeid" jdbcType="VARCHAR"
+			property="purposeid" />
+		<result column="couponmoney" jdbcType="VARCHAR"
+			property="couponmoney" />
+		<result column="isprint" jdbcType="VARCHAR" property="isprint" />
+		<result column="frequency" jdbcType="VARCHAR"
+			property="frequency" />
+		<result column="ownerpay" jdbcType="VARCHAR"
+			property="ownerpay" />
+		<result column="givechange" jdbcType="VARCHAR"
+			property="givechange" />
+		<result column="remark" jdbcType="VARCHAR" property="remark" />
+		<result column="markstatus" jdbcType="VARCHAR"
+			property="markstatus" />
+	</resultMap>
+
+
+	<resultMap id="AccountingVoMap"
+		type="com.dotop.smartwater.project.module.core.water.vo.AccountingVo">
+		<!-- 账单id -->
+		<result column="id" jdbcType="VARCHAR" property="id" />
+		<result column="rid" jdbcType="VARCHAR" property="rid" />
+		<result column="userid" jdbcType="VARCHAR" property="userid" />
+		<result column="account" jdbcType="VARCHAR" property="account" />
+		<result column="username" jdbcType="VARCHAR"
+			property="username" />
+		<result column="sys" jdbcType="VARCHAR" property="sys" />
+		<result column="artificial" jdbcType="VARCHAR"
+			property="artificial" />
+		<result column="differ" jdbcType="VARCHAR" property="differ" />
+		<result column="supplement" jdbcType="VARCHAR"
+			property="supplement" />
+		<result column="dtime" jdbcType="VARCHAR" property="dtime" />
+		<result column="atime" jdbcType="VARCHAR" property="atime" />
+		<result column="status" jdbcType="VARCHAR" property="status" />
+		<result column="substatus" jdbcType="VARCHAR"
+			property="substatus" />
+		<result column="remark" jdbcType="VARCHAR" property="remark" />
+		<result column="createtime" jdbcType="VARCHAR"
+			property="createtime" />
+		<result column="communityid" jdbcType="VARCHAR"
+			property="communityid" />
+	</resultMap>
+
+	<select id="getList" resultMap="OrderVoMap"
+		parameterType="java.util.Map">
+		SELECT
+		o.*,
+		p.ownerpay,p.givechange,
+		e.penalty,
+		m.remark,m.`status` AS markstatus
+		FROM `order` o
+		INNER JOIN order_ext e ON o.tradeno = e.tradeno
+		INNER JOIN trade_pay p ON o.tradeno = p.tradeno
+		LEFT JOIN order_mark m ON o.tradeno = m.tradeno
+		<where>
+		    o.issub = 0 AND o.paystatus = 1
+			<if test="userid != null and userid != ''">
+				and o.operatorid = #{userid}
+			</if>
+			<if test="enterpriseid != null and enterpriseid != '' ">
+				AND o.enterpriseid = #{enterpriseid}
+			</if>
+
+			<if test="communityid != null and communityid != '' ">
+				AND o.communityid = #{communityid}
+			</if>
+
+			<if test="atime != null and atime != '' ">
+				AND o.paytime between DATE_SUB( #{atime} , interval 0
+				day)
+				AND DATE_ADD(#{atime} , interval 1 day)
+			</if>
+		</where>
+		<if test="limit!=null and offset!=null">
+			order by o.paytime desc
+			LIMIT #{limit} OFFSET #{offset}
+		</if>
+	</select>
+
+	<select id="get" resultMap="AccountingVoMap"
+		parameterType="java.util.Map">
+		SELECT * FROM accounting
+		<where>
+			<if test="userid != null and userid != ''">
+				and userid = #{userid}
+			</if>
+			<if test="enterpriseid != null and enterpriseid != '' ">
+				AND enterpriseid = #{enterpriseid}
+			</if>
+			<if test="atime != null and atime != '' ">
+				AND atime between DATE_SUB( #{atime} , interval 0
+				day)
+				AND DATE_ADD(#{atime} , interval 1 day)
+			</if>
+		</where>
+	</select>
+
+
+	<select id="getUserDayMoney" parameterType="java.lang.String"
+		resultType="Double">
+		SELECT sum(t.ownerpay-t.givechange) as sys
+		FROM `order` o
+		INNER JOIN trade_pay t
+		ON o.tradeno = t.tradeno
+		<where>
+			<if test="userid != null and userid != ''">
+				and o.operatorid = #{userid}
+			</if>
+			<if test="enterpriseid != null and enterpriseid != '' ">
+				AND o.enterpriseid = #{enterpriseid}
+			</if>
+			<if test="atime != null and atime != '' ">
+				AND o.paytime between DATE_SUB( #{atime} , interval 0
+				day)
+				AND DATE_ADD(#{atime} , interval 1 day)
+			</if>
+		</where>
+	</select>
+
+	<delete id="del">
+		DELETE FROM accounting where id = #{id}
+	</delete>
+
+
+	<insert id="add">
+		insert into accounting
+		( id ,
+		enterpriseid,rid,userid,account,username,sys,artificial,
+		differ,atime,dtime,status,substatus,remark,createtime)
+		VALUES
+		(#{id},
+		#{enterpriseid},#{rid},#{userid},#{account},#{username},#{sys},#{artificial},
+		#{differ},#{atime},DATE_FORMAT(#{dtime},'%Y-%m-%d
+		%H:%i:%s'),#{status},#{substatus},#{remark},DATE_FORMAT(#{createtime},'%Y-%m-%d
+		%H:%i:%s'))
+	</insert>
+
+
+   <!--  删除工单异常 -->
+	<delete id="deleteMark" >
+		DELETE FROM order_mark where tradeno = #{tradeno}
+	</delete>
+
+    <!--    记录工单异常 -->
+	<insert id="saveMarkOrder">
+		insert into order_mark
+		(id,tradeno,remark,status,marktime,userid,username,createtime,enterpriseid)
+		value (#{id},#{tradeno},#{remark},#{status},#{marktime},#{userid},#{username},#{createtime},#{enterpriseid})
+	</insert>
+
+
+</mapper>

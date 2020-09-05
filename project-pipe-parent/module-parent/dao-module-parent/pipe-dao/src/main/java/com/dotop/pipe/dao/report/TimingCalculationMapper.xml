@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper
+	namespace="com.dotop.pipe.api.dao.report.ITimingCalculationDao">
+
+	<resultMap id="TimingCalculationVoMap"
+		type="com.dotop.pipe.core.vo.report.TimingCalculationVo">
+		<result column="tc_id" jdbcType="VARCHAR" property="tcId" />
+		<result column="code" jdbcType="VARCHAR" property="code" />
+		<result column="name" jdbcType="VARCHAR" property="name" />
+		<result column="des" jdbcType="VARCHAR" property="des" />
+		<result column="status" jdbcType="VARCHAR" property="status" />
+		<result column="upper_limit" jdbcType="VARCHAR" property="upperLimit" />
+		<result column="lower_limit" jdbcType="VARCHAR" property="lowerLimit" />
+		<collection property="formulas" ofType="com.dotop.pipe.core.vo.report.TimingFormulaVo">
+			<result column="tf_id" jdbcType="VARCHAR" property="tfId" />
+			<result column="tf_direction" jdbcType="VARCHAR" property="direction" />
+			<result column="tf_multiple" jdbcType="VARCHAR" property="multiple" />
+			<result column="device_id" jdbcType="VARCHAR" property="deviceId" />
+			<association property="device" javaType="com.dotop.pipe.core.vo.device.DeviceVo">
+				<result column="device_id" jdbcType="VARCHAR" property="deviceId" />
+				<result column="device_code" jdbcType="VARCHAR" property="code" />
+				<result column="device_name" jdbcType="VARCHAR" property="name" />
+				<result column="device_des" jdbcType="VARCHAR" property="des" />
+			</association>
+		</collection>
+	</resultMap>
+
+	<insert id="add">
+		INSERT INTO pls_timing_calculation
+		(tc_id, code, name,	des, status, upper_limit, lower_limit, create_by, create_date, last_by, last_date, is_del, enterprise_id)
+		VALUES
+		(#{tcId}, #{code}, #{name}, #{des}, #{status}, #{upperLimit}, #{lowerLimit}, #{userBy}, #{curr},#{userBy}, #{curr}, #{isDel}, #{enterpriseId})
+	</insert>
+
+	<select id="get" resultMap="TimingCalculationVoMap">
+		SELECT a.tc_id,a.code, a.name, a.des, a.status, a.upper_limit, a.lower_limit,
+		b.tf_id,b.direction AS tf_direction,b.multiple AS tf_multiple,
+		c.device_id,c.code AS device_code,c.name AS device_name,c.des AS device_des
+		FROM pls_timing_calculation AS a
+		JOIN pls_timing_formula AS b ON a.tc_id=b.tc_id AND a.is_del=#{isDel} AND b.is_del=#{isDel}
+		JOIN pls_device AS c ON b.device_id = c.device_id AND b.is_del=#{isDel} AND c.is_del=#{isDel}
+		<where>
+			<if test="enterpriseId != null and enterpriseId != ''">
+				AND a.enterprise_id=#{enterpriseId}
+			</if>
+			<if test="isDel != null">
+				AND a.is_del=#{isDel}
+			</if>
+			<if test="tcId != null and tcId != ''">
+				AND a.tc_id=#{tcId}
+			</if>
+			<if test="code != null and code != ''">
+				AND a.code=#{code}
+			</if>
+		</where>
+	</select>
+
+	<select id="list" resultMap="TimingCalculationVoMap">
+		SELECT a.tc_id,a.code, a.name, a.des, a.status, a.upper_limit, a.lower_limit,
+		b.tf_id,b.direction AS tf_direction,b.multiple AS tf_multiple,
+		c.device_id,c.code AS device_code,c.name AS device_name,c.des AS device_des
+		FROM pls_timing_calculation AS a
+		JOIN pls_timing_formula AS b ON a.tc_id=b.tc_id AND a.is_del=#{isDel} AND b.is_del=#{isDel}
+		JOIN pls_device AS c ON b.device_id = c.device_id AND b.is_del=#{isDel} AND c.is_del=#{isDel}
+		<where>
+			<if test="enterpriseId != null and enterpriseId != ''">
+				AND a.enterprise_id=#{enterpriseId}
+			</if>
+			<if test="isDel != null">
+				AND a.is_del=#{isDel}
+			</if>
+			<if test="code != null and code != ''">
+				AND a.code=#{code}
+			</if>
+		</where>
+		ORDER BY a.last_date DESC
+	</select>
+
+	<update id="edit" parameterType="java.util.Map">
+		UPDATE pls_timing_calculation
+		<trim prefix="set" suffixOverrides=",">
+			<if test="code != null and code != ''">
+				code=#{code},
+			</if>
+			<if test="name != null and name != ''">
+				name=#{name},
+			</if>
+			<if test="des != null and des != ''">
+				des=#{des},
+			</if>
+			<if test="status != null">
+				status=#{status},
+			</if>
+			<if test="upperLimit != null">
+				upper_limit=#{upperLimit},
+			</if>
+			<if test="lowerLimit != null">
+				lower_limit=#{lowerLimit},
+			</if>
+			<if test="userBy != null and userBy != ''">
+				last_by=#{userBy},
+			</if>
+			<if test="curr != null">
+				last_date=#{curr},
+			</if>
+		</trim>
+		WHERE 
+		enterprise_id=#{enterpriseId} AND tc_id=#{tcId} AND is_del=#{isDel}
+	</update>
+
+	<update id="del">
+		UPDATE pls_timing_calculation SET
+		is_del='1',last_by=#{userBy},last_date=#{curr}
+		WHERE 
+		enterprise_id=#{enterpriseId} AND tc_id=#{tcId} AND	is_del=#{isDel}
+	</update>
+
+	<select id="isExist" resultType="java.lang.Boolean">
+		SELECT EXISTS
+		(
+		SELECT tc_id FROM pls_timing_calculation
+		<where>
+			AND is_del=#{isDel}
+			<if test="code != null and code != ''">
+				AND code=#{code}
+			</if>
+			<if test="tcId != null and tcId != ''">
+				AND tc_id=#{tcId}
+			</if>
+		</where>
+		)
+	</select>
+
+</mapper>

@@ -1,0 +1,191 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dotop.smartwater.project.module.dao.workcenter.IDbFieldDao">
+
+   <resultMap id="WorkCenterDbFieldVoMap" type="com.dotop.smartwater.project.module.core.water.vo.WorkCenterDbFieldVo">
+		<result column="id" jdbcType="VARCHAR" property="id" />
+		<result column="db_id"   jdbcType="VARCHAR" property="dbId" />
+		<result column="attribute" jdbcType="VARCHAR" property="attribute" />
+		<result column="name" jdbcType="VARCHAR" property="name" />
+		<result column="field_type" jdbcType="VARCHAR" property="fieldType" />
+		<result column="last_by" jdbcType="VARCHAR" property="lastBy" />
+		<result column="last_date" jdbcType="VARCHAR" property="lastDate" />
+		<result column="create_by" jdbcType="VARCHAR" property="createBy" />
+		<result column="create_date" jdbcType="VARCHAR" property="createDate" />
+		<result column="enterpriseid" jdbcType="VARCHAR" property="enterpriseid" />
+		<association property="typeDictChild" javaType="com.dotop.smartwater.project.module.core.water.vo.DictionaryChildVo">
+			<result column="type_dict_child_id" jdbcType="VARCHAR" property="childId" />
+		</association>
+		<association property="contentDict" javaType="com.dotop.smartwater.project.module.core.water.vo.DictionaryVo">
+			<result column="content_dict_id" jdbcType="VARCHAR" property="dictionaryId" />
+		</association>
+		<association property="relationDictChild" javaType="com.dotop.smartwater.project.module.core.water.vo.DictionaryChildVo">
+			<result column="relation_dict_child_id" jdbcType="VARCHAR" property="childId" />
+		</association>
+	</resultMap>
+	
+	<select id="list" resultMap="WorkCenterDbFieldVoMap">
+		SELECT id,db_id,attribute,name,field_type,type_dict_child_id,content_dict_id,relation_dict_child_id
+		,is_del,create_by,create_date,last_by,last_date,enterpriseid
+        FROM wc_db_field
+		<where>
+			<if test="enterpriseid != null and enterpriseid != ''">
+				AND enterpriseid=#{enterpriseid}
+			</if>
+			<if test="isDel != null">
+				AND is_del=#{isDel}
+			</if>
+			<if test="dbId != null  and dbId != ''">
+				AND db_id=#{dbId}
+			</if>
+		</where>
+		<if test="ifSort">
+			ORDER BY last_date DESC
+		</if>
+	</select>
+	
+	<select id="get" resultMap="WorkCenterDbFieldVoMap">
+		SELECT id,db_id,attribute,name,field_type,type_dict_child_id,content_dict_id,relation_dict_child_id
+		,is_del,create_by,create_date,last_by,last_date,enterpriseid
+        FROM wc_db_field
+		<where>
+			<if test="enterpriseid != null and enterpriseid != ''">
+				AND enterpriseid=#{enterpriseid}
+			</if>
+			<if test="isDel != null">
+				AND is_del=#{isDel}
+			</if>
+			<if test="id != null and id != ''">
+				AND id=#{id}
+			</if>
+		</where>
+	</select>
+	
+	<insert id="add">
+		INSERT INTO wc_db_field
+		(id,db_id,attribute,name,field_type,type_dict_child_id,content_dict_id,relation_dict_child_id
+		,is_del,create_by,create_date,last_by,last_date,enterpriseid)
+		VALUES
+		(#{id},#{dbId},#{attribute},#{name},#{fieldType},#{typeDictChild.childId},#{contentDict.dictionaryId},#{relationDictChild.childId}
+		,#{isDel},#{userBy},#{curr},#{userBy},#{curr},#{enterpriseid})
+	</insert>
+	
+	<update id="edit">
+		UPDATE wc_db_field
+		<trim prefix="set" suffixOverrides=",">
+			<if test="attribute != null and attribute != ''">
+				attribute=#{attribute},
+			</if>
+			<if test="name != null and name != ''">
+				name=#{name},
+			</if>
+			<if test="fieldType != null and fieldType != ''">
+				field_type=#{fieldType},
+			</if>
+			<if test="typeDictChild != null and typeDictChild.childId != null">
+				type_dict_child_id=#{typeDictChild.childId},
+			</if>
+			<if test="contentDict != null and contentDict.dictionaryId != null">
+				content_dict_id=#{contentDict.dictionaryId},
+			</if>
+			<if test="relationDictChild != null and relationDictChild.childId != null">
+				relation_dict_child_id=#{relationDictChild.childId},
+			</if>
+			<if test="userBy != null and userBy != ''">
+				last_by=#{userBy},
+			</if>
+			<if test="curr != null">
+				last_date=#{curr},
+			</if>
+		</trim>
+		WHERE enterpriseid=#{enterpriseid} AND id=#{id} AND is_del=#{isDel}
+	</update>
+	
+	<update id="del">
+		UPDATE wc_db_field
+		<trim prefix="set" suffixOverrides=",">
+			<if test="newIsDel != null and newIsDel != ''">
+				is_del=#{newIsDel},
+			</if>
+			<if test="userBy != null and userBy != ''">
+				last_by=#{userBy},
+			</if>
+			<if test="curr != null">
+				last_date=#{curr},
+			</if>
+		</trim>
+		<where>
+			enterpriseid=#{enterpriseid} AND is_del=#{isDel}
+			<if test="id != null and id != ''">
+			 	AND id=#{id}
+			</if>
+			<if test="dbId != null and dbId != ''">
+				AND db_id=#{dbId}
+			</if>
+		</where>
+	</update>
+	
+	<insert id="adds" parameterType="java.util.List">
+		<foreach collection="list" item="item" index="index" open="" close="" separator=";">
+			INSERT INTO wc_db_field
+			(id,db_id,attribute,name,field_type,type_dict_child_id,content_dict_id,relation_dict_child_id
+			,is_del,create_by,create_date,last_by,last_date,enterpriseid)
+			VALUES
+			(#{item.id},#{item.dbId},#{item.attribute},#{item.name},#{item.fieldType},#{item.typeDictChild.childId},#{item.contentDict.dictionaryId},#{item.relationDictChild.childId}
+			,#{item.isDel},#{item.userBy},#{item.curr},#{item.userBy},#{item.curr},#{item.enterpriseid})
+		</foreach>
+	</insert>
+	
+	<update id="edits" parameterType="java.util.List">
+		<foreach collection="list" item="item" index="index" open="" close="" separator=";">
+			UPDATE wc_db_field
+			<trim prefix="set" suffixOverrides=",">
+				<if test="item.attribute != null and item.attribute != ''">
+					attribute=#{item.attribute},
+				</if>
+				<if test="item.name != null and item.name != ''">
+					name=#{item.name},
+				</if>
+				<if test="item.fieldType != null and item.fieldType != ''">
+					field_type=#{item.fieldType},
+				</if>
+				<if test="item.typeDictChild != null and item.typeDictChild.childId != null">
+					type_dict_child_id=#{item.typeDictChild.childId},
+					content_dict_id=#{item.contentDict.dictionaryId},
+				</if>
+				<!--<if test="item.contentDict != null and item.contentDict.dictionaryId != null">-->
+				<!-- content_dict_id=#{item.contentDict.dictionaryId},-->
+				<!--</if>-->
+				<if test="item.relationDictChild != null and item.relationDictChild.childId != null">
+					relation_dict_child_id=#{item.relationDictChild.childId},
+				</if>
+				<if test="item.userBy != null and item.userBy != ''">
+					last_by=#{item.userBy},
+				</if>
+				<if test="item.curr != null">
+					last_date=#{item.curr},
+				</if>
+			</trim>
+			WHERE enterpriseid=#{item.enterpriseid} AND id=#{item.id} AND is_del=#{item.isDel}
+		</foreach>
+	</update>
+	
+    <update id="dels" parameterType="java.util.List">
+    	<foreach collection="list" item="item" index="index" open="" close="" separator=";">
+			UPDATE wc_db_field
+			<trim prefix="set" suffixOverrides=",">
+				<if test="item.newIsDel != null and item.newIsDel != ''">
+					is_del=#{item.newIsDel},
+				</if>
+				<if test="item.userBy != null and item.userBy != ''">
+					last_by=#{item.userBy},
+				</if>
+				<if test="item.curr != null">
+					last_date=#{item.curr},
+				</if>
+			</trim>
+			WHERE enterpriseid=#{item.enterpriseid} AND id=#{item.id} AND is_del=#{item.isDel}
+		</foreach>
+	</update>
+	
+</mapper>

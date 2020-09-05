@@ -1,0 +1,43 @@
+logging:
+  config: classpath:log4j2-dev.xml
+
+wechat:
+  notify_url: http://admin.eastcomiot.com/water-pay/callback/weChatPay
+
+druid:
+  datasource:
+    url: jdbc:mysql://222.20.83.207:3306/water?useUnicode=true&characterEncoding=UTF8&useSSL=false&serverTimezone=Asia/Shanghai&allowMultiQueries=true
+    username: root
+    password: 123456
+
+redis:
+  cache:
+    database: 4
+    host: 127.0.0.1
+    hosts: 127.0.0.1
+    password:
+    port: 6379
+    ports: 26379
+
+oss:
+  AccessKeyId:
+  AccessKeySecret:
+  endpoint:
+  bucketName:
+  fileDir: water-cas/
+
+mybatis:
+  configLocation: classpath:mybatis-config-dev.xml
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://localhost:8761/eureka/
+
+param:
+  config:
+    version: 2.5
+    userinvalidtime: 7
+    serverhost: #下发指令地址
+    weixindebug: true
+    authserverurl: http://localhost:39000/water-cas

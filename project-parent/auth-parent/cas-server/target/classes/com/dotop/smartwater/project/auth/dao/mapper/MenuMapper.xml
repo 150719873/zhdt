@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper
+	namespace="com.dotop.smartwater.project.auth.dao.IMenuDao">
+
+	<!-- <resultMap id="InventoryVoMap"
+		type="com.dotop.smartwater.project.module.core.water.vo.InventoryVo">
+		<result column="inTotal" jdbcType="VARCHAR" property="inTotal" />
+		<result column="outTotal" jdbcType="VARCHAR" property="outTotal" />
+		<result column="stockTotal" jdbcType="VARCHAR" property="stockTotal" />
+		<association property="product" javaType="com.dotop.smartwater.project.module.core.water.vo.StoreProductVo">
+			<result column="productNo" jdbcType="VARCHAR" property="productNo" />
+			<result column="name" jdbcType="VARCHAR" property="name" />
+			<result column="unit" jdbcType="VARCHAR" property="unit" />
+			<result column="model" jdbcType="VARCHAR" property="model" />
+			<result column="spec" jdbcType="VARCHAR" property="spec" />
+			<result column="material" jdbcType="VARCHAR" property="material" />
+			<result column="vender" jdbcType="VARCHAR" property="vender" />
+			<result column="produced" jdbcType="VARCHAR" property="produced" />
+			<result column="contact" jdbcType="VARCHAR" property="contact" />
+			<result column="phone" jdbcType="VARCHAR" property="phone" />
+		</association>
+	</resultMap> -->
+
+	<select id="adminList" resultType="com.dotop.smartwater.project.module.core.auth.vo.MenuVo">
+		select * from admin_menu where 1=1 
+		<if test="level != null">
+			AND level = #{level}
+		</if>
+		<if test="parentid != null and parentid != ''">
+			AND parentid = #{parentid}
+		</if>
+	</select>
+	
+	<select id="list" resultType="com.dotop.smartwater.project.module.core.auth.vo.MenuVo">
+		select * from menu where 1=1 
+		<if test="level != null">
+			AND level = #{level}
+		</if>
+		<if test="parentid != null and parentid != ''">
+			AND parentid = #{parentid}
+		</if>
+	</select>
+	
+	<select id="adminGet"  resultType="com.dotop.smartwater.project.module.core.auth.vo.MenuVo">
+		select * from admin_menu where menuid = #{menuid}
+	</select>
+	
+	<select id="get"  resultType="com.dotop.smartwater.project.module.core.auth.vo.MenuVo">
+		select * from menu where menuid = #{menuid}
+	</select>
+	
+	<insert id="adminAdd">
+		insert into admin_menu(menuid, parentid, name, uri, iconuri, level, type, introduction, modelid, systype) 
+		values(#{menuid}, #{parentid}, #{name}, #{uri}, #{iconuri}, #{level}, #{type}, #{introduction}, #{modelid}, #{systype})
+	</insert>
+	
+	<insert id="add">
+		insert into menu(menuid, parentid, name, uri, iconuri, level, type, introduction, modelid, systype) 
+		values(#{menuid}, #{parentid}, #{name}, #{uri}, #{iconuri}, #{level}, #{type}, #{introduction}, #{modelid}, #{systype})
+	</insert>
+	
+	<update id="adminRevise">
+		update admin_menu 
+		<trim prefix="set" suffixOverrides=",">
+			<if test="menuid != null and menuid != ''">
+				menuid = #{menuid},
+			</if>
+			<if test="parentid != null and parentid != ''">
+				parentid = #{parentid},
+			</if>
+			<if test="name != null and name != ''">
+				name = #{name},
+			</if>
+			<if test="1==1">
+				uri = #{uri},
+			</if>
+			<if test="1==1">
+				iconuri = #{iconuri},
+			</if>
+			<if test="level != null">
+				level = #{level},
+			</if>
+			<if test="type != null">
+				type = #{type},
+			</if>
+			<if test="1==1">
+				introduction = #{introduction},
+			</if>
+			<if test="modelid != null and modelid != ''">
+				modelid = #{modelid},
+			</if>
+			<if test="systype != null and systype != ''">
+				systype = #{systype}
+			</if>
+		</trim>
+		where menuid = #{menuid}
+	</update>
+	
+	<update id="revise">
+		update menu 
+		<trim prefix="set" suffixOverrides=",">
+			<if test="menuid != null and menuid != ''">
+				menuid = #{menuid},
+			</if>
+			<if test="parentid != null and parentid != ''">
+				parentid = #{parentid},
+			</if>
+			<if test="name != null and name != ''">
+				name = #{name},
+			</if>
+			<if test="uri != null and uri != ''">
+				uri = #{uri},
+			</if>
+			<if test="iconuri != null and iconuri != ''">
+				iconuri = #{iconuri},
+			</if>
+			<if test="level != null">
+				level = #{level},
+			</if>
+			<if test="type != null">
+				type = #{type},
+			</if>
+			<if test="introduction != null and introduction != ''">
+				introduction = #{introduction},
+			</if>
+			<if test="modelid != null and modelid != ''">
+				modelid = #{modelid},
+			</if>
+			<if test="systype != null and systype != ''">
+				systype = #{systype}
+			</if>
+		</trim>
+		where menuid = #{menuid}
+	</update>
+	
+	<delete id="adminDel">
+		delete from admin_menu where 1=1
+		<foreach collection="list" item="item" index="index" separator="">
+			<choose>
+			    <when test="index == 0">
+			        AND (menuid = #{item.menuid}
+			    </when>
+			    <otherwise>
+			        or menuid = #{item.menuid}
+			    </otherwise>
+			</choose>
+			<if test="list.size()-index == 1">
+				)
+			</if>
+        </foreach>
+	</delete>
+	
+	<delete id="del">
+		delete from menu where 1=1
+		<foreach collection="list" item="item" index="index" separator="">
+			<choose>
+			    <when test="index == 0">
+			        AND (menuid = #{item.menuid}
+			    </when>
+			    <otherwise>
+			        or menuid = #{item.menuid}
+			    </otherwise>
+			</choose>
+			<if test="list.size()-index == 1">
+				)
+			</if>
+        </foreach>
+	</delete>
+	
+</mapper>

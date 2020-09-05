@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.dotop.smartwater.project.module.dao.tool.IModeConfigureDao">
+	
+	<select id="listModeConfigure" resultType="com.dotop.smartwater.project.module.core.water.vo.ModeBindVo">
+		select a.*, b.child_name as modeName
+		from mode_bind a left join dictionary_child b on a.mode = b.child_id
+		where a.enterpriseid = #{enterpriseid}
+	</select>
+	<!--没有时默认加载所有-->
+	<select id="defaultModeConfigure" resultType="com.dotop.smartwater.project.module.core.water.vo.ModeBindVo">
+		select a.child_id as `mode`, a.child_name as modeName
+		from dictionary_child a where dictionary_id = '28,300001'
+	</select>
+	
+	<insert id="configureMode">
+		insert into mode_bind(id, mode, enterpriseid) values
+		<foreach collection="list" item="item" index="index" separator=",">
+            (#{item.id}, #{item.mode}, #{item.enterpriseid})
+        </foreach>
+	</insert>
+	
+	<delete id="deleteModeConfigure">
+		delete from mode_bind where enterpriseid = #{enterpriseid}
+	</delete>
+	
+</mapper>

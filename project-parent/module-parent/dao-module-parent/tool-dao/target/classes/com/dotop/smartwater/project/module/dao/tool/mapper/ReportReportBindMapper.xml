@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.dotop.smartwater.project.module.dao.tool.IReportRoleBindDao">
+		
+	<resultMap id="ReportRoleBindVoMap" type="com.dotop.smartwater.project.module.core.water.vo.ReportRoleBindVo">
+		<result column="id" jdbcType="VARCHAR" property="id" />
+		<result column="bindid" jdbcType="VARCHAR" property="bindid" />
+		<result column="roleid" jdbcType="VARCHAR" property="roleid" />
+		<result column="enterpriseid"   jdbcType="VARCHAR" property="enterpriseid" />
+		<association property="reportBind" javaType="com.dotop.smartwater.project.module.core.water.vo.ReportBindVo">
+			<result column="reportid" jdbcType="VARCHAR" property="reportid" />
+			<result column="reportname" jdbcType="VARCHAR" property="reportname" />
+			<result column="type" jdbcType="VARCHAR" property="type" />
+		</association>
+	</resultMap>
+
+	<select id="list" resultMap="ReportRoleBindVoMap">
+		<choose>
+           <when test="roleid != null and roleid != ''">
+            select  DISTINCT c.enterpriseid ,c.bindid as bindid, c.reportid, c.reportname, c.type AS report_type
+            from role_permission as a join menu as b  on a.permissionid = b.menuid 
+            join  report_bind as c on c.bindid = b.uri 
+           </when>
+           <otherwise>
+           select DISTINCT c.enterpriseid ,c.bindid as bindid, c.reportid, c.reportname, c.type AS report_type 
+           from enterprise as d join platform_role_permission as e on d.proleid = e.proleid
+           join menu as b on b.menuid = e.menuid join  report_bind as c on c.bindid = b.uri
+           </otherwise>
+        </choose>
+        <where>
+           and b.parentid = '42000000'
+          <if test="enterpriseid != null and enterpriseid != ''">
+				AND c.enterpriseid=#{enterpriseid}
+		  </if>
+		  <choose>
+		    <when test="roleid != null and roleid != ''">
+		        AND a.roleid=#{roleid}
+		    </when>
+            <otherwise>
+             and d.enterpriseid=#{enterpriseid}
+            </otherwise>
+           </choose>
+        </where>
+	</select>
+	
+	<insert id="adds" parameterType="java.util.List">
+		<foreach collection="list" item="item" index="index" open="" close="" separator=";">
+			INSERT INTO report_role_bind (id,bindid,roleid
+			,is_del,create_by,create_date,last_by,last_date,enterpriseid)
+			VALUES (#{item.id},#{item.bindid},#{item.roleid}
+			,#{item.isDel},#{item.userBy},#{item.curr},#{item.userBy},#{item.curr},#{item.enterpriseid})
+		</foreach>
+	</insert>
+	
+	<update id="dels" parameterType="java.util.List">
+		<foreach collection="list" item="item" index="index" open="" close="" separator=";">
+			DELETE FROM report_role_bind 
+			WHERE enterpriseid=#{item.enterpriseid} AND bindid=#{item.bindid} AND is_del=#{item.isDel}
+		</foreach>
+	</update>
+
+</mapper>

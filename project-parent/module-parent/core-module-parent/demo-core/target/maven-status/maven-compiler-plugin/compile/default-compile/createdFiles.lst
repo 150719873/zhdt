@@ -1,0 +1,4 @@
+com\dotop\smartwater\project\module\core\demo\bo\HelloBo.class
+com\dotop\smartwater\project\module\core\demo\vo\HelloVo.class
+com\dotop\smartwater\project\module\core\demo\dto\HelloDto.class
+com\dotop\smartwater\project\module\core\demo\form\HelloForm.class

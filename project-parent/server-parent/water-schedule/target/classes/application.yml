@@ -1,0 +1,100 @@
+#debug: true
+spring.profiles.active: dev
+
+logging:
+  config: classpath:log4j2-prod.xml
+
+server:
+  port: 36666
+  servlet:
+    context-path: /water-schedule
+  undertow:
+    io-threads: 32
+    worker-threads: 2048
+    buffer-size: 10240
+    direct-buffers: true
+
+spring.servlet.multipart.max-file-size: 1MB
+spring.servlet.multipart.max-request-size: 1MB
+
+druid:
+  datasource:
+    name: water-schedule
+    type: com.alibaba.druid.pool.DruidDataSource
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    filters: stat
+    maxActive: 200
+    initialSize: 1
+    maxWait: 30000
+    minIdle: 1
+    timeBetweenEvictionRunsMillis: 30000
+    minEvictableIdleTimeMillis: 300000
+    validationQuery: select 'x'
+    testWhileIdle: true
+    testOnBorrow: false
+    testOnReturn: false
+    poolPreparedStatements: true
+    maxOpenPreparedStatements: 20
+
+spring:
+  application:
+    name: water-schedule
+  cache:
+    type: redis
+    redis:
+      time-to-live: 3600
+
+mybatis:
+  mapperLocations: classpath*:com/dotop/smartwater/project/module/dao/**/*.xml
+  configLocation: classpath:mybatis-config.xml
+
+eureka:
+  instance:
+    prefer-ip-address: true
+    lease-expiration-duration-in-seconds: 30
+    lease-renewal-interval-in-seconds: 10
+  client:
+    registry-fetch-interval-seconds: 30
+    registerWithEureka: true
+    fetchRegistry: true
+
+feign:
+  httpclient:
+    enabled: false
+  okhttp:
+    enabled: true
+  hystrix:
+    enabled: true
+
+ribbon:
+  httpclient:
+    enabled: false
+  okhttp:
+    enabled: true
+  eureka:
+    enabled: true
+  ReadTimeout: 10000
+  ConnectTimeout: 10000
+  MaxAutoRetries: 0
+  MaxAutoRetriesNextServer: 0
+  OkToRetryOnAllOperations: false
+
+
+hystrix:
+  threadpool:
+    default:
+      coreSize: 1000
+      maxQueueSize: 1000
+      queueSizeRejectionThreshold: 500
+  command:
+    default:
+      execution:
+        isolation:
+          thread:
+            timeoutInMilliseconds: 10000
+
+# 其他包要用的参数,本系统没有用到
+param:
+  revenue:
+     uploadUrl: /opt/smartwater/water-upload/upload/
+     

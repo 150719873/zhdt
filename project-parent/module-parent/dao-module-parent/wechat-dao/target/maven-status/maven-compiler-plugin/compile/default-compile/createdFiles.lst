@@ -1,0 +1,5 @@
+com\dotop\smartwater\project\module\dao\wechat\IWechatUserDao.class
+com\dotop\smartwater\project\module\dao\wechat\IWechatPayDao.class
+com\dotop\smartwater\project\module\dao\wechat\IWechatInstallDao.class
+com\dotop\smartwater\project\module\dao\wechat\IWechatDao.class
+com\dotop\smartwater\project\module\dao\wechat\IWechatRechargeDao.class

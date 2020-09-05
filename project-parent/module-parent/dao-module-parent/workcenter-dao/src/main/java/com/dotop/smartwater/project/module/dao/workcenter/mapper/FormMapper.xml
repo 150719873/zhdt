@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dotop.smartwater.project.module.dao.workcenter.IFormDao">
+
+   <resultMap id="WorkCenterFormVoMap" type="com.dotop.smartwater.project.module.core.water.vo.WorkCenterFormVo">
+		<result column="id" jdbcType="VARCHAR" property="id" />
+		<result column="code"   jdbcType="VARCHAR" property="code" />
+		<result column="name" jdbcType="VARCHAR" property="name" />
+		<result column="desc" jdbcType="VARCHAR" property="desc" />
+		<result column="body" jdbcType="VARCHAR" property="body" />
+	    <result column="app_body" jdbcType="VARCHAR" property="appBody" />
+		<result column="body_map" property="bodyMap" />
+		<result column="if_effect" jdbcType="VARCHAR" property="ifEffect" />
+		<result column="last_by" jdbcType="VARCHAR" property="lastBy" />
+		<result column="last_date" jdbcType="VARCHAR" property="lastDate" />
+		<result column="create_by" jdbcType="VARCHAR" property="createBy" />
+		<result column="create_date" jdbcType="VARCHAR" property="createDate" />
+		<result column="enterpriseid" jdbcType="VARCHAR" property="enterpriseid" />
+		<collection property="dbs" ofType="com.dotop.smartwater.project.module.core.water.vo.WorkCenterDbVo">
+			<result column="db_id" jdbcType="VARCHAR" property="id" />
+			<result column="db_name" jdbcType="VARCHAR" property="name" /> 
+			<result column="db_load_type" jdbcType="VARCHAR" property="loadType" /> 
+			<result column="db_load_status" jdbcType="VARCHAR" property="loadStatus" /> 
+			<result column="db_sql_str" jdbcType="VARCHAR" property="sqlStr" /> 
+			<result column="db_if_effect" jdbcType="VARCHAR" property="ifEffect" />
+			<collection property="dbFields" ofType="com.dotop.smartwater.project.module.core.water.vo.WorkCenterDbFieldVo">
+				<result column="field_id" jdbcType="VARCHAR" property="id" /> 
+				<result column="field_attribute" jdbcType="VARCHAR" property="attribute" /> 
+				<result column="field_name" jdbcType="VARCHAR" property="name" />
+				<result column="field_type" jdbcType="VARCHAR" property="fieldType" /> 
+				<association property="typeDictChild" javaType="com.dotop.smartwater.project.module.core.water.vo.DictionaryChildVo">
+					<result column="field_type_dict_child_id" jdbcType="VARCHAR" property="childId" />
+				</association>
+				<association property="contentDict" javaType="com.dotop.smartwater.project.module.core.water.vo.DictionaryVo">
+					<result column="field_content_dict_id" jdbcType="VARCHAR" property="dictionaryId" />
+				</association>
+				<association property="relationDictChild" javaType="com.dotop.smartwater.project.module.core.water.vo.DictionaryChildVo">
+					<result column="field_relation_dict_child_id" jdbcType="VARCHAR" property="childId" />
+				</association>
+			</collection>
+		</collection>
+	</resultMap>
+	
+	<select id="list" resultMap="WorkCenterFormVoMap">
+		SELECT a.id,a.code,a.name,a.`desc`,a.body,a.app_body,a.body_map,a.if_effect
+		,a.is_del,a.create_by,a.create_date,a.last_by,a.last_date,a.enterpriseid
+        FROM wc_form AS a
+		<where>
+			<if test="enterpriseid != null and enterpriseid != ''">
+				AND a.enterpriseid=#{enterpriseid}
+			</if>
+			<if test="isDel != null">
+				AND a.is_del=#{isDel}
+			</if>
+			<if test="name != null and name != ''">
+				AND a.name LIKE CONCAT(CONCAT('%',#{name},'%'))
+			</if>
+			<if test="code != null and code != ''">
+				AND a.code LIKE CONCAT(CONCAT('%',#{code},'%'))
+			</if>
+			<if test="ifEffect != null and ifEffect != ''">
+				AND a.if_effect=#{ifEffect}
+			</if>
+		</where>
+		<if test="ifSort">
+			ORDER BY a.last_date DESC
+		</if>
+	</select>
+	
+	<select id="get" resultMap="WorkCenterFormVoMap">
+		SELECT a.id,a.code,a.name,a.`desc`,a.body,a.app_body,a.body_map,a.if_effect
+		,a.is_del,a.create_by,a.create_date,a.last_by,a.last_date,a.enterpriseid
+		,b.id AS db_id,b.name AS db_name,b.load_type AS db_load_type,b.load_status AS db_load_status,b.sql_str AS db_sql_str,b.if_effect AS db_if_effect
+		,c.id AS field_id,c.attribute AS field_attribute,c.name AS field_name,c.field_type
+		,c.type_dict_child_id AS field_type_dict_child_id,c.content_dict_id AS field_content_dict_id,c.relation_dict_child_id AS field_relation_dict_child_id
+        FROM wc_form AS a
+        LEFT JOIN wc_db AS b ON a.id=b.form_id AND a.is_del=#{isDel} AND b.is_del=#{isDel}
+        LEFT JOIN wc_db_field AS c ON b.id=c.db_id AND b.is_del=#{isDel} AND c.is_del=#{isDel}
+		<where>
+			<if test="enterpriseid != null and enterpriseid != ''">
+				AND a.enterpriseid=#{enterpriseid}
+			</if>
+			<if test="isDel != null">
+				AND a.is_del=#{isDel}
+			</if>
+			<if test="id != null and id != ''">
+				AND a.id=#{id}
+			</if>
+		</where>
+	</select>
+	
+	<insert id="add">
+		INSERT INTO wc_form
+		(id,code,name,`desc`,body,app_body,body_map,if_effect
+		,is_del,create_by,create_date,last_by,last_date,enterpriseid)
+		VALUES
+		(#{id},#{code},#{name},#{desc},#{body},#{appBody},#{bodyMap,javaType=java.util.List},#{ifEffect}
+		,#{isDel},#{userBy},#{curr},#{userBy},#{curr},#{enterpriseid})
+	</insert>
+	
+	<update id="edit">
+		UPDATE wc_form
+		<trim prefix="set" suffixOverrides=",">
+			<if test="name != null and name != ''">
+				name=#{name},
+			</if>
+			<if test="desc != null">
+				`desc`=#{desc},
+			</if>
+			<if test="body != null and body != ''">
+				body=#{body},
+			</if>
+			<if test="appBody != null">
+				app_body=#{appBody},
+			</if>
+			<if test="bodyMap != null and bodyMap.size > 0">
+				body_map=#{bodyMap,javaType=java.util.List},
+			</if>
+			<if test="ifEffect != null and ifEffect != ''">
+				if_effect=#{ifEffect},
+			</if>
+			<if test="userBy != null and userBy != ''">
+				last_by=#{userBy},
+			</if>
+			<if test="curr != null">
+				last_date=#{curr},
+			</if>
+		</trim>
+		WHERE enterpriseid=#{enterpriseid} AND id=#{id} AND is_del=#{isDel}
+	</update>
+	
+	<update id="del">
+		UPDATE wc_form
+		<trim prefix="set" suffixOverrides=",">
+			<if test="newIsDel != null and newIsDel != ''">
+				is_del=#{newIsDel},
+			</if>
+			<if test="userBy != null and userBy != ''">
+				last_by=#{userBy},
+			</if>
+			<if test="curr != null">
+				last_date=#{curr},
+			</if>
+		</trim>
+		WHERE enterpriseid=#{enterpriseid} AND id=#{id} AND is_del=#{isDel}
+	</update>
+    
+</mapper>

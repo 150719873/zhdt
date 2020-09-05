@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper
+	namespace="com.dotop.smartwater.project.module.dao.tool.IPrintBindDao">
+
+	<insert id="add">
+		insert into print_bind
+		(id,enterpriseid,designid,bindtime,type,typename,isprint)
+		values
+		(#{id},#{enterpriseid}, #{designid} , #{curr},#{smstype}, #{smstypename}
+		,#{isprint})
+	</insert>
+
+	<!-- 打印模板绑定 -->
+	<select id="list"
+		resultType="com.dotop.smartwater.project.module.core.water.vo.PrintBindVo">
+		SELECT pb.*,c.name as enterprisename FROM(
+		SELECT b.* , d.id as tempid
+		, d.`name` as name , d.`describe` , d.createtime
+		FROM print_bind b ,
+		design_print d
+		where b.designid = d.id) pb inner join enterprise as c
+		on pb.enterpriseid =
+		c.enterpriseid
+		<where>
+			<if test="enterpriseid != null and enterpriseid != ''">
+				and pb.enterpriseid = #{enterpriseid}
+			</if>
+			<if test="name != null and name != ''">
+				and pb.name LIKE CONCAT('%',#{name},'%')
+			</if>
+		</where>
+		<if test="limit!=null and offset!=null">
+			order by pb.bindtime desc
+			LIMIT #{limit} OFFSET #{offset}
+		</if>
+	</select>
+
+	<select id="listAll"
+		resultType="com.dotop.smartwater.project.module.core.water.vo.PrintBindVo">
+		select *,id as tempid FROM design_print
+	</select>
+
+	<delete id="del">
+		delete from print_bind where id= #{id}
+	</delete>
+
+	<select id="get"
+		resultType="com.dotop.smartwater.project.module.core.water.vo.DesignPrintVo">
+		SELECT * FROM `design_print` as a WHERE id=#{id}
+	</select>
+
+	<select id="getRelationDesign"
+		resultType="com.dotop.smartwater.project.module.core.water.vo.DesignPrintVo">
+		SELECT d.*,p.isprint,p.type FROM print_bind p LEFT JOIN
+		design_print d ON
+		p.designid = d.id WHERE p.id = #{id}
+	</select>
+
+	<!-- <update id="edit" parameterType="java.util.Map"> UPDATE `wechat_template` 
+		<trim prefix="set" suffixOverrides=","> <if test="updatetime != null"> updatetime=#{updatetime}, 
+		</if> <if test="delflag != null "> delflag=#{delflag}, </if> <if test="name 
+		!= null and name != ''"> name=#{name}, </if> <if test="smsptid != null and 
+		smsptid != ''"> valve_type=#{valveType}, </if> <if test="content != null 
+		"> content=#{content}, </if> <if test="status != null and status != '' "> 
+		status=#{status}, </if> <if test="remarks != null and remarks != '' "> remarks=#{remarks}, 
+		</if> <if test="enterpriseid != null "> enterpriseid=#{enterpriseid}, </if> 
+		</trim> WHERE id=#{id} </update> -->
+
+	<select id="isExist" resultType="java.lang.Boolean">
+		SELECT EXISTS
+		(
+		SELECT id FROM print_bind
+		<where>
+			<if test="smstype != null">
+				and type=#{smstype}
+			</if>
+
+			<if test="enterpriseid != null and enterpriseid != ''">
+				and enterpriseid= #{enterpriseid}
+			</if>
+		</where>
+		)
+	</select>
+
+	<select id="getPrintStatus"
+		resultType="com.dotop.smartwater.project.module.core.water.vo.PrintBindVo">
+		SELECT designid AS designprintid, isprint AS printstatus FROM print_bind
+		WHERE enterpriseid
+		= #{enterpriseid} AND type = #{smstype} limit 1
+	</select>
+</mapper>

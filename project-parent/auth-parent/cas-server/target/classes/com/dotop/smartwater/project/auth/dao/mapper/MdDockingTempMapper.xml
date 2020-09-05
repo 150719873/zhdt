@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.dotop.smartwater.project.auth.dao.IMdDockingTempDao">
+    <resultMap id="BaseResultMap" type="com.dotop.smartwater.project.module.core.auth.vo.MdDockingTempVo">
+        <id column="id" jdbcType="VARCHAR" property="id" />
+        <result column="category" jdbcType="VARCHAR" property="category" />
+        <result column="type" jdbcType="VARCHAR" property="type" />
+        <result column="type_name" jdbcType="VARCHAR" property="typeName" />
+        <result column="host" jdbcType="VARCHAR" property="host" />
+        <result column="url" jdbcType="VARCHAR" property="url" />
+        <result column="time" jdbcType="TIMESTAMP" property="time" />
+        <result column="rang" jdbcType="INTEGER" property="rang" />
+        <result column="is_del" jdbcType="BIT" property="isDel" />
+        <result column="create_by" jdbcType="VARCHAR" property="createBy" />
+        <result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
+        <result column="last_by" jdbcType="VARCHAR" property="lastBy" />
+        <result column="last_date" jdbcType="TIMESTAMP" property="lastDate" />
+        <result column="factory" jdbcType="VARCHAR" property="factory" />
+        <result column="status" jdbcType="BIT" property="status" />
+    </resultMap>
+    <sql id="Base_Column_List">
+    id, category, type, type_name, host, url, time, rang, is_del, create_by, create_date,
+    last_by, last_date, factory, status
+  </sql>
+    <select id="get" parameterType="com.dotop.smartwater.project.module.core.auth.dto.MdDockingTempDto"
+            resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from md_docking_temp
+        where id = #{id,jdbcType=VARCHAR} and is_del = 0
+    </select>
+    <delete id="del" parameterType="com.dotop.smartwater.project.module.core.auth.dto.MdDockingTempDto">
+    delete from md_docking_temp
+    where id = #{id,jdbcType=VARCHAR}
+  </delete>
+    <insert id="add" parameterType="com.dotop.smartwater.project.module.core.auth.dto.MdDockingTempDto">
+    insert into md_docking_temp (id, category, type,
+      type_name, host, url,
+      time, rang, is_del, create_by,
+      create_date, last_by, last_date,
+      factory, status)
+    values (#{id,jdbcType=VARCHAR}, #{category,jdbcType=VARCHAR}, #{type,jdbcType=VARCHAR},
+      #{typeName,jdbcType=VARCHAR}, #{host,jdbcType=VARCHAR}, #{url,jdbcType=VARCHAR},
+      #{time,jdbcType=TIMESTAMP}, #{rang,jdbcType=INTEGER}, #{isDel,jdbcType=BIT}, #{createBy,jdbcType=VARCHAR},
+      #{createDate,jdbcType=TIMESTAMP}, #{lastBy,jdbcType=VARCHAR}, #{lastDate,jdbcType=TIMESTAMP},
+      #{factory,jdbcType=VARCHAR}, #{status,jdbcType=BIT})
+  </insert>
+    <update id="edit" parameterType="com.dotop.smartwater.project.module.core.auth.dto.MdDockingTempDto">
+        update md_docking_temp
+        <set>
+            <if test="category != null and category != '' ">
+                category = #{category,jdbcType=VARCHAR},
+            </if>
+            <if test="type != null and type != '' ">
+                type = #{type,jdbcType=VARCHAR},
+            </if>
+            <if test="typeName != null and typeName != '' ">
+                type_name = #{typeName,jdbcType=VARCHAR},
+            </if>
+            <if test="host != null and host != '' ">
+                host = #{host,jdbcType=VARCHAR},
+            </if>
+            <if test="url != null and url != '' ">
+                url = #{url,jdbcType=VARCHAR},
+            </if>
+            <if test="time != null">
+                time = #{time,jdbcType=TIMESTAMP},
+            </if>
+            <if test="rang != null">
+                rang = #{rang,jdbcType=INTEGER},
+            </if>
+            <if test="isDel != null">
+                is_del = #{isDel,jdbcType=BIT},
+            </if>
+            <if test="createBy != null and createBy != '' ">
+                create_by = #{createBy,jdbcType=VARCHAR},
+            </if>
+            <if test="createDate != null">
+                create_date = #{createDate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="lastBy != null and lastBy != '' ">
+                last_by = #{lastBy,jdbcType=VARCHAR},
+            </if>
+            <if test="lastDate != null">
+                last_date = #{lastDate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="factory != null and factory != '' ">
+                factory = #{factory,jdbcType=VARCHAR},
+            </if>
+            <if test="status != null">
+                status = #{status,jdbcType=BIT},
+            </if>
+        </set>
+        where id = #{id,jdbcType=VARCHAR}
+    </update>
+
+
+    <select id="list" parameterType="com.dotop.smartwater.project.module.core.auth.dto.MdDockingTempDto"
+            resultMap="BaseResultMap">
+        select a.*
+        from md_docking_temp a
+        <where>
+            <if test="typeName != null and typeName != ''">
+                and a.type_name like concat('%',#{typeName},'%')
+            </if>
+            <if test="factory != null and factory != ''">
+                and a.factory = #{factory}
+            </if>
+            <if test="type != null and type != ''">
+                and a.type = #{type}
+            </if>
+        </where>
+        order by a.factory asc
+    </select>
+</mapper>

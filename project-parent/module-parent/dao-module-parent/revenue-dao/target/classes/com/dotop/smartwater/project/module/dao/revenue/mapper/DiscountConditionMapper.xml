@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.dotop.smartwater.project.module.dao.revenue.IDiscountConditionDao">
+
+	<resultMap id="ConditionVoMap"	type="com.dotop.smartwater.project.module.core.water.vo.ConditionVo">
+		<result column="id" jdbcType="VARCHAR" property="id" />
+		<result column="discountid" jdbcType="VARCHAR" property="discountid" />
+		<result column="no" jdbcType="VARCHAR" property="no" />
+		<result column="amount" jdbcType="VARCHAR" property="amount" />
+		<result column="mode" jdbcType="VARCHAR" property="mode" />
+		<result column="value" jdbcType="VARCHAR" property="value" />
+		<result column="unit" jdbcType="VARCHAR" property="unit" />
+		<result column="createtime" jdbcType="VARCHAR" property="createtime" />
+	</resultMap>
+
+	<select id="findcondition" resultMap="ConditionVoMap">
+		SELECT id,discountid,no,amount,mode,value,unit,createtime 
+		FROM discount_condition	
+		<where>  
+			<if test="discountid != null and discountid != ''">
+				AND  discountid = #{discountid}
+			</if>
+		</where>
+		ORDER BY createtime ASC
+	</select>
+	
+	<insert id="savecondition">
+		INSERT INTO discount_condition 
+			(id,discountid,no,amount,mode,value,unit,createtime)  
+		VALUE 
+			(#{id},#{discountid},#{no},#{amount},#{mode},#{value},#{unit},#{createtime})
+	</insert>
+
+	<update id="editcondition">
+		UPDATE discount_condition SET no=#{no},amount=#{amount},mode=#{mode},value=#{value},unit=#{unit} WHERE id = #{id}
+	</update>
+	
+	<select id="getCondition" resultMap="ConditionVoMap">
+		SELECT id,discountid,no,amount,mode,value,unit,createtime 
+		FROM discount_condition 
+		<where>  
+			id = #{id}
+			<if test="id != null and id != ''">
+				AND id = #{id}
+			</if>
+		</where>
+	</select>
+	
+	<delete id="deleteCond">
+		DELETE FROM discount_condition WHERE id = #{id}
+	</delete>
+	
+	<select id="getcondtions" resultMap="ConditionVoMap">
+		SELECT id,discountid,no,amount,mode,value,unit,createtime 
+		FROM discount_condition	
+		<where>   
+			<if test="discountid != null and discountid != ''">
+				AND  discountid = #{discountid}
+			</if>
+		</where>
+		ORDER BY no ASC
+	</select>
+	
+</mapper>

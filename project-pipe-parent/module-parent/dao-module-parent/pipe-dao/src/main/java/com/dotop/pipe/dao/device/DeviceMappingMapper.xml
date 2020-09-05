@@ -1,0 +1,182 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper
+	namespace="com.dotop.pipe.api.dao.device.IDeviceMappingDao">
+
+	<resultMap id="DeviceMappingVoMap" type="com.dotop.pipe.core.vo.device.DeviceMappingVo">
+	    <result column="map_id" jdbcType="VARCHAR" property="mapId"/>
+		<result column="device_id" jdbcType="VARCHAR" property="deviceId"/>
+		<result column="other_id" jdbcType="VARCHAR" property="otherId"/>
+		<result column="direction" jdbcType="VARCHAR" property="direction"/>
+		<result column="level" jdbcType="VARCHAR" property="level"/>
+		<result column="device_id" jdbcType="VARCHAR" property="deviceId"/>
+		<association property="deviceVo" javaType="com.dotop.pipe.core.vo.device.DeviceVo">
+			<result column="self_device_id" jdbcType="VARCHAR" property="deviceId"/>
+			<result column="self_device_code" jdbcType="VARCHAR" property="code"/>
+			<result column="self_device_name" jdbcType="VARCHAR" property="name"/>
+			<result column="self_device_des" jdbcType="VARCHAR" property="des"/>
+		</association>
+		<collection property="otherDeviceVos" ofType="com.dotop.pipe.core.vo.device.DeviceVo"
+					javaType="java.util.List" column="other_device_id" select="queryDeviceById">
+			<result column="other_device_id" jdbcType="VARCHAR" property="deviceId"/>
+			<result column="other_device_code" jdbcType="VARCHAR" property="code"/>
+			<result column="other_device_name" jdbcType="VARCHAR" property="name"/>
+			<result column="other_device_des" jdbcType="VARCHAR" property="des"/>
+		</collection>
+	</resultMap>
+
+	<resultMap id="DeviceVoMap" type="com.dotop.pipe.core.vo.device.DeviceVo">
+		<result column="device_id" jdbcType="VARCHAR" property="deviceId"/>
+		<result column="code" jdbcType="VARCHAR" property="code"/>
+		<result column="name" jdbcType="VARCHAR" property="name"/>
+		<result column="des" jdbcType="VARCHAR" property="des"/>
+		<association property="area" javaType="com.dotop.pipe.core.vo.area.AreaModelVo">
+			<result column="area_id" jdbcType="VARCHAR" property="areaId"/>
+			<result column="area_code" jdbcType="VARCHAR" property="areaCode"/>
+			<result column="area_name" jdbcType="VARCHAR" property="name"/>
+			<result column="area_des" jdbcType="VARCHAR" property="des"/>
+			<result column="area_color_num" jdbcType="VARCHAR" property="areaColorNum"/>
+			<result column="area_scale" jdbcType="VARCHAR" property="scale"/>
+		</association>
+	</resultMap>
+
+	<select id="queryDeviceById" parameterType="java.lang.String"
+			resultMap="DeviceVoMap">
+		 SELECT a.device_id,a.code, a.name, a.des,
+        a.address,
+        a.area_id AS area_id,
+        c.area_code AS area_code,c.name AS area_name,c.area_color_num,c.scale as area_scale
+        FROM pls_device AS a
+        LEFT JOIN pls_area AS c ON a.area_id=c.area_id
+		where a.device_id = #{device_id} AND a.is_del=0
+	</select>
+
+	<insert id="add">
+		INSERT INTO pls_device_map
+		(map_id, device_id, other_id,`level` , create_by, create_date, is_del, enterprise_id)
+		VALUES
+		(#{deviceMapId}, #{deviceId}, #{otherId},'0', #{userBy}, #{curr},  #{isDel}, #{enterpriseId});
+	</insert>
+
+	<update id="del">
+		UPDATE pls_device_map SET
+		is_del=#{newIsDel},create_by=#{userBy},
+		create_date=#{curr}
+		WHERE
+		enterprise_id=#{enterpriseId}
+		<if test="deviceId != null and deviceId != ''">
+			AND device_id=#{deviceId}
+		</if>
+		<if test="deviceMapId != null and deviceMapId != ''">
+			AND map_id=#{deviceMapId}
+		</if>
+	</update>
+	
+	<select id="isExist" resultType="java.lang.Boolean">
+		SELECT EXISTS
+		(
+		SELECT map_id FROM pls_point_map
+		<where>
+			enterprise_id=#{enterpriseId} AND
+			is_del=#{isDel}
+			<if test="pointId != null and pointId != ''">
+				AND point_id=#{pointId}
+			</if>
+		</where>
+		)
+	</select>
+
+	<insert id="addMapping">
+		INSERT INTO pls_device_map
+		(map_id, device_id, other_id, direction , `level` , create_by, create_date, is_del, enterprise_id)
+		VALUES
+		<!--  正向 -->
+		<if test="addPositiveOtherIds != null">
+			<foreach collection="addPositiveOtherIds" item="item" separator=",">
+				(UUID(),
+				#{deviceId},
+				#{item},
+				#{direction},
+				#{level},
+				#{userBy},
+				#{curr},
+				#{isDel},
+				#{enterpriseId})
+			</foreach>
+		</if>
+		<!--  反向 -->
+		<if test="addReverseOtherIds != null ">
+			<foreach collection="addReverseOtherIds" item="item" separator=",">
+				( UUID(),
+				#{deviceId},
+				#{item},
+				#{direction},
+				#{level},
+				#{userBy},
+				#{curr},
+				#{isDel},
+				#{enterpriseId} )
+			</foreach>
+			;
+		</if>
+	</insert>
+
+
+	<update id="delMapping">
+		UPDATE pls_device_map SET
+		is_del=#{isDel},create_by=#{userBy},
+		create_date=#{curr}
+		WHERE
+		enterprise_id = #{enterpriseId}
+		and device_id = #{deviceId}
+		and map_id in
+		<if test="delMapIds != null ">
+			<foreach collection="delMapIds" item="item" separator="," open="(" close=")">
+				#{item}
+			</foreach>
+		</if>
+	</update>
+
+	<select id="mappingList" resultMap="DeviceMappingVoMap">
+
+		select a.device_id as device_id ,a.direction as direction , a.`level` as `level` , a.map_id as map_id,
+		b.area_id as self_device_id , b.area_code as self_device_code , b.`name` as self_device_name,
+		c.device_id as other_device_id
+
+		from pls_device_map as a
+		JOIN pls_area as b on a.device_id = b.area_id and b.is_del = 0
+		JOIN pls_device as c on a.other_id = c.device_id and c.is_del = 0
+		where a.enterprise_id = #{enterpriseId}
+		<if test="level != null and level != ''">
+			and a.`level`=#{level}
+		</if>
+		<if test="direction != null and direction != ''">
+			and a.direction=#{direction}
+		</if>
+		<if test="deviceId != null ">
+			and a.device_id = #{deviceId}
+		</if>
+			and a.is_del = 0
+	</select>
+
+	<select id="regionMappingList"  resultMap="DeviceMappingVoMap" >
+		select a.device_id as device_id ,a.direction as direction , a.`level` as `level` , a.map_id as map_id,
+		b.device_id as self_device_id , b.code as self_device_code , b.`name` as self_device_name,
+		c.device_id as other_device_id
+		from pls_device_map as a
+		JOIN pls_device as b on a.device_id = b.device_id and b.is_del = 0
+		JOIN pls_device as c on a.other_id = c.device_id and c.is_del = 0
+		where a.enterprise_id = #{enterpriseId}
+		<if test="level != null and level != ''">
+			and a.`level`=#{level}
+		</if>
+		<if test="direction != null and direction != ''">
+			and a.direction=#{direction}
+		</if>
+		<if test="deviceId != null ">
+			and a.device_id = #{deviceId}
+		</if>
+		and a.is_del = 0
+	</select>
+
+</mapper>

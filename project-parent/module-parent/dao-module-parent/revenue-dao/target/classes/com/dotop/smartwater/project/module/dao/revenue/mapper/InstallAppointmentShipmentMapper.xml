@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper
+	namespace="com.dotop.smartwater.project.module.dao.revenue.IInstallAppointmentShipmentDao">
+
+	<resultMap id="InstallShipmentVo"
+		type="com.dotop.smartwater.project.module.core.water.vo.InstallShipmentVo">
+		
+		<!-- 主键 -->
+		<result column="id" jdbcType="VARCHAR" property="id" />
+		<result column="number" jdbcType="VARCHAR" property="number" />
+		<result column="model_id" jdbcType="VARCHAR" property="modelId" />
+		<result column="model_name" jdbcType="VARCHAR" property="modelName" />
+		<result column="ship_no" jdbcType="VARCHAR" property="shipNo" />
+		<result column="status" jdbcType="VARCHAR" property="status" />
+		<result column="ship_number" jdbcType="VARCHAR" property="shipNumber" />
+		<result column="ship_time" jdbcType="VARCHAR" property="shipTime"/>
+		<result column="enterprise_id" jdbcType="VARCHAR" property="enterpriseid" />
+		<result column="create_by" jdbcType="VARCHAR" property="createBy" />
+		<result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
+		<result column="last_by" jdbcType="VARCHAR" property="lastBy" />
+		<result column="last_date" jdbcType="TIMESTAMP" property="lastDate" />
+		
+	</resultMap>
+
+	<select id="get" resultMap="InstallShipmentVo">
+		SELECT * FROM install_shipment where number = #{number} and enterprise_id = #{enterpriseid} 
+	</select>
+	
+	<insert id="submitShip">
+		 INSERT INTO `install_shipment` (id,number,model_id,model_name,ship_number,status,enterprise_id,create_by,create_date)
+		VALUES (#{id}, #{number}, #{modelId}, #{modelName}, #{shipNumber}, #{status}, #{enterpriseid}, #{userBy}, #{curr})
+	</insert>
+	
+	<update id="updateShip">
+		UPDATE `install_shipment` SET model_id=#{modelId} , `model_name`=#{modelName} , `ship_number`=#{shipNumber} ,
+		`status` = #{status} ,last_date=#{curr},last_by=#{userBy} 
+		WHERE enterprise_id = #{enterpriseid} and number=#{number}
+	</update>
+	
+</mapper>

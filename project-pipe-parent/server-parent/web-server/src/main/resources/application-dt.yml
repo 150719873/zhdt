@@ -1,0 +1,34 @@
+druid:
+  datasource:
+    url: jdbc:mysql://rm-wz91y5du7xqr0aot9.mysql.rds.aliyuncs.com:3306/pipe?useUnicode=true&characterEncoding=UTF8&useSSL=false&serverTimezone=Asia/Shanghai&allowMultiQueries=true
+    username: pipe
+    password: ABda35f0d2F6c1
+
+redis:
+  cache:
+    database: 11
+    host: r-wz9ewh0547c5u7eugl.redis.rds.aliyuncs.com
+    password: 6DCC6abA6CcE7
+    port: 6379
+    
+cas.auth.path: http://localhost:39999/water-cas
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://localhost:8761/eureka/
+      
+dispatch-server.ribbon.listOfServers: http://localhost:8080
+      
+spring.servlet.multipart.location: /opt/smartwater/pipe-server/upload_temp
+upload.base.path: /opt/smartwater/pipe-server/upload
+download.error.txt.path: /opt/smartwater/pipe-server/upload
+
+email:
+  username: "test1@qq.com"
+  password: "123456"
+  host: "mail.qq.com"
+  port: "143"
+  protocol: "imap"
+  backAddress: "test2@qq.com"
+  backDir: /opt/smartwater/pipe-server/email/

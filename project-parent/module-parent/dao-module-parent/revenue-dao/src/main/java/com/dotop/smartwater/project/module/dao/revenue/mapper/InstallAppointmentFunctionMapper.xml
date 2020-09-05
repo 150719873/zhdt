@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper
+	namespace="com.dotop.smartwater.project.module.dao.revenue.IInstallAppointmentFunctionDao">
+
+	<resultMap id="InstallAppointmentFunctionVo"
+		type="com.dotop.smartwater.project.module.core.water.vo.InstallAppointmentFunctionVo">
+		
+		<!-- 主键 -->
+		<result column="id" jdbcType="VARCHAR" property="id" />
+		<result column="number" jdbcType="VARCHAR" property="number" />
+		<result column="function_id" jdbcType="VARCHAR" property="functionId" />
+		<result column="template_id" jdbcType="VARCHAR" property="templateId" />
+		<result column="table_name" jdbcType="VARCHAR" property="tableName" />
+		<result column="name" jdbcType="VARCHAR" property="name" />
+		<result column="is_head" jdbcType="VARCHAR" property="isHead" />
+		<result column="page_url" jdbcType="VARCHAR" property="pageUrl"/>
+		<result column="enterprise_id" jdbcType="VARCHAR" property="enterpriseid" />
+		<result column="create_by" jdbcType="VARCHAR" property="createBy" />
+		<result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
+		<result column="last_by" jdbcType="VARCHAR" property="lastBy" />
+		<result column="last_date" jdbcType="TIMESTAMP" property="lastDate" />
+		
+	</resultMap>
+
+	<insert id="generateFuncs">
+		INSERT INTO install_appointment_function 
+			(`id` ,`number` , function_id, `table_name` , `name` , is_head , page_url , enterprise_id , create_by , create_date)
+		SELECT UUID() , #{number} , f.id , f.table_name , f.`name` , f.is_head , f.page_url , t.enterprise_id , t.create_by , t.create_date 
+		FROM install_template_relation t LEFT JOIN install_function f ON t.function_id = f.id
+		WHERE template_id = #{templateId}
+	</insert>
+</mapper>

@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.dotop.smartwater.project.module.dao.store.IStoreProductDao">
+
+    <!-- <resultMap id="StoreProductVoMap"
+               type="com.dotop.smartwater.project.module.core.water.vo.StoreProductVo">
+        <result column="productId" jdbcType="VARCHAR" property="productId"/>
+        <result column="proUrlImg1" jdbcType="VARCHAR" property="proUrlImg1"/>
+        <result column="proUrlImg2" jdbcType="VARCHAR" property="proUrlImg2"/>
+        <result column="proUrlImg3" jdbcType="VARCHAR" property="proUrlImg3"/>
+        <result column="productNo" jdbcType="VARCHAR" property="productNo"/>
+        <result column="name" jdbcType="VARCHAR" property="name"/>
+        <result column="intro" jdbcType="VARCHAR" property="intro"/>
+        <result column="model" jdbcType="VARCHAR" property="model"/>
+        <result column="spec" jdbcType="VARCHAR" property="spec"/>
+        <result column="material" jdbcType="VARCHAR" property="material"/>
+        <result column="weight" jdbcType="VARCHAR" property="weight"/>
+        <result column="unit" jdbcType="VARCHAR" property="unit"/>
+        <result column="price" jdbcType="VARCHAR" property="price"/>
+        <result column="describe" jdbcType="VARCHAR" property="unit"/>
+        <result column="total" jdbcType="VARCHAR" property="describe"/>
+        <result column="status" jdbcType="VARCHAR" property="status"/>
+        <result column="enterpriseId" jdbcType="VARCHAR" property="enterpriseid"/>
+        <result column="enterprisename" jdbcType="VARCHAR" property="enterprisename"/>
+        <result column="vender" jdbcType="VARCHAR" property="vender"/>
+        <result column="produced" jdbcType="VARCHAR" property="produced"/>
+        <result column="contacts" jdbcType="VARCHAR" property="contacts"/>
+        <result column="phone" jdbcType="VARCHAR" property="phone"/>
+        <result column="createTime" jdbcType="TIMESTAMP" property="createTime"/>
+        <result column="createUserId" jdbcType="VARCHAR" property="createUserId"/>
+        <result column="createUsername" jdbcType="VARCHAR" property="createUsername"/>
+        <result column="updateTime" jdbcType="TIMESTAMP" property="updateTime"/>
+        <result column="updateUserId" jdbcType="VARCHAR" property="updateUserId"/>
+        <result column="updateUsername" jdbcType="VARCHAR" property="updateUsername"/>
+        <association property="storage" javaType="com.dotop.smartwater.project.module.core.water.vo.StorageVo">
+            <result column="price" jdbcType="VARCHAR" property="price" />
+        </association>
+    </resultMap> -->
+
+    <select id="getProByCon" resultType="com.dotop.smartwater.project.module.core.water.vo.StoreProductVo">
+       select b.stockTotal ,  a.*, c.child_name as materialName, c.child_value as materialValue, d.dictionary_name as categoryName, d.dictionary_value as categoryValue,
+       e.child_name as typeName, e.child_value as typeValue from store_product as a
+       left join (select c.productNo as productNo , sum(c.stock) as stockTotal from store_storage as c group by c.productNo) as b 
+        on a.productNo = b.productNo left join dictionary_child as c on c.child_id = a.material left join dictionary_child as e 
+        on e.child_id = a.type left join dictionary as d on d.dictionary_id = a.category
+       <where>
+	        a.status != -1 and a.enterpriseId = #{enterpriseid}
+	        <if test="productNo != null and productNo != ''">
+	            AND a.productNo like concat('%',#{productNo},'%')
+	        </if>
+	        <if test="name != null and name != ''">
+	            AND a.name like concat('%',#{name},'%')
+	        </if>
+	        <if test="status != null">
+	            AND a.status = #{status}
+	        </if>
+	        <if test="model != null and model != ''">
+	            AND a.model like concat('%', #{model}, '%')
+	        </if>
+	        <if test="material != null and material != ''">
+	            AND a.material = #{material}
+	        </if>
+	        <if test="materialValue != null and materialValue != ''">
+	            AND c.child_value = #{materialValue}
+	        </if>
+	        <if test="materialName != null and materialName != ''">
+	            AND c.child_name like concat('%', #{materialName}, '%')
+	        </if>
+	        <if test="type != null and type != ''">
+	            AND a.type = #{type}
+	        </if>
+	        <if test="typeValue != null and typeValue != ''">
+	            AND e.child_value = #{typeValue}
+	        </if>
+	        <if test="typeName != null and typeName != ''">
+	            AND e.child_name like concat('%', #{typeName}, '%')
+	        </if>
+	        <if test="category != null and category != ''">
+	            AND a.category = #{category}
+	        </if>
+	        <if test="categoryValue != null and categoryValue != ''">
+	            AND d.dictionary_value = #{categoryValue}
+	        </if>
+	        <if test="categoryName != null and categoryName != ''">
+	            AND d.dictionary_name like concat('%', #{categoryName}, '%')
+	        </if>
+         </where>
+        ORDER BY a.createTime DESC
+    </select>
+
+    <select id="getProductByNo" resultType="com.dotop.smartwater.project.module.core.water.vo.StoreProductVo">
+		select a.*, c.child_name as materialName, c.child_value as materialValue, d.dictionary_name as categoryName, d.dictionary_value as categoryValue,
+       e.child_name as typeName, e.child_value as typeValue from store_product as a
+       left join dictionary_child as c on c.child_id = a.material left join dictionary_child as e 
+        on e.child_id = a.type left join dictionary as d on d.dictionary_id = a.category
+         where a.enterpriseId = #{enterpriseid}
+		<if test="productNo != null and productNo != ''">
+			and a.productNo = #{productNo}
+		</if>
+		<if test="productId != null and productId != ''">
+			and a.productId = #{productId}
+		</if>
+		limit 1
+	</select>
+
+    <insert id="addProduct">
+		insert into store_product (productId,proUrlImg1,proUrlImg2,proUrlImg3,productNo,`name`,intro,model,spec,material,weight,
+			unit,price,useYear,limitValue,`describe`,`status`,enterpriseId,vender,produced,contacts,phone,caliber,category,type,createTime,
+			createUserId, createUsername, updateTime, updateUserId, updateUsername) values (#{productId},#{proUrlImg1}, #{proUrlImg2},#{proUrlImg3}, 
+			#{productNo}, #{name}, #{intro}, #{model}, #{spec}, #{material}, #{weight}, #{unit},
+			#{price}, #{useYear}, #{limitValue}, #{describe}, #{status}, #{enterpriseid}, #{vender}, #{produced}, #{contacts},
+			#{phone}, #{caliber}, #{category}, #{type}, #{createTime}, #{createUserId}, #{createUsername}, #{updateTime}, #{updateUserId}, #{updateUsername})
+	</insert>
+	
+	<insert id="batchAddProduct">
+		insert into store_product (productId,productNo,`name`,intro,model,spec,material,weight,unit,price,useYear,limitValue,
+		`describe`,`status`,enterpriseId,vender,produced,contacts,phone,caliber,category,type,createTime, createUserId, createUsername)
+		values
+		<foreach collection="list" item="data" separator=",">
+     	  (#{data.productId}, #{data.productNo}, #{data.name}, #{data.intro}, #{data.model}, #{data.spec}, #{data.material},
+     	  #{data.weight}, #{data.unit}, #{data.price}, #{data.useYear}, #{data.limitValue}, #{data.describe}, #{data.status},
+     	  #{data.enterpriseid}, #{data.vender}, #{data.produced}, #{data.contacts}, #{data.phone}, #{data.caliber}, #{data.category},
+     	  #{data.type}, #{data.createTime}, #{data.createUserId}, #{data.createUsername})
+      </foreach>
+	</insert>
+
+    <update id="editProduct">
+		update store_product set proUrlImg1 = #{proUrlImg1},proUrlImg2 = #{proUrlImg2},proUrlImg3 = #{proUrlImg3}, 
+	        name = #{name},intro = #{intro},model = #{model},spec = #{spec},material = #{material},weight = #{weight}, 
+			unit = #{unit}, price = #{price}, useYear = #{useYear}, limitValue = #{limitValue}, `describe` = #{describe}, vender = #{vender}, produced = #{produced}, 
+	        contacts = #{contacts}, phone = #{phone}, caliber = #{caliber}, category = #{category}, type = #{type}, updateUserId = #{updateUserId}, updateUsername = #{updateUsername},
+			updateTime = #{updateTime} where enterpriseId = #{enterpriseid} and productNo = #{productNo}
+	</update>
+
+    <update id="changeStatus">
+		update store_product set status = #{status}, updateTime = #{updateTime}, updateUserId = #{updateUserId},
+			updateUsername = #{updateUsername} where enterpriseId = #{enterpriseid} and productNo = #{productNo}
+	</update>
+
+    <select id="checkProductNo" resultType="Integer">
+		select count(*) from store_product where enterpriseId = #{enterpriseid} and productNo = #{productNo}
+	</select>
+	
+	<select id="checkProductName" resultType="Integer">
+		select count(*) from store_product where enterpriseId = #{enterpriseid} and name = #{name}
+		<if test="productNo != null and productNo != ''">
+			and productNo != #{productNo}
+		</if>
+	</select>
+
+    <delete id="deleteProduct">
+		delete from store_product where enterpriseId = #{enterpriseid} and productNo = #{productNo}
+	</delete>
+
+</mapper>

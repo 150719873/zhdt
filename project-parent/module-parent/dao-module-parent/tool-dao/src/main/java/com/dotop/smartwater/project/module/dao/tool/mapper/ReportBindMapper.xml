@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.dotop.smartwater.project.module.dao.tool.IReportBindDao">
+
+    <resultMap id="ReportBindVoMap" type="com.dotop.smartwater.project.module.core.water.vo.ReportBindVo">
+        <result column="bindid" jdbcType="VARCHAR" property="bindid"/>
+        <result column="enterpriseid" jdbcType="VARCHAR" property="enterpriseid"/>
+        <result column="reportid" jdbcType="VARCHAR" property="reportid"/>
+        <result column="reportname" jdbcType="VARCHAR" property="reportname"/>
+        <result column="createtime" jdbcType="VARCHAR" property="createtime"/>
+        <result column="createuser" jdbcType="VARCHAR" property="createuser"/>
+        <result column="description" jdbcType="VARCHAR" property="description"/>
+        <result column="type" jdbcType="VARCHAR" property="type"/>
+        <result column="enterprisename" jdbcType="VARCHAR" property="enterprisename"/>
+    </resultMap>
+
+    <select id="list" resultMap="ReportBindVoMap">
+        SELECT a.bindid,a.enterpriseid,a.reportid,a.reportname,a.createtime,a.createuser,a.description,a.type,
+        b.name as enterprisename FROM report_bind AS a INNER JOIN enterprise as b ON a.enterpriseid = b.enterpriseid
+        <where>
+            <if test="enterpriseid != null and enterpriseid != ''">
+                AND a.enterpriseid=#{enterpriseid}
+            </if>
+            <if test="reportid != null and reportid != ''">
+                AND a.reportid=#{reportid}
+            </if>
+            <if test="reportname != null and reportname != ''">
+                AND a.reportname LIKE CONCAT(CONCAT('%',#{reportname},'%'))
+            </if>
+            <if test="bindids != null">
+                AND a.bindid in
+                <foreach collection="bindids" index="index" item="item" open="(" separator="," close=")">
+                    #{item}
+                </foreach>
+            </if>
+        </where>
+        <if test="ifSort">
+            ORDER BY a.createtime ASC
+        </if>
+    </select>
+
+    <insert id="add">
+		INSERT INTO report_bind (bindid,enterpriseid,reportid,reportname,description,type,createtime,createuser)
+		VALUES (#{bindid},#{enterpriseid},#{reportid},#{reportname},#{description},#{type},#{curr},#{userBy})
+	</insert>
+
+    <delete id="del">
+		DELETE FROM report_bind WHERE bindid=#{bindid}
+	</delete>
+
+    <select id="get" resultMap="ReportBindVoMap">
+        SELECT a.bindid,a.enterpriseid,a.reportid,a.reportname,a.createtime,a.createuser,a.description,a.type,
+        b.name as enterprisename FROM report_bind AS a INNER JOIN enterprise as b ON a.enterpriseid = b.enterpriseid
+        <where>
+            <if test="enterpriseid != null and enterpriseid != ''">
+                AND a.enterpriseid=#{enterpriseid}
+            </if>
+            <if test="reportid != null and reportid != ''">
+                AND a.reportid=#{reportid}
+            </if>
+            <if test="bindid != null and bindid != ''">
+                AND a.bindid=#{bindid}
+            </if>
+        </where>
+    </select>
+</mapper>

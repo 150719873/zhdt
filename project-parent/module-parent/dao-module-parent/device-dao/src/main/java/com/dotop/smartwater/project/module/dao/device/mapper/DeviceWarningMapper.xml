@@ -1,0 +1,177 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.dotop.smartwater.project.module.dao.device.IDeviceWarningDao">
+    <!-- <resultMap id="DeviceWarningVo"
+               type="com.dotop.smartwater.project.module.core.water.vo.DeviceWarningVo">
+
+        <id property="id" column="id"/>
+        <result property="openException" column="openException"/>
+        <result property="closeException" column="closeException"/>
+        <result property="abnormalCurrent" column="abnormalCurrent"/>
+        <result property="abnormalPower" column="abnormalPower"/>
+        <result property="magneticAttack" column="magneticAttack"/>
+        <result property="devid" column="devid"/>
+        <result property="ctime" column="ctime"/>
+        <result property="handler" column="handler"/>
+        <result property="handletime" column="handletime"/>
+        <result property="remark" column="remark"/>
+        <result property="status" column="status"/>
+        <result property="enterpriseid" column="enterpriseid"/>
+        <result property="enterpriseid" column="enterpriseid"/>
+        <result property="enterpriseid" column="enterpriseid"/>
+        <result property="enterpriseid" column="enterpriseid"/>
+        <result property="enterpriseid" column="enterpriseid"/>
+        <result property="enterpriseid" column="enterpriseid"/>
+    </resultMap> -->
+
+    <!-- <resultMap id="WarningVo"
+               type="com.dotop.smartwater.project.module.core.water.vo.customize.WarningVo">
+
+        <result property="ids" column="ids"/>
+        <result property="devid" column="devid"/>
+        <result property="deveui" column="deveui"/>
+        <result property="useraddr" column="useraddr"/>
+        <result property="warningTypeStr" column="warningTypeStr"/>
+        <result property="description" column="description"/>
+        <result property="countNum" column="countNum"/>
+        <result property="ctime" column="ctime"/>
+        <result property="handletime" column="handletime"/>
+        <result property="status" column="status"/>
+    </resultMap> -->
+
+    <select id="getDeviceWarningList" resultType="com.dotop.smartwater.project.module.core.water.vo.DeviceWarningVo">
+      select a.*, b.ownerid from `device_warning` a left join `owner` b on a.devid = b.devid
+		WHERE a.enterpriseid = #{enterpriseid}
+		<if test="deveui != null and deveui != ''">
+            AND a.deveui LIKE CONCAT('%',#{deveui},'%')
+        </if>
+        <if test="status != null and status!=-1">
+            AND a.status = #{status}
+        </if>
+        <if test="devno != null and devno != ''">
+            AND a.devno LIKE CONCAT('%',#{devno},'%')
+        </if>
+        ORDER BY a.ctime DESC
+    </select>
+
+    <insert id="addDeviceWarning">
+        insert into `device_warning`(id, openException, closeException, abnormalCurrent, abnormalPower, magneticAttack, 
+        anhydrousAbnormal, disconnectionAbnormal, pressureException, devid,
+        devno, deveui, status, modeId, modeName, warningNum, address, ctime, handler, handletime, remark, enterpriseid)
+        VALUES (#{id}, #{openException}, #{closeException}, #{abnormalCurrent}, #{abnormalPower}, #{magneticAttack}, 
+        #{anhydrousAbnormal}, #{disconnectionAbnormal}, #{pressureException}, #{devid},
+        #{devno}, #{deveui}, #{status}, #{modeId}, #{modeName}, #{warningNum}, #{address}, #{ctime}, 
+        #{handler}, #{handletime}, #{remark}, #{enterpriseid})
+    </insert>
+
+    <select id="findByDevice" resultType="com.dotop.smartwater.project.module.core.water.vo.DeviceWarningVo">
+        select * from device_warning where `status` = 0 and enterpriseid = #{enterpriseid}
+        <if test="devid != null">
+        	and devid = #{devid}
+        </if>
+        <if test="devno != null">
+        	and devno = #{devno}
+        </if>
+        <if test="deveui != null">
+        	and deveui = #{deveui}
+        </if>
+        <if test="devid == null and deveui == null and devno == null">
+        	1 != 1
+        </if>
+		order by ctime desc limit 1
+    </select>
+
+    <update id="handleWarning">
+        update `device_warning` set status = 1, handler = #{handler}, handletime = NOW()
+        where id in
+        <foreach collection="list" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </update>
+
+    <update id="updateDeviceWarning">
+        update `device_warning`
+        <set>
+        	<if test="devno != null and devno != ''">
+                devno = #{devno},
+            </if>
+            <if test="deveui != null and deveui != ''">
+                deveui = #{deveui},
+            </if>
+            <if test="openException != null and openException != '' and openException != '0'">
+                openException = #{openException},
+            </if>
+            <if test="closeException != null and closeException != '' and closeException != '0'">
+                closeException = #{closeException},
+            </if>
+            <if test="abnormalCurrent != null and abnormalCurrent != '' and abnormalCurrent != '0'">
+                abnormalCurrent = #{abnormalCurrent},
+            </if>
+            <if test="abnormalPower != null and abnormalPower != '' and abnormalPower != '0'">
+                abnormalPower = #{abnormalPower},
+            </if>
+            <if test="magneticAttack != null and magneticAttack != '' and magneticAttack != '0'">
+                magneticAttack = #{magneticAttack},
+            </if>
+            <if test="anhydrousAbnormal != null and anhydrousAbnormal != '' and anhydrousAbnormal != '0'">
+                anhydrousAbnormal = #{anhydrousAbnormal},
+            </if>
+            <if test="disconnectionAbnormal != null and disconnectionAbnormal != '' and disconnectionAbnormal != '0'">
+                disconnectionAbnormal = #{disconnectionAbnormal},
+            </if>
+            <if test="pressureException != null and pressureException != '' and pressureException != '0'">
+                pressureException = #{pressureException},
+            </if>
+            <if test="status != null">
+                status = #{status},
+            </if>
+            <if test="warningNum != null">
+                warningNum = #{warningNum},
+            </if>
+            <if test="ctime != null">
+                ctime = #{ctime},
+            </if>
+        </set>
+        WHERE id = #{id}
+    </update>
+    
+    <delete id="deleteDeviceWarning">
+    	delete from device_warning where id = #{id} and `status` = 1
+    </delete>
+    
+    <insert id="addDeviceWarningDetail">
+        INSERT INTO `device_warning_detail`(id, warningId, openException, closeException, abnormalCurrent, 
+        abnormalPower, magneticAttack,anhydrousAbnormal, disconnectionAbnormal, pressureException, warningTime)
+        VALUES(#{id}, #{warningId}, #{openException}, #{closeException}, #{abnormalCurrent}, #{abnormalPower}, 
+        #{magneticAttack}, #{anhydrousAbnormal}, #{disconnectionAbnormal}, #{pressureException}, #{warningTime})
+    </insert>
+    
+    <select id="getDeviceWarningDetailList" resultType="com.dotop.smartwater.project.module.core.water.vo.DeviceWarningDetailVo">
+    	select * from device_warning_detail where warningId = #{warningId} order by warningTime desc
+    </select>
+    
+    <select id="getDeviceWarning" resultType="com.dotop.smartwater.project.module.core.water.vo.DeviceWarningVo">
+    	select a.*, b.ownerid from `device_warning` a left join `owner` b on a.devid = b.devid
+		WHERE a.id = #{id}
+    </select>
+    
+    <delete id="deleteDeviceWarningDetail">
+    	delete from device_warning_detail where warningId = #{warningId}
+    </delete>
+    
+    <select id="getDeviceWarningCount" resultType="java.lang.Long">
+        <!-- SELECT COUNT(*) FROM
+        (
+            SELECT a.devid FROM
+            (
+                SELECT id,devid,handletime,`STATUS` FROM `device_warning`
+                WHERE `status`=0 AND enterpriseid=#{enterpriseid}
+            ) a
+            JOIN device b
+            ON a.devid=b.devid
+            GROUP BY a.devid,a.handletime,a.status
+		)d -->
+		select count(*) from device_warning where `status` = 0 and enterpriseid = #{enterpriseid} group by enterpriseid
+	</select>
+
+</mapper>

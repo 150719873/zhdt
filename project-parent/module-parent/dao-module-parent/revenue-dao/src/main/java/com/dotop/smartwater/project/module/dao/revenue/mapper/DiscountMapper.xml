@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.dotop.smartwater.project.module.dao.revenue.IDiscountDao">
+
+	<resultMap id="DiscountVoMap" type="com.dotop.smartwater.project.module.core.water.vo.DiscountVo">
+		<result column="id" jdbcType="VARCHAR" property="id" />
+		<result column="enterpriseid" jdbcType="VARCHAR" property="enterpriseid" />
+		<result column="name" jdbcType="VARCHAR" property="name" />
+		<result column="type" jdbcType="VARCHAR" property="type" />
+		<result column="validityday" jdbcType="VARCHAR" property="validityday" />
+		<result column="isconpon" jdbcType="VARCHAR" property="isconpon" />
+		<result column="isdefault" jdbcType="VARCHAR" property="isdefault" />
+		<result column="starttime" jdbcType="VARCHAR" property="starttime" />
+		<result column="endtime" jdbcType="VARCHAR" property="endtime" />
+		<result column="remark" jdbcType="VARCHAR" property="remark" />
+		<result column="createuser" jdbcType="VARCHAR" property="createuser" />
+		<result column="username" jdbcType="VARCHAR" property="username" />
+		<result column="createtime" jdbcType="VARCHAR" property="createtime" />
+	</resultMap>
+
+	<select id="find" resultMap="DiscountVoMap">
+		SELECT d.id,d.enterpriseid,d.name,d.type,d.validityday,d.isconpon,d.isdefault,
+			d.starttime,d.endtime,d.remark,d.createuser,d.username,d.createtime
+		FROM discount d 
+		<where>  
+			<if test="enterpriseid != null and enterpriseid != ''">
+				AND d.enterpriseid = #{enterpriseid}
+			</if>
+			<if test="name != null and name != ''">
+				AND d.name like concat('%',#{name},'%')
+			</if>
+		</where>
+		ORDER BY d.createtime desc 
+	</select>
+	
+	<update id="updateDiscountDefault">
+		update discount set isdefault = 0 where enterpriseid = #{enterpriseid}
+	</update>
+
+	<insert id="save">
+		INSERT INTO discount 
+			(id,enterpriseid,name,type,validityday,isconpon,isdefault,starttime,endtime,remark,createuser,username,createtime)
+		VALUE 
+			(#{id},#{enterpriseid},#{name},#{type},#{validityday},#{isconpon},#{isdefault},#{starttime},#{endtime},#{remark},#{createuser},#{username},#{createtime})
+	</insert>
+	
+	<update id="edit">
+		UPDATE discount SET name=#{name},type=#{type},validityday=#{validityday},isconpon=#{isconpon},isdefault=#{isdefault},
+		starttime=#{starttime},endtime=#{endtime},remark=#{remark}
+		WHERE id = #{id}
+	</update>
+	
+	<delete id="deleteConds">
+		DELETE FROM discount_condition WHERE discountid = #{id}
+	</delete>
+	
+	<delete id="delete">
+		DELETE FROM discount WHERE id = #{id}
+	</delete>
+	
+	<select id="getisDefaultDiscount" resultMap="DiscountVoMap">
+		SELECT d.id,d.enterpriseid,d.name,d.type,d.validityday,d.isconpon,d.isdefault,d.starttime,d.endtime,d.remark,d.createuser,d.username,d.createtime
+		FROM discount d 
+		WHERE d.isdefault = 1 AND d.enterpriseid=#{enterpriseid} AND starttime &lt;= now() &lt; endtime  
+	</select>
+	
+	<select id="getDiscount" resultMap="DiscountVoMap">
+		SELECT d.id,d.enterpriseid,d.name,d.type,d.validityday,d.isconpon,d.isdefault,d.starttime,d.endtime,d.remark,d.createuser,d.username,d.createtime
+		FROM discount d 
+		<where> 
+			<if test="id != null and id != ''">
+				AND d.id = #{id}
+			</if>
+		</where>
+	</select>
+	
+</mapper>

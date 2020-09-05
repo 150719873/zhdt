@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.dotop.smartwater.view.server.dao.pipe.monitor.IMonitorDao">
+
+    <resultMap id="BaseResultMap"
+               type="com.dotop.smartwater.view.server.core.monitor.vo.LiquidLevelVo">
+        <result column="id" jdbcType="VARCHAR" property="id"/>
+        <result column="val" jdbcType="VARCHAR" property="val"/>
+        <result column="status" jdbcType="VARCHAR" property="status"/>
+        <result column="pond" jdbcType="VARCHAR" property="pond"/>
+        <result column="create_date" jdbcType="TIMESTAMP" property="createDate"/>
+        <result column="create_by" jdbcType="VARCHAR" property="createBy"/>
+        <result column="last_date" jdbcType="TIMESTAMP" property="lastDate"/>
+        <result column="last_by" jdbcType="VARCHAR" property="lastBy"/>
+    </resultMap>
+
+
+    <resultMap id="BaseResultLogMap"
+               type="com.dotop.smartwater.view.server.core.monitor.vo.PondAlarmVo">
+        <result column="id" jdbcType="VARCHAR" property="id"/>
+        <result column="type" jdbcType="VARCHAR" property="type"/>
+        <result column="status" jdbcType="VARCHAR" property="status"/>
+        <result column="pond" jdbcType="VARCHAR" property="pond"/>
+        <result column="create_date" jdbcType="TIMESTAMP" property="createDate"/>
+        <result column="create_by" jdbcType="VARCHAR" property="createBy"/>
+        <result column="last_date" jdbcType="TIMESTAMP" property="lastDate"/>
+        <result column="last_by" jdbcType="VARCHAR" property="lastBy"/>
+    </resultMap>
+
+    <select id="liquidPage" resultMap="BaseResultMap">
+        SELECT id,val,status,pond,last_date FROM
+        pls_facility_liquid_level
+        where enterprise_id = #{enterpriseId} and facility_id = #{facilityId}
+        <where>
+            <if test="pond != null">
+                pond = #{pond}
+            </if>
+        </where>
+    </select>
+
+    <select id="pondAlarmPage" resultMap="BaseResultLogMap">
+        SELECT id,type,pond,status,last_date FROM
+        pls_facility_pond_alarm
+        where enterprise_id = #{enterpriseId} and facility_id = #{facilityId} order by create_date desc
+    </select>
+
+    <update id="addLiquidLists">
+        insert into
+        pls_facility_liquid_level(id,status,val,facility_id,pond,enterprise_id,last_by,last_date,create_by,create_date)
+        values
+        <foreach collection="list" item="item" separator=",">
+            ( #{item.id},#{item.status},#{item.val}
+            ,#{item.facilityId},#{item.pond},#{item.enterpriseId},#{item.userBy},#{item.curr},#{item.userBy},#{item.curr}
+            )
+        </foreach>
+        ON DUPLICATE KEY UPDATE
+        val = VALUES(val),
+        status = VALUES(status),
+        last_date = VALUES(last_date)
+    </update>
+
+    <update id="addPondALarmLists">
+        insert into
+        pls_facility_pond_alarm(id,type,status,facility_id,pond,enterprise_id,last_by,last_date,create_by,create_date)
+        values
+        <foreach collection="list" item="item" separator=",">
+            ( #{item.id},#{item.type},#{item.status}
+            ,#{item.facilityId},#{item.pond},#{item.enterpriseId},#{item.userBy},#{item.curr},#{item.userBy},#{item.curr}
+            )
+        </foreach>
+        ON DUPLICATE KEY UPDATE
+        type = VALUES(type),
+        status = VALUES(status),
+        last_date = VALUES(last_date)
+
+    </update>
+
+
+</mapper>

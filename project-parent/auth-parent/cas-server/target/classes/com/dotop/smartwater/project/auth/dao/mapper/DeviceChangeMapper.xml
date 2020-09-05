@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.dotop.smartwater.project.auth.dao.IDeviceChangeDao">
+
+   <resultMap id="DeviceChangeVo" type="com.dotop.smartwater.project.module.core.water.vo.DeviceChangeVo">
+        <result column="id" property="id"/>
+        <result column="sc_deveui" property="scDeveui"/>
+        <result column="sc_devno" property="scDevno"/>
+        <result column="sc_mode" property="scMode"/>
+        <result column="sc_water" property="scWater"/>
+        <result column="nw_deveui" property="nwDeveui"/>
+        <result column="nw_devno" property="nwDevno"/>
+        <result column="nw_water" property="nwWater"/>
+        <result column="userno" property="userno"/>
+        <result column="username" property="username"/>
+        <result column="useraddr" property="useraddr"/>
+        <result column="reason" property="reason"/>
+        <result column="enterprise_id" jdbcType="VARCHAR" property="enterpriseid" />
+		<result column="create_by" jdbcType="VARCHAR" property="createBy" />
+		<result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
+		<result column="last_by" jdbcType="VARCHAR" property="lastBy" />
+		<result column="last_date" jdbcType="TIMESTAMP" property="lastDate" />
+    </resultMap>
+    
+    <select id="getList" resultMap="DeviceChangeVo">
+		SELECT 
+			c.id,c.sc_deveui,c.sc_devno,c.sc_water,c.nw_deveui,c.nw_devno,c.nw_water,c.userno,c.username,
+			c.useraddr,c.reason,c.enterprise_id,c.create_by,c.create_date,c.last_by,c.last_date
+			, d.child_name AS 'sc_mode' 
+		FROM device_change c LEFT JOIN dictionary_child d ON c.sc_mode = d.child_id
+		<where>
+		enterprise_id = #{enterpriseid} 
+			<if test="scDevno != null and scDevno != ''">
+				and c.sc_devno like concat('%',#{scDevno},'%')
+			</if>
+			<if test="userno != null and userno != ''">
+				and c.userno like concat('%',#{userno},'%')
+			</if>
+		</where>
+		order by c.create_date desc
+		<if test="limit!=null and offset!=null">
+			LIMIT #{limit} OFFSET #{offset}
+		</if>
+	</select>
+
+</mapper>

@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="com.dotop.smartwater.project.module.dao.wechat.IWechatInstallDao">
+<resultMap id="WechatUserVo"
+		type="com.dotop.smartwater.project.module.core.water.vo.WechatUserVo">
+		<result column="id" jdbcType="VARCHAR" property="id" />
+		<result column="openid" jdbcType="VARCHAR" property="openid" />
+		<result column="name" jdbcType="VARCHAR" property="name" />
+		<result column="head_url" jdbcType="VARCHAR" property="headUrl" />
+		<result column="phone" jdbcType="VARCHAR" property="phone" />
+		<result column="cardid" jdbcType="VARCHAR" property="cardid" />
+		<result column="code" jdbcType="VARCHAR" property="code" />
+		<result column="code_time" jdbcType="VARCHAR" property="codeTime" />
+		<result column="source" jdbcType="TIMESTAMP" property="source" />
+		<result column="enterprise_id" jdbcType="VARCHAR" property="enterpriseid" />
+		<result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
+		<result column="last_date" jdbcType="TIMESTAMP" property="lastDate" />
+	</resultMap>
+
+	<insert id="save">
+		 INSERT INTO `wechat_user` (id,openid,enterprise_id,create_date)
+		VALUES (#{id}, #{openid}, #{enterpriseid}, #{curr})
+	</insert>
+	
+	<select id="get" resultMap="WechatUserVo">
+		SELECT * FROM `wechat_user` 
+		<where>
+			enterprise_id = #{enterpriseid} 
+			<if test="openid != null and openid != ''">
+				and openid = #{openid}
+			</if>
+			<if test="id != null and id != ''">
+				and id = #{id}
+			</if>
+		</where>
+	</select>
+	
+
+	<update id="update">
+		UPDATE `wechat_user` SET `name`=#{name} , head_url = #{headUrl} ,`phone`=#{phone}, cardid=#{cardid} ,`source`=#{source},last_date=#{curr}
+		WHERE id=#{id} and enterprise_id=#{enterpriseid}
+	</update>
+</mapper>

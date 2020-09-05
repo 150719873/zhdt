@@ -1,0 +1,27 @@
+server:
+  port: 8761
+  undertow:
+    io-threads: 32
+    worker-threads: 2048
+    buffer-size: 10240
+    direct-buffers: true
+spring:
+  application:
+    name: smartwater-eureka
+logging:
+  config: classpath:log4j2-prod.xml
+  
+eureka:
+  server:
+    enable-self-preservation: true
+    eviction-interval-timer-in-ms: 30000
+  instance:
+    hostname: smartwater-eureka
+    prefer-ip-address: true
+  client:
+    healthcheck:
+      enabled: true
+    registerWithEureka: false
+    fetchRegistry: false
+    serviceUrl:
+      defaultZone: http://localhost:${server.port}/eureka/

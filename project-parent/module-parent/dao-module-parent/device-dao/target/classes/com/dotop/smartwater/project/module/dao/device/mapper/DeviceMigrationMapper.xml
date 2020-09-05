@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.dotop.smartwater.project.module.dao.device.IDeviceMigrationDao">
+	
+	<select id="tempPage" resultType="com.dotop.smartwater.project.module.core.water.vo.DeviceMigrationVo">
+		select a.*, b.batch_number as batchNo, b.devno, b.taptype, b.`mode`,c.child_name as modeName, b.enterpriseid
+		 from device_migration_temp a left join `device` b on b.deveui = a.deveui left join dictionary_child c on b.mode = c.child_id
+		 where b.flag != 4
+		order by b.batch_number
+	</select>
+	
+	<select id="tempList" resultType="com.dotop.smartwater.project.module.core.water.vo.DeviceMigrationVo">
+		select a.*, b.batch_number as batchNo, b.devno, b.taptype, b.`mode`,c.child_name as modeName, b.enterpriseid, b.product_id as productId,
+		 CASE d.`status` WHEN '1' THEN 'yes' ELSE 'no' END as isOpen
+		 from device_migration_temp a left join `device` b on b.deveui = a.deveui
+		 left join dictionary_child c on b.mode = c.child_id
+		 left join `owner` d on b.devid = d.devid
+		 where b.flag != 4
+		order by b.batch_number
+	</select>
+	
+	<select id="detail" resultType="com.dotop.smartwater.project.module.core.water.vo.DeviceMigrationVo">
+		select a.*, c.child_name as modeName
+		 from device_migration a left join `device` b on b.deveui = a.deveui left join dictionary_child c on b.mode = c.child_id
+		<where>
+			b.flag != 4
+	        <if test="migrationHistoryId != null and migrationHistoryId != ''">
+	            AND a.migrationHistoryId = #{migrationHistoryId}
+	        </if>
+         </where>
+		order by a.batchNo
+	</select>
+	
+	<select id="page" resultType="com.dotop.smartwater.project.module.core.water.vo.DeviceMigrationVo">
+		select b.batch_number as batchNo, b.devno, b.deveui, b.taptype, b.`mode`,c.child_name as modeName, b.enterpriseid, 
+		b.product_id as productId, 0 as `status`, "等待迁移" as description
+		from `device` b left join dictionary_child c on b.mode = c.child_id
+		<where>
+			b.flag != 4
+	        <if test="enterpriseid != null and enterpriseid != ''">
+	            AND b.enterpriseid = #{enterpriseid}
+	        </if>
+	        <if test="devnoList != null">
+		        AND ( 
+		        <foreach collection="devnoList" item="data" separator=" or ">
+		        	b.devno = #{data}
+		        </foreach>
+		        )
+	        </if>
+	        <if test="batchnoList != null">
+		        AND (
+		        <foreach collection="batchnoList" item="data" separator=" or ">
+		        	b.batch_number = #{data}
+		        </foreach>
+		        )
+	        </if>
+         </where>		
+		order by b.batch_number
+	</select>
+	
+	<select id="pageHistory" resultType="com.dotop.smartwater.project.module.core.water.vo.DeviceMigrationHistoryVo">
+		select a.*, b.name as migrationUserName, c.`name` as initialName, d.`name` as targetName
+		 from device_migration_history a left join user b on a.migrationUserId = b.userid
+		left join enterprise c on a.initialId = c.enterpriseid left join enterprise d on a.targetId = d.enterpriseid
+		where 1=1
+		<if test="initialId != null and initialId != ''">
+			and a.initialId = #{initialId}
+		</if>
+		<if test="targetId != null and targetId != ''">
+			and a.targetId = #{targetId}
+		</if>
+		order by a.migrationTime desc
+	</select>
+	
+	<delete id="clearTemp">
+		delete from device_migration_temp
+	</delete>
+	
+	<select id="get"  resultType="com.dotop.smartwater.project.module.core.water.vo.AppVersionVo">
+		select * from version_control where id = #{id}
+	</select>
+	
+	<insert id="add">
+		insert into version_control(id, name,code, versionNo, versionCode, access, upgrade, qrCode, 
+		createUserId, createTime, status, publishUserId, publishTime, imgUrl, introduction) 
+		values(#{id}, #{name},#{code},#{versionNo}, #{versionCode}, #{access}, #{upgrade}, #{qrCode}, 
+		#{createUserId}, #{createTime}, #{status}, #{publishUserId}, #{publishTime}, #{imgUrl}, #{introduction})
+	</insert>
+	
+	<update id="migrateDevice">
+		<foreach collection="list" item="item" separator=";" open="" close="">
+            update `device`
+            <set>
+                <if test="1 == 1">
+                    product_id = #{item.productId},
+                </if>
+                <if test="history.targetId != null and history.targetId != '' ">
+                    enterpriseid = #{history.targetId},
+                </if>
+            </set>
+             where flag != 4 and deveui = #{item.deveui}
+        </foreach>
+	</update>
+	
+	<insert id="insertMigration">
+		insert into device_migration(id, batchNo, devno, deveui, mode, taptype, status, description, migrationHistoryId)
+		values(#{id}, #{batchNo}, #{devno}, #{deveui}, #{mode}, #{taptype}, #{status}, #{description}, #{migrationHistoryId})
+	</insert>
+	
+	<insert id="batchInsertMigration">
+		insert into device_migration(id, batchNo, devno, deveui, mode, taptype, status, description, migrationHistoryId)
+		values
+		<foreach collection="list" item="data" separator=",">
+     	  (#{data.id}, #{data.batchNo}, #{data.devno}, #{data.deveui}, #{data.mode}, #{data.taptype}, #{data.status}, #{data.description}, #{data.migrationHistoryId})
+      </foreach>
+	</insert>
+	
+	<insert id="insertTemp">
+		insert into device_migration_temp(id, deveui, status, description)
+		values(#{id}, #{deveui}, #{status}, #{description})
+	</insert>
+	
+	<insert id="batchInsertTemp">
+		insert into device_migration_temp(id, deveui, status, description)
+		values
+      <foreach collection="list" item="data" separator=",">
+  	  	(#{data.id}, #{data.deveui}, #{data.status}, #{data.description})
+      </foreach>
+	</insert>
+	
+	<insert id="insertTempSelect">
+		insert into device_migration_temp
+		select b.devid as id, b.deveui,0 as `status`, "等待迁移" as description
+		from `device` b left join dictionary_child c on b.mode = c.child_id
+		<where>
+			b.flag != 4
+	        <if test="enterpriseid != null and enterpriseid != ''">
+	            AND b.enterpriseid = #{enterpriseid}
+	        </if>
+	        <if test="devnoList != null">
+		        AND ( 
+		        <foreach collection="devnoList" item="data" separator=" or ">
+		        	b.devno = #{data}
+		        </foreach>
+		        )
+	        </if>
+	        <if test="batchnoList != null">
+		        AND (
+		        <foreach collection="batchnoList" item="data" separator=" or ">
+		        	b.batch_number = #{data}
+		        </foreach>
+		        )
+	        </if>
+         </where>		
+		order by b.batch_number
+	</insert>
+	
+	<update id="updateTemp">
+		update device_migration_temp set `status` = #{status}, description = #{description}
+		where deveui = #{deveui}
+	</update>
+	
+	<insert id="insertHistory">
+		insert into device_migration_history(id, initialId, targetId, practicalNum, successfulNum, unsuccessfulNum, migrationUserId, migrationTime)
+		values(#{id}, #{initialId}, #{targetId}, #{practicalNum}, #{successfulNum}, #{unsuccessfulNum}, #{migrationUserId}, #{migrationTime})
+	</insert>
+	
+	<select id="judgeDevice" resultType="Integer">
+		select count(*) from `owner` a left join device b on a.devid = b.devid where b.deveui = #{deveui} and a.status = '1'
+	</select>
+	
+	<update id="deleteHistory">
+		delete from device_migration_history where id = #{id}
+	</update>
+	
+	<update id="deleteMigration">
+		delete from device_migration where migrationHistoryId = #{id}
+	</update>
+</mapper>

@@ -1,0 +1,339 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dotop.smartwater.project.module.dao.workcenter.IProcessDao">
+
+   <resultMap id="WorkCenterProcessVoMap" type="com.dotop.smartwater.project.module.core.water.vo.WorkCenterProcessVo">
+		<result column="id" jdbcType="VARCHAR" property="id" />
+		<result column="code" jdbcType="VARCHAR" property="code" />
+		<result column="title" jdbcType="VARCHAR" property="title" />
+		<result column="business_id"   jdbcType="VARCHAR" property="businessId" />
+		<result column="business_type" jdbcType="VARCHAR" property="businessType" />
+		<result column="sql_params" property="sqlParams" />
+		<result column="show_params" property="showParams" />
+		<result column="fill_params" property="fillParams" />
+		<result column="carry_params" property="carryParams" />
+		<result column="status" jdbcType="VARCHAR" property="status" />
+		<result column="applicant" jdbcType="VARCHAR" property="applicant" />
+		<result column="applicant_name" jdbcType="VARCHAR" property="applicantName" />
+		<result column="application_date" jdbcType="VARCHAR" property="applicationDate" />
+		<result column="tmpl_id" jdbcType="VARCHAR" property="tmplId" />
+		<result column="next_process_node_id" jdbcType="VARCHAR" property="nextProcessNodeId" />
+		<result column="next_status" jdbcType="VARCHAR" property="nextStatus" />
+		<result column="next_handlers" property="nextHandlers" />
+		<result column="next_carbon_copyers" property="nextCarbonCopyers" />
+		<result column="next_handler_roles" property="nextHandlerRoles" />
+		<result column="next_carbon_copyer_roles" property="nextCarbonCopyerRoles" />
+		<result column="assign_handler" jdbcType="VARCHAR" property="assignHandler" />
+		<result column="assign_handler_name" jdbcType="VARCHAR" property="assignHandlerName" />
+		<result column="last_by" jdbcType="VARCHAR" property="lastBy" />
+		<result column="last_date" jdbcType="VARCHAR" property="lastDate" />
+		<result column="create_by" jdbcType="VARCHAR" property="createBy" />
+		<result column="create_date" jdbcType="VARCHAR" property="createDate" />
+		<result column="enterpriseid" jdbcType="VARCHAR" property="enterpriseid" />
+		<association property="processForm" javaType="com.dotop.smartwater.project.module.core.water.vo.WorkCenterProcessFormVo">
+			<result column="process_form_id" jdbcType="VARCHAR" property="id" />
+			<result column="form_name" jdbcType="VARCHAR" property="name" /> 
+			<result column="form_code" jdbcType="VARCHAR" property="code" /> 
+			<result column="form_body" jdbcType="VARCHAR" property="body" />
+			<result column="form_app_body" jdbcType="VARCHAR" property="appBody" />
+			<result column="form_body_map" jdbcType="VARCHAR" property="bodyMap" />
+			<collection property="processDbs" ofType="com.dotop.smartwater.project.module.core.water.vo.WorkCenterProcessDbVo">
+				<result column="db_id" jdbcType="VARCHAR" property="id" /> 
+				<result column="db_name" jdbcType="VARCHAR" property="name" /> 
+				<result column="db_load_type" jdbcType="VARCHAR" property="loadType" /> 
+				<result column="db_load_status" jdbcType="VARCHAR" property="loadStatus" /> 
+				<result column="db_sql_str" jdbcType="VARCHAR" property="sqlStr" /> 
+				<collection property="processDbFields" ofType="com.dotop.smartwater.project.module.core.water.vo.WorkCenterProcessDbFieldVo">
+					<result column="field_id" jdbcType="VARCHAR" property="id" /> 
+					<result column="field_attribute" jdbcType="VARCHAR" property="attribute" /> 
+					<result column="field_name" jdbcType="VARCHAR" property="name" /> 
+					<result column="field_type" jdbcType="VARCHAR" property="fieldType" /> 
+					<association property="typeDictChild" javaType="com.dotop.smartwater.project.module.core.water.vo.DictionaryChildVo">
+						<result column="field_type_dict_child_id" jdbcType="VARCHAR" property="childId" />
+					</association>
+					<association property="contentDict" javaType="com.dotop.smartwater.project.module.core.water.vo.DictionaryVo">
+						<result column="field_content_dict_id" jdbcType="VARCHAR" property="dictionaryId" />
+					</association>
+					<association property="relationDictChild" javaType="com.dotop.smartwater.project.module.core.water.vo.DictionaryChildVo">
+						<result column="field_relation_dict_child_id" jdbcType="VARCHAR" property="childId" />
+					</association>
+				</collection>
+			</collection>
+		</association>
+		<association property="currHandleDictChild" javaType="com.dotop.smartwater.project.module.core.water.vo.DictionaryChildVo">
+			<result column="curr_handle_dict_child_id" jdbcType="VARCHAR" property="childId" />
+		</association>
+		<association property="nextProcessNode" javaType="com.dotop.smartwater.project.module.core.water.vo.WorkCenterProcessNodeVo">
+			<result column="next_process_node_id" property="id" /> 
+			<result column="next_node_name" property="name" />
+			<result column="next_tmpl_node_id" property="tmplNodeId"/>
+		</association>
+		<collection property="processNodes" ofType="com.dotop.smartwater.project.module.core.water.vo.WorkCenterProcessNodeVo">
+			<result column="node_id" property="id" /> 
+			<result column="node_name" property="name" /> 
+			<result column="node_type" property="type" />
+			<result column="node_sort" property="sort" /> 
+			<result column="process_node_parent_id" property="processNodeParentId" /> 
+			<result column="node_handlers" property="handlers" /> 
+			<result column="node_carbon_copyers" property="carbonCopyers" /> 
+			<result column="node_handler_roles" property="handlerRoles" /> 
+			<result column="node_carbon_copyer_roles" property="carbonCopyerRoles" /> 
+			<result column="node_if_verify" property="ifVerify" /> 
+			<result column="verify_process_node_id" property="verifyProcessNodeId" /> 
+			<result column="no_verify_process_node_id" property="noVerifyProcessNodeId" /> 
+			<result column="node_if_notice" property="ifNotice" /> 
+			<result column="node_noticers" property="noticers" /> 
+			<result column="node_noticer_roles" property="noticerRoles" /> 
+			<result column="node_if_update" property="ifUpdate" /> 
+			<result column="node_if_photo" property="ifPhoto" /> 
+			<result column="node_photo_num" property="photoNum" /> 
+			<result column="node_if_upload" property="ifUpload" /> 
+			<result column="node_upload_num" property="uploadNum" /> 
+			<result column="node_if_opinion" property="ifOpinion" />
+			<result column="node_opinion_num" property="opinionNum" />
+			<association property="handleDict" javaType="com.dotop.smartwater.project.module.core.water.vo.DictionaryVo">
+				<result column="node_handle_dict_id" jdbcType="VARCHAR" property="dictionaryId" /> 
+			</association>
+			<association property="updateDictChild" javaType="com.dotop.smartwater.project.module.core.water.vo.DictionaryChildVo">
+				<result column="node_update_dict_child_id" jdbcType="VARCHAR" property="childId" />
+			</association>
+		</collection>
+	</resultMap>
+	
+	<select id="list" resultMap="WorkCenterProcessVoMap">
+		SELECT a.id,a.code,a.title,a.business_id,a.business_type,
+		a.sql_params,a.show_params,a.fill_params,a.carry_params,
+		a.status,a.applicant,a.applicant_name,a.application_date,a.process_form_id,a.tmpl_id,
+		a.curr_handle_dict_child_id,a.next_process_node_id,a.next_status,a.next_handlers,a.next_carbon_copyers,
+		a.next_handler_roles,a.next_carbon_copyer_roles,a.assign_handler,a.assign_handler_name
+		,a.is_del,a.create_by,a.create_date,a.last_by,a.last_date,a.enterpriseid
+		,b.name AS next_node_name,b.tmpl_node_id as next_tmpl_node_id
+        FROM wc_process AS a 
+		LEFT JOIN wc_process_node AS b ON a.next_process_node_id=b.id AND a.is_del=#{isDel} AND b.is_del=#{isDel}  
+		<where>
+			<if test="applicant != null or nextHandlers != null or nextCarbonCopyers != null or nextHandlerRoles != null or nextCarbonCopyerRoles != null or assignHandler != null or ids != null">
+				AND ( 1!=1 
+			</if>
+			<if test="applicant != null and applicant != ''">
+				OR a.applicant=#{applicant}
+			</if>
+			<if test="nextHandlers != null">
+				OR
+				<foreach collection="nextHandlers" index="index" item="item" open="(" separator=" OR " close=")">
+					a.next_handlers LIKE CONCAT(CONCAT('%',#{item},'%'))
+				</foreach>
+			</if>
+			<if test="nextCarbonCopyers != null">
+				OR
+				<foreach collection="nextCarbonCopyers" index="index" item="item" open="(" separator=" OR " close=")">
+					a.next_carbon_copyers LIKE CONCAT(CONCAT('%',#{item},'%'))
+				</foreach>
+			</if>
+			<if test="nextHandlerRoles != null">
+				OR
+				<foreach collection="nextHandlerRoles" index="index" item="item" open="(" separator=" OR " close=")">
+					a.next_handler_roles LIKE CONCAT(CONCAT('%',#{item},'%'))
+				</foreach>
+			</if>
+			<if test="nextCarbonCopyerRoles != null">
+				OR
+				<foreach collection="nextCarbonCopyerRoles" index="index" item="item" open="(" separator=" OR " close=")">
+					a.next_carbon_copyer_roles LIKE CONCAT(CONCAT('%',#{item},'%'))
+				</foreach>
+			</if>
+			<if test="assignHandler != null and assignHandler != ''">
+				OR a.assign_handler=#{assignHandler}
+			</if>
+			<if test="ids != null and ids.size()>0">
+				OR a.id in
+				<foreach collection="ids" index="index" item="item" open="(" separator="," close=")">
+                	#{item}       
+        		</foreach>
+			</if> 
+			
+			<if test="applicant != null or nextHandlers != null or nextCarbonCopyers != null or nextHandlerRoles != null or nextCarbonCopyerRoles != null or assignHandler != null or ids != null">
+				)
+			</if>
+			
+			<if test="status != null and status != ''">
+				AND a.status=#{status}
+			</if>
+			<if test="statuss != null">
+				AND a.status in 
+				<foreach collection="statuss" index="index" item="item" open="(" separator="," close=")">
+					#{item}
+				</foreach>
+			</if>
+			<if test="enterpriseid != null and enterpriseid != ''">
+				AND a.enterpriseid=#{enterpriseid}
+			</if>
+			<if test="isDel != null">
+				AND a.is_del=#{isDel}
+			</if>
+			<if test="title != null and title != ''">
+				AND a.title LIKE CONCAT(CONCAT('%',#{title},'%'))
+			</if>
+			<if test="code != null and code != ''">
+				AND a.code LIKE CONCAT(CONCAT('%',#{code},'%'))
+			</if>
+			<if test="applicantName != null and applicantName != ''">
+				AND a.applicant_name LIKE CONCAT(CONCAT('%',#{applicantName},'%'))
+			</if>
+			<if test="startDate != null and endDate != null">
+				AND a.create_date &gt;= #{startDate} AND a.create_date &lt; #{endDate}
+			</if>
+		</where>
+		<if test="ifSort">
+			ORDER BY a.last_date DESC
+		</if>
+		<if test="limit!=null and offset!=null">
+			LIMIT #{limit} OFFSET #{offset}
+		</if>
+	</select>
+	
+	<select id="get" resultMap="WorkCenterProcessVoMap">
+		SELECT a.id,a.code,a.title,a.business_id,a.business_type,
+		a.sql_params,a.show_params,a.fill_params,a.carry_params,
+		a.status,a.applicant,a.applicant_name,a.application_date,a.process_form_id,a.tmpl_id,
+		a.curr_handle_dict_child_id,a.next_process_node_id,a.next_status,a.next_handlers,a.next_carbon_copyers,
+		a.next_handler_roles,a.next_carbon_copyer_roles,a.assign_handler,a.assign_handler_name
+		,a.is_del,a.create_by,a.create_date,a.last_by,a.last_date,a.enterpriseid
+		,b.id AS node_id,b.name AS node_name,b.type AS node_type,b.sort AS node_sort,b.process_node_parent_id
+		,b.handlers AS node_handlers,b.carbon_copyers AS node_carbon_copyers,b.handler_roles AS node_handler_roles,b.carbon_copyer_roles AS node_carbon_copyer_roles
+		,b.handle_dict_id AS node_handle_dict_id,b.if_verify AS node_if_verify,b.verify_process_node_id,b.no_verify_process_node_id
+		,b.if_notice AS node_if_notice,b.noticers AS node_noticers,b.if_update AS node_if_update,b.update_dict_child_id AS node_update_dict_child_id
+		,b.if_photo AS node_if_photo,b.photo_num AS node_photo_num,b.if_upload AS node_if_upload,b.upload_num AS node_upload_num
+		,b.if_opinion AS node_if_opinion,b.opinion_num AS node_opinion_num
+		,c.id AS form_id,c.name AS form_name,c.body AS form_body,c.app_body as form_app_body,c.body_map AS form_body_map
+		,d.id AS db_id,d.name AS db_name,d.load_type AS db_load_type,d.load_status AS db_load_status,d.sql_str AS db_sql_str
+		,e.id AS field_id,e.attribute AS field_attribute,e.name AS field_name,e.field_type
+		,e.type_dict_child_id AS field_type_dict_child_id,e.content_dict_id AS field_content_dict_id,e.relation_dict_child_id AS field_relation_dict_child_id
+        FROM wc_process AS a
+        JOIN wc_process_node AS b ON a.id=b.process_id AND a.is_del=#{isDel} AND b.is_del=#{isDel}
+        JOIN wc_process_form AS c ON a.process_form_id=c.id AND a.is_del=#{isDel} AND c.is_del=#{isDel}
+        LEFT JOIN wc_process_db AS d ON c.id=d.process_form_id AND c.is_del=#{isDel} AND d.is_del=#{isDel}
+        LEFT JOIN wc_process_db_field AS e ON d.id=e.process_db_id AND d.is_del=#{isDel} AND e.is_del=#{isDel}
+		<where>
+			<if test="enterpriseid != null and enterpriseid != ''">
+				AND a.enterpriseid=#{enterpriseid}
+			</if>
+			<if test="businessId != null and businessId != ''">
+				AND a.business_id = #{businessId}
+			</if>
+			<if test="isDel != null">
+				AND a.is_del=#{isDel}
+			</if>
+			<if test="id != null and id != ''">
+				AND a.id=#{id}
+			</if>
+		</where>
+	</select>
+	
+	<insert id="add">
+		INSERT INTO wc_process
+		(id,title,code,business_id,business_type,
+		sql_params,show_params,fill_params,carry_params,status,applicant,applicant_name,application_date,process_form_id,tmpl_id,
+		next_process_node_id,next_status,next_handlers,next_carbon_copyers,
+		next_handler_roles,next_carbon_copyer_roles,assign_handler,assign_handler_name
+		,is_del,create_by,create_date,last_by,last_date,enterpriseid)
+		VALUES
+		(#{id},#{title},#{code},#{businessId},#{businessType},
+		#{sqlParams,javaType=java.util.Map,jdbcType=VARCHAR},
+		#{showParams,javaType=java.util.Map,jdbcType=VARCHAR},
+		#{fillParams,javaType=java.util.Map,jdbcType=VARCHAR},
+		#{carryParams,javaType=java.util.Map,jdbcType=VARCHAR},
+		#{status},#{applicant},#{applicantName},#{applicationDate},#{processFormId},#{tmplId},
+		#{nextProcessNodeId},#{nextStatus},
+		#{nextHandlers,javaType=java.util.List,jdbcType=VARCHAR},
+		#{nextCarbonCopyers,javaType=java.util.List,jdbcType=VARCHAR},
+		#{nextHandlerRoles,javaType=java.util.List,jdbcType=VARCHAR},
+		#{nextCarbonCopyerRoles,javaType=java.util.List,jdbcType=VARCHAR},
+		#{assignHandler},#{assignHandlerName}
+		,#{isDel},#{userBy},#{curr},#{userBy},#{curr},#{enterpriseid})
+	</insert>
+	
+	<update id="edit">
+		UPDATE wc_process
+		<trim prefix="set" suffixOverrides=",">
+			<if test="title != null and title != ''">
+				title=#{title},
+			</if>
+			<if test="status != null and status != ''">
+				status=#{status},
+			</if>
+			<if test="nextProcessNodeId != null and nextProcessNodeId != ''">
+				next_process_node_id=#{nextProcessNodeId}, 
+			</if>
+			<if test="nextStatus != null and nextStatus != ''">
+				next_status=#{nextStatus},
+			</if>
+			<if test="nextHandlers != null">
+				next_handlers=#{nextHandlers,javaType=java.util.List,jdbcType=VARCHAR},
+			</if>
+			<if test="nextCarbonCopyers != null">
+				next_carbon_copyers=#{nextCarbonCopyers,javaType=java.util.List,jdbcType=VARCHAR},
+			</if>
+			<if test="nextHandlerRoles != null">
+				next_handler_roles=#{nextHandlerRoles,javaType=java.util.List,jdbcType=VARCHAR},
+			</if>
+			<if test="nextCarbonCopyerRoles != null">
+				next_carbon_copyer_roles=#{nextCarbonCopyerRoles,javaType=java.util.List,jdbcType=VARCHAR},
+			</if>
+			<if test="assignHandler != null">
+				assign_handler=#{assignHandler},
+			</if>
+			<if test="assignHandlerName != null">
+				assign_handler_name=#{assignHandlerName},
+			</if>
+			<if test="userBy != null and userBy != ''">
+				last_by=#{userBy},
+			</if>
+			<if test="curr != null">
+				last_date=#{curr},
+			</if>
+		</trim>
+		WHERE enterpriseid=#{enterpriseid} AND id=#{id} AND is_del=#{isDel}
+	</update>
+	
+	<update id="editNext">
+		UPDATE wc_process
+		<trim prefix="set" suffixOverrides=",">
+			<if test="status != null and status != ''">
+				status=#{status},
+			</if>
+			curr_handle_dict_child_id=#{currHandleDictChild.childId}, 
+			next_process_node_id=#{nextProcessNodeId}, 
+			next_status=#{nextStatus},
+			next_handlers=#{nextHandlers,javaType=java.util.List,jdbcType=VARCHAR},
+			next_carbon_copyers=#{nextCarbonCopyers,javaType=java.util.List,jdbcType=VARCHAR},
+			next_handler_roles=#{nextHandlerRoles,javaType=java.util.List,jdbcType=VARCHAR},
+			next_carbon_copyer_roles=#{nextCarbonCopyerRoles,javaType=java.util.List,jdbcType=VARCHAR},
+			assign_handler=#{assignHandler},
+			assign_handler_name=#{assignHandlerName},
+			<if test="userBy != null and userBy != ''">
+				last_by=#{userBy},
+			</if>
+			<if test="curr != null">
+				last_date=#{curr},
+			</if>
+		</trim>
+		WHERE enterpriseid=#{enterpriseid} AND id=#{id} AND is_del=#{isDel}
+	</update>
+	
+	<update id="del">
+		UPDATE wc_process
+		<trim prefix="set" suffixOverrides=",">
+			<if test="newIsDel != null and newIsDel != ''">
+				is_del=#{newIsDel},
+			</if>
+			<if test="userBy != null and userBy != ''">
+				last_by=#{userBy},
+			</if>
+			<if test="curr != null">
+				last_date=#{curr},
+			</if>
+		</trim>
+		WHERE enterpriseid=#{enterpriseid} AND id=#{id} AND is_del=#{isDel}
+	</update>
+    
+</mapper>

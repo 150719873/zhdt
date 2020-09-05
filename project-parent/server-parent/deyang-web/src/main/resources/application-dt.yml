@@ -1,0 +1,33 @@
+### 鼎通的配置
+server:
+  port: 7788
+  enterpriseid: 70
+
+spring:
+    datasource:
+        name: mysql
+        type: com.alibaba.druid.pool.DruidDataSource
+        druid:
+          filters: stat
+          driver-class-name: com.mysql.cj.jdbc.Driver
+          url: jdbc:mysql://rm-wz91y5du7xqr0aot9.mysql.rds.aliyuncs.com:3306/water?useSSL=false&useUnicode=true&characterEncoding=utf-8&useLegacyDatetimeCode=false&useTimezone=true&serverTimezone=GMT%2B8
+          username: water
+          password: 02f471eFBb6
+          initial-size: 10
+          min-idle: 50
+          max-active: 500
+          max-wait: 60000
+          time-between-eviction-runs-millis: 60000
+          min-evictable-idle-time-millis: 35000
+          validation-query: SELECT 'x'
+          test-while-idle: true
+          test-on-borrow: false
+          test-on-return: false
+          pool-prepared-statements: true
+          max-pool-prepared-statement-per-connection-size: 500
+    application:
+        name: DeYang Client
+
+logging:
+      path: /opt/smartwater/deyang-server/logs
+      config: classpath:logback-spring.xml

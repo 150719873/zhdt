@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.dotop.smartwater.project.module.dao.tool.ISmsTemplateDao">
+	
+	<select id="getSmsTemplateVoList" resultType="com.dotop.smartwater.project.module.core.water.vo.SmsTemplateVo">
+		SELECT a.id,a.enterpriseid,a.`name`,a.smsptid,a.`code`,a.content,a.`status`,a.remarks,a.delflag,a.smstype,
+			a.createtime,a.updatetime,b.name as enterprisename,a.smstypename
+			FROM sms_template AS a inner join enterprise as b on a.enterpriseid = b.enterpriseid
+			WHERE a.delflag = 0
+		   <if test="enterpriseid != null and enterpriseid != ''">
+			   AND a.enterpriseid = #{enterpriseid}
+		   </if>
+              <if test="name != null and name != ''">
+			   AND a.name LIKE CONCAT('%',#{name},'%')
+		   </if>
+		   <if test="status != null">
+			   AND a.status = #{status}
+		   </if>
+		   <if test="smstype != null">
+			   AND a.smstype = #{smstype}
+		   </if>
+		   <if test="smsptid != null and smsptid != ''">
+			   AND a.smsptid LIKE CONCAT('%',#{smsptid},'%')
+		   </if>
+		   <if test="code != null and code != ''">
+		       AND a.code LIKE CONCAT('%',#{code},'%')
+		   </if>
+		 order by a.createtime desc
+	</select>
+	
+	<insert id="add">
+		INSERT INTO sms_template (id,enterpriseid,name,smsptid,code,content,status,remarks,delflag,
+			createuser,createtime,updateuser,updatetime,smstype,smstypename,bindtime) VALUES (#{id},#{enterpriseid},#{name},#{smsptid},
+			#{code},#{content},#{status},#{remarks},#{delflag},#{createuser},
+			#{createtime},#{updateuser},#{updatetime},#{smstype},#{smstypename},#{bindtime})
+	</insert>
+	
+	<update id="update">
+		update sms_template set enterpriseid=#{enterpriseid},name=#{name},smsptid=#{smsptid},code=#{code},content=#{content},
+			remarks=#{remarks},updateuser=#{updateuser},updatetime=#{updatetime},smstype=#{smstype}
+			where id = #{id}
+	</update>
+	
+	<select id="getSmsTemplate" resultType="com.dotop.smartwater.project.module.core.water.vo.SmsTemplateVo">
+		select a.* from sms_template as a where a.delflag=0 and a.enterpriseid = #{enterpriseid} and a.smstype = #{smstype}
+		 <if test="status != null">
+			   AND a.status = #{status}
+		 </if>
+		 limit 1
+	</select>
+	
+	<select id="getSmsTemplateVo" resultType="com.dotop.smartwater.project.module.core.water.vo.SmsTemplateVo">
+		SELECT a.id,a.enterpriseid,a.`name`,a.smsptid,a.`code`,a.content,a.`status`,a.remarks,a.delflag,a.smstype,
+			a.createtime,a.updatetime,b.name as enterprisename
+			FROM sms_template AS a inner join enterprise as b on a.enterpriseid = b.enterpriseid
+			WHERE a.delflag = 0 
+			<if test="id != null and id != ''">
+			   AND a.id = #{id}
+		   </if>
+		   <if test="code != null and code != ''">
+		       AND a.code = #{code}
+		   </if>
+	</select>
+	
+	<update id="delete">
+		update sms_template set delflag=1 where id = #{id}
+	</update>
+	
+	<update id="updateStatus">
+		update sms_template set status=#{status} where id = #{id}
+	</update>
+	
+	<select id="getByEnterpriseidAndType" resultType="com.dotop.smartwater.project.module.core.water.vo.SmsTemplateVo">
+		select * from sms_template where delflag=0 and smstype=#{smstype} and enterpriseid= #{enterpriseid}
+	</select>
+	
+</mapper>

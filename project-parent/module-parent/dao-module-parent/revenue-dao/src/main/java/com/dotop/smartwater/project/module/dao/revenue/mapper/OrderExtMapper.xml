@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dotop.smartwater.project.module.dao.revenue.IOrderExtDao">
+  <resultMap id="BaseResultMap" type="com.dotop.smartwater.project.module.core.water.vo.OrderExtVo">
+    <id column="tradeno" jdbcType="VARCHAR" property="tradeno" />
+    <result column="penalty" jdbcType="DECIMAL" property="penalty" />
+    <result column="alreadypay" jdbcType="DECIMAL" property="alreadypay" />
+    <result column="ischargebacks" jdbcType="SMALLINT" property="ischargebacks" />
+    <result column="cardid" jdbcType="VARCHAR" property="cardid" />
+    <result column="paytypeinfo" jdbcType="VARCHAR" property="paytypeinfo" />
+    <result column="couponinfo" jdbcType="VARCHAR" property="couponinfo" />
+    <result column="purposeinfo" jdbcType="VARCHAR" property="purposeinfo" />
+    <result column="reduceinfo" jdbcType="VARCHAR" property="reduceinfo" />
+    <result column="chargeinfo" jdbcType="VARCHAR" property="chargeinfo" />
+  </resultMap>
+
+  <select id="findOrderExtByTradeno" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select 
+    tradeno, penalty, alreadypay, ischargebacks, cardid, paytypeinfo, couponinfo, purposeinfo, reduceinfo, chargeinfo
+    from order_ext
+    where tradeno = #{tradeno,jdbcType=VARCHAR}
+  </select>
+  <select id="findOrderExtByTradenos"  resultMap="BaseResultMap">
+    select 
+    tradeno, penalty, alreadypay, ischargebacks, cardid, paytypeinfo, couponinfo, purposeinfo, reduceinfo, chargeinfo
+    from order_ext
+    where tradeno in 
+         <foreach item="item" index="index" collection="tradenos" open="(" separator="," close=")">
+            '${item}'
+        </foreach>
+  </select>
+  
+  <delete id="deleteOrderExtByTradeno" parameterType="java.lang.String">
+    delete from order_ext
+    where tradeno = #{tradeno,jdbcType=VARCHAR}
+  </delete>
+
+  <delete id="deleteOrderExtByOwnerId" parameterType="java.lang.String">
+    delete from `order_ext` where tradeno in
+    (select tradeno from `order_preview` where ownerid = #{ownerid})
+  </delete>
+
+  <insert id="addOrderExt" >
+    insert into order_ext (tradeno, penalty, alreadypay, 
+      ischargebacks, cardid, paytypeinfo, 
+      couponinfo, purposeinfo, reduceinfo, 
+      chargeinfo)
+    values (#{tradeno,jdbcType=VARCHAR}, #{penalty,jdbcType=DECIMAL}, #{alreadypay,jdbcType=DECIMAL}, 
+      #{ischargebacks,jdbcType=SMALLINT}, #{cardid,jdbcType=VARCHAR}, #{paytypeinfo,jdbcType=VARCHAR}, 
+      #{couponinfo,jdbcType=VARCHAR}, #{purposeinfo,jdbcType=VARCHAR}, #{reduceinfo,jdbcType=VARCHAR}, 
+      #{chargeinfo,jdbcType=VARCHAR})
+  </insert>
+
+  <update id="updateOrderExt" >
+    update order_ext
+    <set>
+      <if test="penalty != null">
+        penalty = #{penalty,jdbcType=DECIMAL},
+      </if>
+      <if test="alreadypay != null">
+        alreadypay = #{alreadypay,jdbcType=DECIMAL},
+      </if>
+      <if test="ischargebacks != null">
+        ischargebacks = #{ischargebacks,jdbcType=SMALLINT},
+      </if>
+      <if test="cardid != null">
+        cardid = #{cardid,jdbcType=VARCHAR},
+      </if>
+      <if test="paytypeinfo != null">
+        paytypeinfo = #{paytypeinfo,jdbcType=VARCHAR},
+      </if>
+      <if test="couponinfo != null">
+        couponinfo = #{couponinfo,jdbcType=VARCHAR},
+      </if>
+      <if test="purposeinfo != null">
+        purposeinfo = #{purposeinfo,jdbcType=VARCHAR},
+      </if>
+      <if test="reduceinfo != null">
+        reduceinfo = #{reduceinfo,jdbcType=VARCHAR},
+      </if>
+      <if test="chargeinfo != null">
+        chargeinfo = #{chargeinfo,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where tradeno = #{tradeno,jdbcType=VARCHAR}
+  </update>
+
+</mapper>

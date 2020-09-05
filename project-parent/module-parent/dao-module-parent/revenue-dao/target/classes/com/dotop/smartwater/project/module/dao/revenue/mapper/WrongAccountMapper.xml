@@ -1,0 +1,243 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.dotop.smartwater.project.module.dao.revenue.IWrongAccountDao">
+
+    <resultMap id="WrongAccountVoMap"
+               type="com.dotop.smartwater.project.module.core.water.vo.WrongAccountVo">
+        <id property="id" column="id"/>
+        <result property="wrongno" column="wrongno"/>
+        <result property="enterpriseid" column="enterpriseid"/>
+        <result property="status" column="status"/>
+        <result property="type" column="type"/>
+        <result property="applytime" column="applytime"/>
+        <result property="description" column="description"/>
+        <result property="ownerid" column="ownerid"/>
+        <result property="communityid" column="communityid"/>
+        <result property="orderid" column="orderid"/>
+        <result property="handleid" column="handleid"/>
+        <result property="handlename" column="handlename"/>
+        <result property="handletime" column="handletime"/>
+        <result property="handedesc" column="handedesc"/>
+        <result property="couponid" column="couponid"/>
+        <!-- 冗余字段 -->
+        <result property="original" column="original"/>
+        <result property="communityno" column="communityno"/>
+        <result property="communityname" column="communityname"/>
+        <result property="tradeno" column="tradeno"/>
+        <result property="year" column="year"/>
+        <result property="month" column="month"/>
+        <result property="userno" column="userno"/>
+        <result property="username" column="username"/>
+        <result property="phone" column="phone"/>
+        <result property="addr" column="addr"/>
+        <result property="pricetypename" column="pricetypename"/>
+        <result property="upreadtime" column="upreadtime"/>
+        <result property="upreadwater" column="upreadwater"/>
+        <result property="readtime" column="readtime"/>
+        <result property="readwater" column="readwater"/>
+        <result property="water" column="water"/>
+        <result property="payno" column="payno"/>
+        <result property="amount" column="amount"/>
+        <result property="balance" column="balance"/>
+        <result property="realamount" column="realamount"/>
+        <result property="paytype" column="paytype"/>
+        <result property="paystatus" column="paystatus"/>
+        <result property="paytime" column="paytime"/>
+        <result property="tradestatus" column="tradestatus"/>
+        <result property="isprint" column="isprint"/>
+        <result property="penalty" column="penalty"/>
+        <result property="couponno" column="couponno"/>
+        <result property="coupontype" column="coupontype"/>
+        <result property="couponname" column="couponname"/>
+        <result property="couponstarttime" column="couponstarttime"/>
+        <result property="couponendtime" column="couponendtime"/>
+        <result property="facevalue" column="facevalue"/>
+        <result property="couponunit" column="couponunit"/>
+        <result property="couponstatus" column="couponstatus"/>
+    </resultMap>
+
+
+    <select id="list" resultMap="WrongAccountVoMap"
+            parameterType="java.util.Map">
+        SELECT
+        a.id,a.wrongno,a.enterpriseid,a.status,a.type,a.applytime,a.description
+        ,a.ownerid ,a.communityid,a.orderid
+        ,a.handleid,a.handlename,a.handletime,a.handedesc
+        ,a.couponid
+        ,b.userno,b.username,b.phone,b.addr,b.year,b.month,b.tradeno,b.tradestatus,b.original,b.paystatus
+        ,c.no AS couponno
+        FROM wrong_account AS a
+        <!-- LEFT JOIN `order${_year}${_month}` -->
+        LEFT JOIN `order`
+        AS b ON a.orderid=b.id
+        LEFT JOIN coupon AS c ON a.couponid=c.couponid
+
+        <where>
+            <if test="enterpriseid != null ">
+                and a.enterpriseid = #{enterpriseid}
+            </if>
+            <if test="ownerid != null">
+                and a.ownerid = #{ownerid}
+            </if>
+            <if test="communityIds != null and communityIds != '' ">
+                AND a.communityid in
+                <foreach collection="communityIds.split(',')" index="index" item="item" open="(" separator=","
+                         close=")">
+                    #{item}
+                </foreach>
+            </if>
+            <if test="userno != null and userno != '' ">
+                AND b.userno like CONCAT('%',#{userno},'%')
+            </if>
+            <if test="username != null and username != '' ">
+                AND b.username like CONCAT('%',#{username},'%')
+            </if>
+        </where>
+        order by a.applytime desc
+        <if test="limit!=null and offset!=null">
+            LIMIT #{limit} OFFSET #{offset}
+        </if>
+    </select>
+
+    <select id="get" resultMap="WrongAccountVoMap">
+        SELECT
+        a.id as orderid, a.ownerid, a.tradeno, a.year, a.month,
+        a.userno, a.username, a.phone, a.addr, a.pricetypename, a.upreadtime,
+        a.upreadwater, a.readtime, a.readwater, a.water, a.payno, a.amount,
+        a.balance, a.realamount, a.paytype, a.paystatus,
+        a.paytime,a.tradestatus,a.communityid,a.communityno,a.communityname,
+        a.isprint,a.original
+        <!-- ,b.penalty -->
+        <if test="id != null ">
+            ,c.wrongno,c.status,c.type,c.type,c.applytime,c.description
+            ,c.handlename,c.handletime,c.handedesc
+            ,d.no AS couponno,d.type AS
+            coupontype,d.name AS couponname
+            ,d.starttime AS
+            couponstarttime,d.endtime AS couponendtime
+            ,d.facevalue AS
+            facevalue,d.unit AS couponunit,d.status AS couponstatus
+        </if>
+        FROM `order` AS a
+        <!-- FROM `order${_year}${_month}` AS a -->
+        <!-- JOIN `order_ext${_year}${_month}` AS b ON a.id=b.orderid -->
+        <if test="id != null ">
+            LEFT JOIN wrong_account AS c ON a.id=c.orderid
+            LEFT JOIN
+            `coupon` AS d ON c.couponid=d.couponid
+        </if>
+        <where>
+            <if test="enterpriseid != null ">
+                and a.enterpriseid = #{enterpriseid}
+            </if>
+            <if test="tradeno != null ">
+                and a.tradeno = #{tradeno}
+            </if>
+            <if test="id != null ">
+                and c.id = #{id}
+                <if test="ownerid != null ">
+                    and c.ownerid = #{ownerid}
+                </if>
+                <if test="orderid != null ">
+                    and c.orderid = #{orderid}
+                </if>
+            </if>
+        </where>
+        <if test="id != null ">
+            order by c.createtime desc LIMIT 1
+        </if>
+    </select>
+
+    <select id="isexist" resultType="java.lang.Boolean">
+        SELECT EXISTS
+        (
+        SELECT id FROM wrong_account
+        <where>
+            <if test="orderid !=null ">
+                AND orderid=#{orderid}
+            </if>
+            <if test="statuss !=null">
+                AND status in
+                <foreach collection="statuss" index="index" item="item"
+                         open="(" separator="," close=")">
+                    #{item}
+                </foreach>
+            </if>
+            <if test="wrongno !=null ">
+                AND wrongno=#{wrongno}
+            </if>
+        </where>
+        )
+    </select>
+
+    <select id="getStatus" resultMap="WrongAccountVoMap">
+		SELECT status FROM wrong_account WHERE ownerid=#{ownerid}
+	</select>
+
+    <!-- 新增账单 -->
+    <insert id="add">
+		INSERT INTO wrong_account (
+		id,
+		wrongno,
+		enterpriseid,
+		communityid,
+		status,
+		type,
+		applytime,
+		description,
+		ownerid,
+		orderid,
+		createtime,
+		createuser
+		)
+		VALUE
+		(
+		#{id},
+		#{wrongno},
+		#{enterpriseid},
+		#{communityid},
+		#{status},
+		#{type},
+		#{applytime},
+		#{description},
+		#{ownerid},
+		#{orderid},
+		#{createtime},
+		#{createuser})
+	</insert>
+
+    <!--   修改账单信息 -->
+    <update id="update">
+        update wrong_account
+        <set>
+            <if test="status != null">
+                status = #{status},
+            </if>
+
+            <if test="description != null">
+                description = #{description},
+            </if>
+
+            <if test="handleid != null">
+                handleid = #{handleid},
+            </if>
+            <if test="handlename != null">
+                handlename = #{handlename},
+            </if>
+
+            <if test="handletime != null">
+                handletime = #{handletime},
+            </if>
+            <if test="handedesc != null">
+                handedesc = #{handedesc},
+            </if>
+
+            <if test="couponid != null">
+                couponid = #{couponid},
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+
+
+</mapper>

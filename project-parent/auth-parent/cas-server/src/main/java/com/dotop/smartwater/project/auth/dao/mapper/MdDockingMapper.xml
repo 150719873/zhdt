@@ -1,0 +1,190 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.dotop.smartwater.project.auth.dao.IMdDockingDao">
+    <resultMap id="BaseResultMap" type="com.dotop.smartwater.project.module.core.auth.vo.MdDockingVo">
+        <id column="id" jdbcType="VARCHAR" property="id"/>
+        <result column="category" jdbcType="VARCHAR" property="category"/>
+        <result column="type" jdbcType="VARCHAR" property="type"/>
+        <result column="code" jdbcType="VARCHAR" property="code"/>
+        <result column="username" jdbcType="VARCHAR" property="username"/>
+        <result column="password" jdbcType="VARCHAR" property="password"/>
+        <result column="host" jdbcType="VARCHAR" property="host"/>
+        <result column="url" jdbcType="VARCHAR" property="url"/>
+        <result column="time" jdbcType="TIMESTAMP" property="time"/>
+        <result column="rang" jdbcType="INTEGER" property="rang"/>
+        <result column="enterpriseid" jdbcType="VARCHAR" property="enterpriseid"/>
+        <result column="is_del" jdbcType="BIT" property="isDel"/>
+        <result column="create_by" jdbcType="VARCHAR" property="createBy"/>
+        <result column="create_date" jdbcType="TIMESTAMP" property="createDate"/>
+        <result column="last_by" jdbcType="VARCHAR" property="lastBy"/>
+        <result column="last_date" jdbcType="TIMESTAMP" property="lastDate"/>
+        <result column="water_username" jdbcType="VARCHAR" property="waterUsername"/>
+        <result column="water_password" jdbcType="VARCHAR" property="waterPassword"/>
+        <result column="water_host" jdbcType="VARCHAR" property="waterHost"/>
+        <result column="system" jdbcType="VARCHAR" property="system"/>
+        <result column="mode" jdbcType="VARCHAR" property="mode"/>
+        <result column="factory" jdbcType="VARCHAR" property="factory"/>
+        <result column="product_name" jdbcType="VARCHAR" property="productName"/>
+
+        <result column="enterpriseName" jdbcType="VARCHAR" property="enterpriseName"/>
+        <result column="mde_id" jdbcType="VARCHAR" property="mdeId"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+    id, category, type, code, username, password, host, url, time, rang, enterpriseid,
+    is_del, create_by, create_date, last_by, last_date, water_username, water_password,
+    water_host, system, mode, factory, product_name, mde_id
+  </sql>
+    <select id="get" parameterType="com.dotop.smartwater.project.module.core.auth.dto.MdDockingDto"
+            resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from md_docking
+        where id = #{id,jdbcType=VARCHAR} and is_del = 0
+    </select>
+    <delete id="del" parameterType="com.dotop.smartwater.project.module.core.auth.dto.MdDockingDto">
+    delete from md_docking
+    where id = #{id,jdbcType=VARCHAR}
+  </delete>
+
+    <delete id="delByMdeId">
+    delete from md_docking where mde_id = #{mdeId,jdbcType=VARCHAR}
+  </delete>
+
+    <delete id="updateByMdeId">
+    update md_docking set is_del = #{isDel,jdbcType=BIT} where mde_id = #{mdeId,jdbcType=VARCHAR}
+  </delete>
+
+    <insert id="add" parameterType="com.dotop.smartwater.project.module.core.auth.dto.MdDockingDto">
+    insert into md_docking (id, category, type,
+      code, username, password,
+      host, url, time,
+      rang, enterpriseid, is_del,
+      create_by, create_date, last_by,
+      last_date, water_username, water_password,
+      water_host, system, mode,
+      factory, product_name, mde_id)
+    values (#{id,jdbcType=VARCHAR}, #{category,jdbcType=VARCHAR}, #{type,jdbcType=VARCHAR},
+      #{code,jdbcType=VARCHAR}, #{username,jdbcType=VARCHAR}, #{password,jdbcType=VARCHAR},
+      #{host,jdbcType=VARCHAR}, #{url,jdbcType=VARCHAR}, #{time,jdbcType=TIMESTAMP},
+      #{rang,jdbcType=INTEGER}, #{enterpriseid,jdbcType=VARCHAR}, #{isDel,jdbcType=BIT},
+      #{createBy,jdbcType=VARCHAR}, #{createDate,jdbcType=TIMESTAMP}, #{lastBy,jdbcType=VARCHAR},
+      #{lastDate,jdbcType=TIMESTAMP}, #{waterUsername,jdbcType=VARCHAR}, #{waterPassword,jdbcType=VARCHAR},
+      #{waterHost,jdbcType=VARCHAR}, #{system,jdbcType=VARCHAR}, #{mode,jdbcType=VARCHAR},
+      #{factory,jdbcType=VARCHAR}, #{productName,jdbcType=VARCHAR}, #{mdeId,jdbcType=VARCHAR})
+  </insert>
+    <update id="edit" parameterType="com.dotop.smartwater.project.module.core.auth.dto.MdDockingDto">
+        update md_docking
+        <set>
+            <if test="category != null and category != '' ">
+                category = #{category,jdbcType=VARCHAR},
+            </if>
+            <if test="type != null and type != '' ">
+                type = #{type,jdbcType=VARCHAR},
+            </if>
+            <if test="code != null and code != '' ">
+                code = #{code,jdbcType=VARCHAR},
+            </if>
+            <if test="username != null and username != '' ">
+                username = #{username,jdbcType=VARCHAR},
+            </if>
+            <if test="password != null and password != '' ">
+                password = #{password,jdbcType=VARCHAR},
+            </if>
+            <if test="host != null and host != '' ">
+                host = #{host,jdbcType=VARCHAR},
+            </if>
+            <if test="url != null and url != '' ">
+                url = #{url,jdbcType=VARCHAR},
+            </if>
+            <if test="time != null ">
+                time = #{time,jdbcType=TIMESTAMP},
+            </if>
+            <if test="rang != null">
+                rang = #{rang,jdbcType=INTEGER},
+            </if>
+            <if test="enterpriseid != null and enterpriseid != '' ">
+                enterpriseid = #{enterpriseid,jdbcType=VARCHAR},
+            </if>
+            <if test="isDel != null">
+                is_del = #{isDel,jdbcType=BIT},
+            </if>
+            <if test="lastBy != null and lastBy != '' ">
+                last_by = #{lastBy,jdbcType=VARCHAR},
+            </if>
+            <if test="lastDate != null">
+                last_date = #{lastDate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="waterUsername != null and waterUsername != '' ">
+                water_username = #{waterUsername,jdbcType=VARCHAR},
+            </if>
+            <if test="waterPassword != null and waterPassword != '' ">
+                water_password = #{waterPassword,jdbcType=VARCHAR},
+            </if>
+            <if test="waterHost != null and waterHost != '' ">
+                water_host = #{waterHost,jdbcType=VARCHAR},
+            </if>
+            <if test="system != null and system != '' ">
+                system = #{system,jdbcType=VARCHAR},
+            </if>
+            <if test="mode != null and mode != '' ">
+                mode = #{mode,jdbcType=VARCHAR},
+            </if>
+            <if test="factory != null and factory != '' ">
+                factory = #{factory,jdbcType=VARCHAR},
+            </if>
+            <if test="productName != null and productName != '' ">
+                product_name = #{productName,jdbcType=VARCHAR},
+            </if>
+            <if test="mdeId != null and mdeId != '' ">
+                mde_id = #{mdeId,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where id = #{id,jdbcType=VARCHAR}
+    </update>
+
+
+    <select id="list" parameterType="com.dotop.smartwater.project.module.core.auth.dto.MdDockingDto"
+            resultMap="BaseResultMap">
+        select a.*,b.name as enterpriseName
+        from md_docking a inner join enterprise b on a.enterpriseid = b.enterpriseid
+        <where>
+            <if test="enterpriseid != null and enterpriseid != ''">
+                and a.enterpriseid = #{enterpriseid}
+            </if>
+            <if test="category != null and category != ''">
+                and a.category = #{category}
+            </if>
+            <if test="type != null and type != ''">
+                and a.type = #{type}
+            </if>
+            <if test="mdeId != null and mdeId != ''">
+                and a.mde_id = #{mdeId}
+            </if>
+            <if test="factory != null and factory != ''">
+                and a.factory = #{factory}
+            </if>
+        </where>
+        order by a.id asc
+    </select>
+
+    <select id="getDictionaryList" resultType="com.dotop.smartwater.project.module.core.auth.vo.md.ConfigListBaseVo">
+        select child_name as name, child_id as value from dictionary_child where dictionary_id = #{dictionaryId}
+    </select>
+
+    <select id="getSystemList" resultType="com.dotop.smartwater.project.module.core.auth.vo.md.ConfigListBaseVo">
+        select child_name as name, child_value as value from dictionary_child where dictionary_id = #{dictionaryId}
+    </select>
+
+    <select id="getProductList" resultType="com.dotop.smartwater.project.module.core.auth.vo.md.ConfigListBaseVo">
+        select name, productId as value from store_product where enterpriseId = #{enterpriseId} and status = 2
+    </select>
+
+    <delete id="delByFactoryAndType" parameterType="com.dotop.smartwater.project.module.core.auth.dto.MdDockingDto">
+    delete from md_docking
+    where factory = #{factory} and `type` = #{type}
+  </delete>
+
+    <delete id="delByMdeIdAndFactory">
+    delete from md_docking where mde_id = #{mdeId,jdbcType=VARCHAR} and factory = #{factory}
+  </delete>
+</mapper>

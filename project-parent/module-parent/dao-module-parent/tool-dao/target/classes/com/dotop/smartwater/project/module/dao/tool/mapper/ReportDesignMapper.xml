@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.dotop.smartwater.project.module.dao.tool.IReportDesignDao">
+
+    <select id="list" resultType="com.dotop.smartwater.project.module.core.water.vo.ReportDesignVo">
+    	select a.reportDesignId, a.name, a.introduction, a.createUserId, b.name as createUsername, a.createTime 
+    	from report_design a, user b
+        <where>
+        	a.createUserId = b.userid
+        	<if test="enterpriseid != '28'">
+                AND a.enterpriseId = #{enterpriseid}
+            </if>
+            <if test="reportDesignId != null and reportDesignId != ''">
+                AND a.reportDesignId = #{reportDesignId}
+            </if>
+            <if test="name != null and name != ''">
+                AND a.name LIKE CONCAT(CONCAT('%',#{name},'%'))
+            </if>
+        </where>
+        <if test="ifSort">
+            ORDER BY a.createTime desc
+        </if>
+    </select>
+    
+    <select id="relationList" resultType="com.dotop.smartwater.project.module.core.water.vo.ReportRelationVo">
+    	select a.reportRelationId, a.reportDesignId, a.reportid, a.orderCode, a.size, a.height, b.reportname
+    	from report_relation a, report_bind b
+        <where>
+        	a.reportid = b.reportid and b.enterpriseid = #{enterpriseid}
+            <if test="reportDesignId != null and reportDesignId != ''">
+                AND a.reportDesignId = #{reportDesignId}
+            </if>
+        </where>
+        ORDER BY a.reportDesignId, orderCode ASC
+    </select>
+
+    <insert id="add">
+    	insert into report_design(reportDesignId, name, introduction, createUserId, createTime, enterpriseId)
+    	values(#{reportDesignId}, #{name}, #{introduction}, #{createUserId}, #{createTime}, #{enterpriseid})
+	</insert>
+	
+	<insert id="addRelations">
+        INSERT INTO report_relation(reportRelationId, reportDesignId, reportid, orderCode, size, height)
+        VALUES
+        <foreach collection="list" item="data" separator=",">
+      		(#{data.reportRelationId}, #{data.reportDesignId}, #{data.reportid}, #{data.orderCode}, #{data.size}, #{data.height})
+      	</foreach>
+     </insert>
+
+    <delete id="del">
+    	delete from report_design where reportDesignId = #{reportDesignId}
+	</delete>
+	
+	<delete id="deleteRelation">
+    	delete from report_relation where reportDesignId = #{reportDesignId}
+	</delete>
+
+    <select id="get" resultType="com.dotop.smartwater.project.module.core.water.vo.ReportDesignVo">
+        select a.reportDesignId, a.name, a.introduction, a.createUserId, b.name as createUsername, a.createTime 
+    	from report_design a, user b
+        <where>
+        	a.createUserId = b.userid
+            <if test="reportDesignId != null and reportDesignId != ''">
+                AND a.reportDesignId = #{reportDesignId}
+            </if>
+            <if test="name != null and name != ''">
+                AND a.name LIKE CONCAT(CONCAT('%',#{name},'%'))
+            </if>
+        </where>
+        limit 1
+    </select>
+    
+    <update id="edit">
+		update report_design
+		<set>
+            <if test="name != null and name != ''">
+            	name = #{name},
+            </if>
+            <if test="introduction != null and introduction != ''">
+	            introduction = #{introduction}
+	        </if>
+        </set>
+	    where reportDesignId = #{reportDesignId}
+	</update>
+	
+</mapper>

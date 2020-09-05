@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper
+	namespace="com.dotop.smartwater.project.module.dao.revenue.IInstallAppointmentDao">
+
+	<resultMap id="InstallAppointmentVo"
+		type="com.dotop.smartwater.project.module.core.water.vo.InstallAppointmentVo">
+		
+		<!-- 主键 -->
+		<result column="id" jdbcType="VARCHAR" property="id" />
+		<result column="number" jdbcType="VARCHAR" property="number" />
+		<result column="type_id" jdbcType="VARCHAR" property="typeId" />
+		<result column="type_name" jdbcType="VARCHAR" property="typeName" />
+		<result column="template_id" jdbcType="VARCHAR" property="templateId" />
+		<result column="template_name" jdbcType="VARCHAR" property="templateName" />
+		<result column="apply_id" jdbcType="VARCHAR" property="applyId" />
+		<result column="apply_name" jdbcType="VARCHAR" property="applyName" />
+		<result column="phone" jdbcType="VARCHAR" property="phone" />
+		<result column="addr" jdbcType="VARCHAR" property="addr" />
+		<result column="community_id" jdbcType="VARCHAR" property="communityId" />
+		<result column="community_name" jdbcType="VARCHAR" property="communityName" />
+		<result column="purpose_id" jdbcType="VARCHAR" property="purposeId" />
+		<result column="purpose_name" jdbcType="VARCHAR" property="purposeName" />
+		<result column="card_type" jdbcType="VARCHAR" property="cardType" />
+		<result column="card_id" jdbcType="VARCHAR" property="cardId" />
+		<result column="app_time" jdbcType="TIMESTAMP" property="appTime" />
+		<result column="status" jdbcType="VARCHAR" property="status" />
+		<result column="app_status" jdbcType="VARCHAR" property="appStatus" />
+		<result column="enterprise_id" jdbcType="VARCHAR" property="enterpriseid" />
+		<result column="create_by" jdbcType="VARCHAR" property="createBy" />
+		<result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
+		<result column="last_by" jdbcType="VARCHAR" property="lastBy" />
+		<result column="last_date" jdbcType="TIMESTAMP" property="lastDate" />
+		<result column="is_del" jdbcType="TINYINT" property="isDel"/>
+	</resultMap>
+	
+	
+	<resultMap id="InstallAppointmentDetailVo"
+		type="com.dotop.smartwater.project.module.core.water.vo.InstallAppointmentDetailVo">
+		
+		<!-- 主键 -->
+		<result column="date" jdbcType="VARCHAR" property="date" />
+		<result column="number" jdbcType="VARCHAR" property="number" />
+		<result column="appointmentDay" jdbcType="TINYINT" property="appointmentDay" />
+		<result column="appointmentNumber" jdbcType="TINYINT" property="appointmentNumber" />
+	</resultMap>
+
+	<select id="getList" resultMap="InstallAppointmentVo"
+		parameterType="java.util.Map">
+		SELECT * FROM install_appointment 
+		<where>
+		enterprise_id = #{enterpriseid} and is_del = 0 
+			<if test="number != null and number != ''">
+				and number like concat('%',#{number},'%')
+			</if>
+			<if test="phone != null and phone != ''">
+				and phone like concat('%',#{phone},'%')
+			</if>
+			<if test="typeId != null and typeId != ''">
+				and type_id = #{typeId}
+			</if>
+			<if test="applyId != null and applyId != ''">
+				and apply_id = #{applyId}
+			</if>
+		</where>
+		order by create_date desc
+		<if test="limit!=null and offset!=null">
+			LIMIT #{limit} OFFSET #{offset}
+		</if>
+	</select>
+	
+	<update id="setTemp">
+		UPDATE `install_appointment` SET `template_id`=#{templateId}, `template_name`=#{templateName}
+		, last_date=#{curr},last_by=#{userBy} WHERE enterprise_id = #{enterpriseid} and number = #{number}
+	</update>
+	
+	<update id="delete">
+		UPDATE `install_appointment` SET `is_del`=#{isDel,jdbcType=TINYINT}
+		, last_date=#{curr},last_by=#{userBy} WHERE enterprise_id = #{enterpriseid} and number = #{number}
+	</update>
+	
+	<update id="updateAppointmentStatus">
+		UPDATE `install_appointment` SET `status`=#{status}
+		, last_date=#{curr},last_by=#{userBy} WHERE enterprise_id = #{enterpriseid} and number = #{number}
+	</update>
+	
+	<update id="updateAppointment">
+		UPDATE `install_appointment` SET `community_id`=#{communityId} , community_name = #{communityName}
+		, last_date=#{curr},last_by=#{userBy} WHERE enterprise_id = #{enterpriseid} and number = #{number}
+	</update>
+	
+	<select id="get" resultMap="InstallAppointmentVo">
+		SELECT * FROM install_appointment where `number`= #{number} and is_del = 0 and enterprise_id = #{enterpriseid} 
+	</select>
+	
+	<select id="getAppointmentDetail" resultMap="InstallAppointmentDetailVo">
+		SELECT d.date , count(t.id) as number , #{appointmentNumber} as appointmentNumber FROM (
+			SELECT a.Date as date
+			FROM
+			  (SELECT curdate() + INTERVAL (a.a + (10 * b.a) + (100 * c.a)) DAY AS Date
+			   FROM
+			     (SELECT 0 AS a UNION ALL SELECT 1 UNION ALL SELECT 2 UNION ALL SELECT 3 UNION ALL SELECT 4 UNION ALL SELECT 5 UNION ALL SELECT 6
+			      UNION ALL SELECT 7 UNION ALL SELECT 8 UNION ALL SELECT 9) AS a CROSS
+			   JOIN
+			     (SELECT 0 AS a
+			      UNION ALL SELECT 1 UNION ALL SELECT 2 UNION ALL SELECT 3 UNION ALL SELECT 4 UNION ALL SELECT 5 UNION ALL SELECT 6 
+						UNION ALL SELECT 7 UNION ALL SELECT 8 UNION ALL SELECT 9) AS b CROSS
+			   JOIN
+			     (SELECT 0 AS a
+			      UNION ALL SELECT 1 UNION ALL SELECT 2 UNION ALL SELECT 3 UNION ALL SELECT 4 UNION ALL SELECT 5 UNION ALL SELECT 6
+			      UNION ALL SELECT 7 UNION ALL SELECT 8 UNION ALL SELECT 9) AS c) a
+			where a.Date between #{startDate} and #{endDate}
+			) d LEFT JOIN install_appointment t ON d.date = t.app_time and t.enterprise_id=#{enterpriseid}  and t.is_del = 0
+			GROUP BY d.date
+	</select>
+	
+	<select id="appointmentNumber" resultType="java.lang.Integer">
+		SELECT count(id) as count FROM install_appointment where app_time = #{appTime} and is_del = 0 and enterprise_id = #{enterpriseid}
+	</select>
+	
+	<select id="checkNohandles" resultType="java.lang.Integer">
+		SELECT count(id) as count FROM install_appointment where apply_id = #{applyId} and is_del = 0 and enterprise_id = #{enterpriseid} and `status` &lt; 630 and status != 2
+	</select>
+	
+	<insert id="generateAppointment">
+		INSERT INTO `install_appointment` (id,number,type_id,type_name,template_id,template_name,apply_id,apply_name,phone,
+		addr,community_id,community_name,purpose_id,purpose_name ,
+		card_type,card_id,app_time,status,app_status,enterprise_id,create_by,create_date)
+		VALUES (#{id}, #{number}, #{typeId}, #{typeName}, #{templateId}, #{templateName}, #{applyId}, #{applyName}, #{phone},
+		 #{addr} ,#{communityId},#{communityName},#{purposeId},#{purposeName},
+		 #{cardType}, #{cardId}, #{appTime}, #{status}, #{appStatus}, #{enterpriseid}, #{userBy}, #{curr})
+	</insert>
+	
+</mapper>

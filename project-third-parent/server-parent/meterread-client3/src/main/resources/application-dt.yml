@@ -1,0 +1,13 @@
+param.config.userName: chengburemote
+param.config.password: chengbu123456
+param.config.code: chengbu
+param.config.serverHost: http://chengbu.zhdt-tech.com/meter-server/
+
+druid.datasource-third.url: jdbc:sqlserver://localhost:1433; DatabaseName=Yuan_chen_sb_dt
+druid.datasource-third.username: sa
+druid.datasource-third.password: 12345678
+
+
+
+
+

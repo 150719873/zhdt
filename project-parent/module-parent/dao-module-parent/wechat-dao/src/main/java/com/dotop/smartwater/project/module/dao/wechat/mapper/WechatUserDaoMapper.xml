@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper
+	namespace="com.dotop.smartwater.project.module.dao.wechat.IWechatUserDao">
+
+    <select id="getAllOpenidByOwnerid" resultType="com.dotop.smartwater.project.module.core.third.vo.wechat.WechatOwnerVo">
+       select openid from wechat_owner where ownerid = #{ownerid}
+    </select>
+
+	<select id="getOwner"
+		resultType="com.dotop.smartwater.project.module.core.water.vo.OwnerVo">
+		SELECT o.*, d.water,d.devno, ow.openid, ow.isdefault
+		FROM `owner` o
+		LEFT JOIN `wechat_owner` ow ON o.ownerid = ow.ownerid
+		LEFT JOIN device
+		d ON o.devid = d.devid
+		<where>
+			<if test="openid != null and openid != '' ">
+				and ow.openid=#{openid}
+			</if>
+			<if test="ownerid != null and ownerid != '' ">
+				and o.ownerid=#{ownerid}
+			</if>
+		</where>
+
+	</select>
+
+	<select id="getOwnerList"
+		resultType="com.dotop.smartwater.project.module.core.water.vo.OwnerVo">
+		SELECT o.*,d.water,d.devno,ow.openid,ow.isdefault
+		FROM
+		`owner` o
+		LEFT JOIN `wechat_owner` ow
+		ON o.ownerid=ow.ownerid
+		LEFT JOIN
+		device d
+		ON o.devid=d.devid
+		WHERE o.enterpriseid=#{enterpriseid} AND
+		ow.openid=#{openid} and
+		o.status != 0
+		order by
+		ow.isdefault desc,ow.ownerid asc
+	</select>
+
+	<select id="getOwnerUserByMsg"
+		resultType="com.dotop.smartwater.project.module.core.water.vo.OwnerVo">
+		select * from owner o
+		where o.enterpriseid= #{enterpriseid}
+		AND
+		o.username=#{username} AND
+		(o.userno=#{usermsg} OR
+		o.userphone=#{usermsg} OR (o.cardtype=1 AND
+		o.cardid=#{usermsg}))
+	</select>
+
+	<update id="updateWechatIsdefault">
+		UPDATE `wechat_owner` SET isdefault=0 WHERE
+		openid=#{openid}
+	</update>
+
+	<insert id="blindOwner">
+		INSERT INTO `wechat_owner`(ownerid,openid,isdefault)
+		VALUES(#{ownerid},#{openid},#{isdefault})
+	</insert>
+
+	<update id="deleteOwnerBlind">
+		DELETE FROM `wechat_owner` WHERE openid=#{openid} AND
+		ownerid=#{ownerid}
+	</update>
+
+	<update id="updateDefaultBlindStatus">
+		UPDATE `wechat_owner` SET
+		isdefault=#{isDefaultStatus} WHERE
+		openid=#{openid} AND
+		ownerid=#{ownerid}
+	</update>
+
+	<update id="setIschargebacks">
+		UPDATE `owner` SET ischargebacks=#{ischargebacks}
+		WHERE ownerid=#{ownerid}
+	</update>
+
+
+</mapper>

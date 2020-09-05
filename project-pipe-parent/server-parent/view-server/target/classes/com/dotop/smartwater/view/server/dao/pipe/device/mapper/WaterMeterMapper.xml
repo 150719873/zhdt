@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.dotop.smartwater.view.server.dao.pipe.device.IWaterMeterDao">
+
+    <resultMap id="BaseResultMap"
+               type="com.dotop.pipe.core.vo.device.DevicePropertyVo">
+         <result column="quality_chlorine" jdbcType="VARCHAR" property="qualityChlorine"/>
+        <result column="quality_oxygen" jdbcType="VARCHAR" property="qualityOxygen"/>
+        <result column="quality_ph" jdbcType="VARCHAR" property="qualityPh"/>
+        <result column="quality_turbid" jdbcType="VARCHAR" property="qualityTurbid"/>
+        <result column="quality_tem_one" jdbcType="VARCHAR" property="qualityTemOne"/>
+    </resultMap>
+
+    <resultMap id="WorkOrderResultMap"
+               type="com.dotop.pipe.core.vo.workorder.WorkOrderVo">
+        <result column="record_data" jdbcType="VARCHAR" property="recordData"/>
+
+    </resultMap>
+
+    <select id="waterMeterData" resultMap="BaseResultMap">
+        SELECT quality_chlorine, quality_oxygen, quality_ph, quality_turbid, quality_tem_one FROM pls_device_data
+        <where>
+            <if test="deviceId != null and deviceId != ''">
+                and device_id = #{deviceId}
+            </if>
+            <if test="enterpriseId != null and enterpriseId != ''">
+                and enterprise_id = #{enterpriseId}
+            </if>
+        </where>
+    </select>
+
+    <select id="workOrderList" resultMap="WorkOrderResultMap">
+        SELECT record_data FROM pls_work_order
+        <where>
+            `status` = -2 AND record_data is NOT NULL
+            <if test="enterpriseId != null and enterpriseId != ''">
+                and enterprise_id = #{enterpriseId}
+            </if>
+        </where>
+    </select>
+
+</mapper>

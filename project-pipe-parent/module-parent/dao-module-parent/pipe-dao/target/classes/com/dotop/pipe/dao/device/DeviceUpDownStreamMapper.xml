@@ -1,0 +1,196 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.dotop.pipe.api.dao.device.IDeviceUpDownStreamDao">
+	<resultMap id="DeviceVoMap" type="com.dotop.pipe.core.vo.device.DeviceVo" >
+			<result column="device_id" jdbcType="VARCHAR" property="deviceId" />
+			<result column="upDownStreamId" jdbcType="VARCHAR" property="upDownStreamId" />
+		    <result column="code" jdbcType="VARCHAR" property="code" />
+		    <result column="name" jdbcType="VARCHAR" property="name" />
+		    <result column="des" jdbcType="VARCHAR" property="des" />
+		    <result column="alarmProperties" jdbcType="VARCHAR" property="alarmProperties" />
+		    <association property="area" javaType="com.dotop.pipe.core.vo.area.AreaModelVo">
+	            <result column="area_id" jdbcType="VARCHAR" property="areaId"/>
+	            <result column="area_code" jdbcType="VARCHAR" property="areaCode"/>
+	            <result column="area_name" jdbcType="VARCHAR" property="name"/>
+	            <result column="area_des" jdbcType="VARCHAR" property="des"/>
+	            <result column="area_color_num" jdbcType="VARCHAR" property="areaColorNum"/>
+	            <result column="area_scale" jdbcType="VARCHAR" property="scale"/>
+	        </association>
+		    <association property="product" javaType="com.dotop.pipe.core.vo.product.ProductVo">
+	            <result column="product_id" jdbcType="VARCHAR" property="productId"/>
+	            <result column="product_code" jdbcType="VARCHAR" property="code"/>
+	            <result column="product_name" jdbcType="VARCHAR" property="name"/>
+	            <result column="product_des" jdbcType="VARCHAR" property="des"/>
+	            <association property="category" javaType="com.dotop.pipe.core.vo.common.DictionaryVo">
+	                <result column="product_category_name" jdbcType="VARCHAR" property="name"/>
+	                <result column="product_category_val" jdbcType="VARCHAR" property="val"/>
+	            </association>
+	            <association property="type" javaType="com.dotop.pipe.core.vo.common.DictionaryVo">
+	                <result column="product_type_name" jdbcType="VARCHAR" property="name"/>
+	                <result column="product_type_val" jdbcType="VARCHAR" property="val"/>
+	            </association>
+            </association>
+		    <association property="deviceProperty" javaType="com.dotop.pipe.core.vo.device.DevicePropertyVo">
+				<result column="flw_measure" jdbcType="VARCHAR" property="flwMeasure"/>
+				<result column="flw_rate" jdbcType="VARCHAR" property="flwRate"/>
+				<result column="flw_total_value" jdbcType="VARCHAR" property="flwTotalValue"/>
+				<result column="pressure_value" jdbcType="VARCHAR" property="pressureValue"/>
+		</association>
+	 </resultMap>
+	 
+	 <resultMap id="DeviceUpDownMap" type="com.dotop.pipe.core.vo.device.DeviceUpDownStreamVo" >
+			<result column="childrenCount" jdbcType="VARCHAR" property="childrenCount" />
+		    <result column="parentCount" jdbcType="VARCHAR" property="parentCount" />
+		    <result column="upDownStreamId" jdbcType="VARCHAR" property="upDownStreamId" />
+			<association property="area" javaType="com.dotop.pipe.core.vo.area.AreaModelVo">
+	            <result column="area_id" jdbcType="VARCHAR" property="areaId"/>
+	            <result column="area_code" jdbcType="VARCHAR" property="areaCode"/>
+	            <result column="area_name" jdbcType="VARCHAR" property="name"/>
+	            <result column="area_des" jdbcType="VARCHAR" property="des"/>
+	            <result column="area_color_num" jdbcType="VARCHAR" property="areaColorNum"/>
+	            <result column="area_scale" jdbcType="VARCHAR" property="scale"/>
+	        </association>
+	        <association property="deviceVo" javaType="com.dotop.pipe.core.vo.device.DeviceVo">
+	              <result column="device_id" jdbcType="VARCHAR" property="deviceId" />
+	              <result column="code" jdbcType="VARCHAR" property="code" />
+		          <result column="name" jdbcType="VARCHAR" property="name" />
+	        </association>
+	 </resultMap>
+
+	<!-- 删除 -->
+	  <update id="del">
+		UPDATE pls_device_updown_stream
+		<trim prefix="set" suffixOverrides=",">
+			<if test="userBy != null and userBy != ''">
+				  last_by = #{userBy} ,
+			</if>
+			<if test="curr != null ">
+				  last_date = #{curr},
+			</if>
+			<if test="isDel != null  ">
+				  is_del = #{isDel} ,
+			</if>
+		</trim>
+		WHERE enterprise_id = #{enterpriseId}   
+		<if test="deviceId != null">
+		  AND device_id = #{deviceId}
+		</if>
+		<if test="id != null">
+		  AND id = #{id}
+		</if>
+	</update>
+
+	<update id="editAlarmProperty">
+         UPDATE pls_device_updown_stream
+		<trim prefix="set" suffixOverrides=",">
+			<if test="userBy != null and userBy != ''">
+				last_by = #{userBy} ,
+			</if>
+			<if test="curr != null ">
+				last_date = #{curr},
+			</if>
+			<if test="alarmProperties != null  ">
+				alarm_properties = #{alarmProperties} ,
+			</if>
+		</trim>
+		WHERE enterprise_id = #{enterpriseId} AND id = #{id}
+	</update>
+
+	<insert id="add">
+	   <if test="type != null and type == 'parent' ">
+			 INSERT INTO	pls_device_updown_stream
+				(id,device_id,parent_device_id,create_by,create_date,last_by,last_date,is_del,enterprise_id)
+				VALUE
+		   <foreach collection="parentDeviceIds"   item="ele" separator="," >
+				(UUID(),#{deviceId},#{ele},#{userBy},#{curr},#{userBy},#{curr},#{isDel},#{enterpriseId})
+		   </foreach>
+	   </if>
+	     <if test="type != null and type == 'child' ">
+			 INSERT INTO	pls_device_updown_stream
+				(id,device_id,parent_device_id,create_by,create_date,last_by,last_date,is_del,enterprise_id)
+				VALUE
+		   <foreach collection="parentDeviceIds"   item="ele" separator="," >
+				(UUID(),#{ele},#{deviceId},#{userBy},#{curr},#{userBy},#{curr},#{isDel},#{enterpriseId})
+		   </foreach>
+	   </if>  
+	</insert>
+	
+	<select id = "getParent" resultMap="DeviceVoMap" parameterType="java.util.Map">
+	    select a.id as upDownStreamId , b.device_id as device_id,b.`code` as `code` ,b.des as des , b.name as name,
+	     d.area_id as area_id ,d.area_code as area_code ,d.`name` as area_name,
+	      b.product_id,b.product_category,b.product_type
+        from pls_device_updown_stream as a join pls_device  as b on a.parent_device_id = b.device_id  
+          join pls_area as d on b.area_id = d.area_id  
+         <where>
+             a.device_id = #{deviceId}
+			<if test="enterpriseId != null and enterpriseId != ''">
+				AND a.enterprise_id=#{enterpriseId}
+				 AND b.enterprise_id=#{enterpriseId}
+			</if> 
+			<if test="isDel != null">
+				AND a.is_del=#{isDel}
+				AND b.is_del=#{isDel}
+			</if>
+        </where>
+	</select>
+	<select id = "getChild" resultMap="DeviceVoMap" parameterType="java.util.Map">
+	     select a.id as upDownStreamId , a.alarm_properties as alarmProperties,b.device_id as device_id,b.`code` as `code` ,b.des as des,b.name as name,
+	      d.area_id as area_id ,d.area_code as area_code ,d.`name` as area_name,
+	      b.product_id,b.product_category,b.product_type
+         from pls_device_updown_stream as a join pls_device  as b on a.device_id = b.device_id 
+         join pls_area as d on b.area_id = d.area_id  
+         <where>
+             a.parent_device_id = #{deviceId}
+			<if test="enterpriseId != null and enterpriseId != ''">
+				AND a.enterprise_id=#{enterpriseId}
+				 AND b.enterprise_id=#{enterpriseId}
+			</if> 
+			<if test="isDel != null">
+				AND a.is_del=#{isDel}
+				AND b.is_del=#{isDel}
+			</if> 
+        </where>
+	</select>
+	
+	
+	<select id = "list" resultMap="DeviceUpDownMap" >
+	
+	select count(DISTINCT dd.b_parent_device_id) as parentCount , count(DISTINCT dd.c_device_id) as  childrenCount , 
+	dd.a_code  as code, dd.a_name as name , dd.a_device_id as device_id ,
+      dd.d_area_id as area_id  , dd.d_area_code as area_code ,dd.d_area_name as area_name
+     from 
+       (
+		 select  b.parent_device_id as b_parent_device_id , c.device_id as c_device_id  ,a.device_id as a_device_id ,
+		 a.code as   a_code , a.name as a_name , a.product_category as a_product_category ,
+         d.area_id as d_area_id ,d.area_code as d_area_code ,d.`name` as d_area_name
+	    from pls_device as a 
+		left join  pls_device_updown_stream as b on a.device_id = b.device_id 
+		left join  pls_device_updown_stream as c on a.device_id = c.parent_device_id 
+		join pls_area as d on a.area_id = d.area_id 
+		where (b.parent_device_id is not null or c.device_id is not null ) and a.enterprise_id = #{enterpriseId} 
+		    <if test="isDel != null">
+				AND a.is_del=#{isDel}
+			</if> 
+			   <if test="name != null">
+				AND a.name LIKE concat('%',#{name},'%') 
+			</if> 
+			 <if test="code != null">
+				AND a.code LIKE concat('%',#{code},'%') 
+			</if> 
+			 <if test="areaId != null">
+				AND d.area_id=#{areaId}
+			</if> 
+       ) as dd
+       group by dd.a_device_id 
+	</select>
+
+
+	<select id="getForecast" resultMap="DeviceVoMap" >
+		  select a.device_id,a.alarm_properties as alarmProperties,b.flw_measure,b.flw_rate,b.pressure_value
+		  from pls_device_updown_stream  as a
+		  JOIN pls_device_data as  b on a.parent_device_id = b.device_id and b.is_del = 0 and a.is_del = 0
+		  WHERE a.device_id = #{deviceId} and a.alarm_properties is not null and a.enterprise_id = #{enterpriseId}
+		  LIMIT 1
+	</select>
+
+</mapper>

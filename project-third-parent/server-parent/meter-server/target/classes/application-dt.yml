@@ -1,0 +1,20 @@
+druid:
+  datasource-meter:
+    name: datasource-meter
+    url: jdbc:mysql://rm-wz91y5du7xqr0aot9.mysql.rds.aliyuncs.com:3306/water?useSSL=false&useUnicode=true&characterEncoding=utf-8&useLegacyDatetimeCode=false&useTimezone=true&serverTimezone=GMT%2B8&allowMultiQueries=true
+    username: water
+    password: 02f471eFBb6
+
+redis:
+  cache:
+    database: 30
+    host: r-wz9ewh0547c5u7eugl.redis.rds.aliyuncs.com
+    password: 6DCC6abA6CcE7
+    port: 6379
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://localhost:8761/eureka/
+
+combine.file.path: /opt/smartwater/meter-server/file/combine/App.bin

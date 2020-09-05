@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dotop.smartwater.project.module.dao.workcenter.IProcessDbDao">
+
+  <insert id="add">
+		INSERT INTO wc_process_db
+		(id,process_id,process_form_id,name,load_type,load_status,sql_str,db_id
+		,is_del,create_by,create_date,last_by,last_date,enterpriseid)
+		VALUES
+		(#{id},#{processId},#{processFormId},#{name},#{loadType},#{loadStatus},#{sqlStr},#{dbId}
+		,#{isDel},#{userBy},#{curr},#{userBy},#{curr},#{enterpriseid})
+	</insert>
+    
+</mapper>

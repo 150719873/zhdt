@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper
+	namespace="com.dotop.smartwater.project.module.dao.revenue.IInstallAppointmentAcceptanceDao">
+
+	<resultMap id="InstallAcceptanceVo"
+		type="com.dotop.smartwater.project.module.core.water.vo.InstallAcceptanceVo">
+		
+		<!-- 主键 -->
+		<result column="id" jdbcType="VARCHAR" property="id" />
+		<result column="number" jdbcType="VARCHAR" property="number" />
+		<result column="accept_id" jdbcType="VARCHAR" property="acceptId" />
+		<result column="accept_name" jdbcType="VARCHAR" property="acceptName" />
+		<result column="end_time" jdbcType="VARCHAR" property="endTime" />
+		<result column="place" jdbcType="VARCHAR" property="place" />
+		<result column="accept_time" jdbcType="VARCHAR" property="acceptTime" />
+		<result column="status" jdbcType="VARCHAR" property="status" />
+		<result column="submit_status" jdbcType="VARCHAR" property="submitStatus" />
+		<result column="addr" jdbcType="VARCHAR" property="addr" />
+		<result column="explan" jdbcType="VARCHAR" property="explan"/>
+		<result column="upload_file" jdbcType="VARCHAR" property="uploadFile"/>
+		<result column="enterprise_id" jdbcType="VARCHAR" property="enterpriseid" />
+		<result column="create_by" jdbcType="VARCHAR" property="createBy" />
+		<result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
+		<result column="last_by" jdbcType="VARCHAR" property="lastBy" />
+		<result column="last_date" jdbcType="TIMESTAMP" property="lastDate" />
+		
+		<result column="purpose_id" jdbcType="VARCHAR" property="purposeId" />
+		<result column="purpose_name" jdbcType="VARCHAR" property="purposeName" />
+		<result column="community_id" jdbcType="VARCHAR" property="communityId" />
+		<result column="community_name" jdbcType="VARCHAR" property="communityName" />
+		<result column="phone" jdbcType="VARCHAR" property="phone" />
+		<result column="apply_name" jdbcType="VARCHAR" property="applyName" />
+		<result column="type_id" jdbcType="VARCHAR" property="typeId" />
+		<result column="type_name" jdbcType="VARCHAR" property="typeName" />
+	</resultMap>
+
+	
+	<select id="getList" resultMap="InstallAcceptanceVo">
+		SELECT 
+			ac.* ,a.purpose_id , a.purpose_name , a.community_id , a.community_name ,a.phone , a.apply_name , a.type_id ,a.type_name
+		FROM install_acceptance ac LEFT JOIN install_appointment a ON ac.`number` = a.`number`
+		<where>
+		ac.enterprise_id = #{enterpriseid} and ac.accept_id = #{acceptId}
+			<if test="submitStatus != null and submitStatus != ''">
+				and ac.submit_status = #{submitStatus}
+			</if>
+			<if test="status != null and status != ''">
+				and ac.`status` = #{status}
+			</if>
+		</where>
+		order by ac.create_date desc
+		<if test="limit!=null and offset!=null">
+			LIMIT #{limit} OFFSET #{offset}
+		</if>
+	</select>
+	
+
+
+	<select id="get" resultMap="InstallAcceptanceVo">
+		SELECT * FROM install_acceptance where number = #{number} and enterprise_id = #{enterpriseid} 
+	</select>
+	
+	<insert id="submitAccept">
+		 INSERT INTO `install_acceptance` (id,number,accept_id,accept_name,end_time,addr,
+		 status,accept_time,`place`,`explan`,submit_status,upload_file,
+		 enterprise_id,create_by,create_date)
+		VALUES (#{id}, #{number}, #{acceptId}, #{acceptName}, #{endTime}, #{addr}, 
+		#{status}, #{acceptTime}, #{place},#{explan}, #{submitStatus}, #{uploadFile},
+		#{enterpriseid}, #{userBy}, #{curr})
+	</insert>
+	
+	<update id="updateAccept">
+		UPDATE `install_acceptance` SET 
+		accept_id=#{acceptId} , `accept_name`=#{acceptName} , `end_time`=#{endTime} ,`addr` = #{addr} , 
+		`status` = #{status} ,`accept_time`=#{acceptTime}, `place`=#{place} ,`explan` = #{explan}, submit_status=#{submitStatus} ,upload_file=#{uploadFile},
+		last_date=#{curr},last_by=#{userBy} 
+		WHERE enterprise_id = #{enterpriseid} and number=#{number}
+	</update>
+	
+	<update id="accept">
+		UPDATE `install_acceptance` SET status=#{status} ,submit_status=#{submitStatus}, `accept_time`=#{acceptTime} , `place`=#{place} ,
+		`explan` = #{explan}, upload_file=#{uploadFile}, last_date=#{curr},last_by=#{userBy} 
+		WHERE enterprise_id = #{enterpriseid} and number=#{number}
+	</update>
+	
+</mapper>

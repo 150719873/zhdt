@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dotop.smartwater.project.module.dao.device.IDeviceBookManagementDao">
+    <resultMap id="BaseResultMap"
+               type="com.dotop.smartwater.project.module.core.water.vo.DeviceBookManagementVo">
+        <id column="book_id" jdbcType="VARCHAR" property="bookId"/>
+        <result column="book_num" jdbcType="VARCHAR" property="bookNum"/>
+        <result column="book_user_id" jdbcType="VARCHAR" property="bookUserId"/>
+        <result column="book_type" jdbcType="VARCHAR" property="bookType"/>
+        <result column="create_by" jdbcType="VARCHAR" property="createBy"/>
+        <result column="create_date" jdbcType="TIMESTAMP" property="createDate"/>
+        <result column="last_by" jdbcType="VARCHAR" property="lastBy"/>
+        <result column="last_date" jdbcType="TIMESTAMP" property="lastDate"/>
+        <result column="is_del" jdbcType="TINYINT" property="isDel"/>
+        <result column="enterpriseid" jdbcType="VARCHAR" property="enterpriseid"/>
+
+        <result column="name" jdbcType="VARCHAR" property="userName"/>
+        <result column="child_name" jdbcType="VARCHAR" property="childName"/>
+        <result column="worknum" jdbcType="VARCHAR" property="workNum"/>
+    </resultMap>
+
+    <select id="get" parameterType="java.lang.String" resultMap="BaseResultMap">
+        SELECT a.last_date, a.book_id, a.book_num, a.book_type, c.`name` as last_by, d.child_name
+        FROM `device_book_management` a
+        left JOIN `user` c on a.last_by = c.userid
+        left JOIN `dictionary_child` d on a.book_type = d.child_id
+        where book_id = #{bookId,jdbcType=VARCHAR}
+        <if test="enterpriseid != null and enterpriseid != '' ">
+            and a.enterpriseid = #{enterpriseid,jdbcType=VARCHAR}
+        </if>
+    </select>
+
+    <select id="list" parameterType="java.lang.String" resultMap="BaseResultMap">
+        SELECT a.last_date, a.book_id, a.book_num, a.book_type, c.`name` as last_by, d.child_name
+        FROM `device_book_management` a
+        left JOIN `user` c on a.last_by = c.userid
+        left JOIN `dictionary_child` d on a.book_type = d.child_id
+        <where>
+            <if test="bookNum != null and bookNum != '' ">
+                and a.book_num = #{bookNum}
+            </if>
+            <if test="bookType != null and bookType != '' ">
+                and a.book_type = #{bookType,jdbcType=VARCHAR}
+            </if>
+            <if test="enterpriseid != null and enterpriseid != '' ">
+                and a.enterpriseid = #{enterpriseid,jdbcType=VARCHAR}
+            </if>
+        </where>
+        order by a.last_date desc
+    </select>
+
+    <delete id="del" parameterType="java.lang.String">
+        delete from device_book_management
+        where book_id = #{bookId,jdbcType=VARCHAR}
+        <if test="enterpriseid != null and enterpriseid != '' ">
+            and enterpriseid = #{enterpriseid,jdbcType=VARCHAR}
+        </if>
+    </delete>
+
+    <insert id="add" parameterType="com.dotop.smartwater.project.module.core.water.dto.DeviceBookManagementDto">
+	    insert into device_book_management (book_id, book_num, 
+	      book_type, create_by, 
+	      create_date, last_by, last_date, 
+	      is_del, enterpriseid)
+	    values (#{bookId,jdbcType=VARCHAR}, #{bookNum,jdbcType=VARCHAR}, 
+	      #{bookType,jdbcType=VARCHAR}, #{createBy,jdbcType=VARCHAR}, 
+	      #{createDate,jdbcType=TIMESTAMP}, #{lastBy,jdbcType=VARCHAR}, #{lastDate,jdbcType=TIMESTAMP}, 
+	      #{isDel,jdbcType=TINYINT},#{enterpriseid})
+  	</insert>
+
+    <update id="edit" parameterType="com.dotop.smartwater.project.module.core.water.dto.DeviceBookManagementDto">
+        update device_book_management
+        <set>
+            <if test="bookType != null and bookType != '' ">
+                book_type = #{bookType,jdbcType=VARCHAR},
+            </if>
+            <if test="lastBy != null and lastBy != '' ">
+                last_by = #{lastBy,jdbcType=VARCHAR},
+            </if>
+            <if test="lastDate != null">
+                last_date = #{lastDate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="isDel != null and isDel != '' ">
+                is_del = #{isDel,jdbcType=TINYINT},
+            </if>
+        </set>
+        where book_id = #{bookId,jdbcType=VARCHAR}
+        <if test="enterpriseid != null and enterpriseid != '' ">
+            and enterpriseid = #{enterpriseid,jdbcType=VARCHAR}
+        </if>
+    </update>
+
+    <select id="findReadersbyAreas" resultType="java.lang.String">
+        select k.name from device_book_bind u
+        INNER JOIN `user` k on u.book_user_id = k.userid
+        where u.book_num in (
+        select a.book_num from `owner` a
+        <where>
+            <if test="list != null">
+                a.communityid in
+                <foreach collection="list" item="communityid" index="index"
+                         open="(" close=")" separator=",">
+                    #{communityid}
+                </foreach>
+            </if>
+            and u.enterpriseid = #{enterpriseid}
+            and a.book_num is not null GROUP BY a.book_num
+        </where>
+        )
+        GROUP BY u.book_user_id
+    </select>
+    
+    <select id="judgeIfExistWorker" resultType="java.lang.Integer">
+    	select count(*) from device_book_bind a left join device_book_management b on a.book_num = b.book_num 
+    	where b.book_id = #{bookId} and b.enterpriseid = #{enterpriseid}
+    </select>
+    
+    <select id="judgeIfExistOwner" resultType="java.lang.Integer">
+    	select count(*) from `owner` a left join device_book_management b on a.book_num = b.book_num 
+    	where b.book_id = #{bookId} and b.enterpriseid = #{enterpriseid} and a.enterpriseid = #{enterpriseid}
+    </select>
+
+    <select id="getAreaIdsByUserid" resultType="java.lang.String">
+       select communityid from `owner`
+        where enterpriseid = #{enterpriseid} and book_num in  (select book_num
+        from device_book_bind where book_user_id = #{userid}
+        GROUP BY book_num)
+        GROUP BY communityid;
+    </select>
+</mapper>

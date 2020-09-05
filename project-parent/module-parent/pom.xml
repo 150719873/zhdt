@@ -1,0 +1,36 @@
+<?xml version="1.0"?>
+<project
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
+	xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>com.dotop.smartwater.project</groupId>
+		<artifactId>project-parent</artifactId>
+		<version>3.0.0-SNAPSHOT</version>
+	</parent>
+	<groupId>com.dotop.smartwater.project.module</groupId>
+	<artifactId>module-parent</artifactId>
+	<name>module-parent</name>
+	<url>http://maven.apache.org</url>
+	<packaging>pom</packaging>
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+	</properties>
+	<dependencies>
+		<dependency>
+			<groupId>com.dotop.smartwater.dependence</groupId>
+			<artifactId>dependence-core</artifactId>
+			<scope>provided</scope>
+		</dependency>
+	</dependencies>
+	<modules>
+		<module>api-module-parent</module>
+		<module>cache-module-parent</module>
+		<module>core-module-parent</module>
+		<module>dao-module-parent</module>
+		<module>service-module-parent</module>
+		<module>client-module-parent</module>
+	</modules>
+</project>

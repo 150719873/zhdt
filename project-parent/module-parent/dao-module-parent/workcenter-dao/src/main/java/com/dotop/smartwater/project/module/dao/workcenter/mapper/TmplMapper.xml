@@ -1,0 +1,372 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dotop.smartwater.project.module.dao.workcenter.ITmplDao">
+
+   <resultMap id="WorkCenterTmplVoMap" type="com.dotop.smartwater.project.module.core.water.vo.WorkCenterTmplVo">
+		<result column="id" jdbcType="VARCHAR" property="id" />
+		<result column="code" jdbcType="VARCHAR" property="code" />
+		<result column="name" jdbcType="VARCHAR" property="name" />
+		<result column="desc" jdbcType="VARCHAR" property="desc" />
+		<result column="if_effect" jdbcType="VARCHAR" property="ifEffect" />
+		<result column="last_by" jdbcType="VARCHAR" property="lastBy" />
+		<result column="last_date" jdbcType="VARCHAR" property="lastDate" />
+		<result column="create_by" jdbcType="VARCHAR" property="createBy" />
+		<result column="create_date" jdbcType="VARCHAR" property="createDate" />
+		<result column="enterpriseid" jdbcType="VARCHAR" property="enterpriseid" />
+		<association property="form" javaType="com.dotop.smartwater.project.module.core.water.vo.WorkCenterFormVo">
+			<result column="form_id" jdbcType="VARCHAR" property="id" /> 
+			<result column="form_name" jdbcType="VARCHAR" property="name" /> 
+			<result column="form_body" jdbcType="VARCHAR" property="body" />
+			<result column="form_app_body" jdbcType="VARCHAR" property="appBody" />
+			<result column="form_body_map" property="bodyMap" />
+			<collection property="dbs" ofType="com.dotop.smartwater.project.module.core.water.vo.WorkCenterDbVo">
+				<result column="db_id" jdbcType="VARCHAR" property="id" />
+				<result column="db_name" jdbcType="VARCHAR" property="name" /> 
+				<result column="db_load_type" jdbcType="VARCHAR" property="loadType" /> 
+				<result column="db_load_status" jdbcType="VARCHAR" property="loadStatus" /> 
+				<result column="db_sql_str" jdbcType="VARCHAR" property="sqlStr" /> 
+				<result column="db_if_effect" jdbcType="VARCHAR" property="ifEffect" />
+				<collection property="dbFields" ofType="com.dotop.smartwater.project.module.core.water.vo.WorkCenterDbFieldVo">
+					<result column="field_id" jdbcType="VARCHAR" property="id" /> 
+					<result column="field_attribute" jdbcType="VARCHAR" property="attribute" /> 
+					<result column="field_name" jdbcType="VARCHAR" property="name" />
+					<result column="field_type" jdbcType="VARCHAR" property="fieldType" /> 
+					<association property="typeDictChild" javaType="com.dotop.smartwater.project.module.core.water.vo.DictionaryChildVo">
+						<result column="field_type_dict_child_id" jdbcType="VARCHAR" property="childId" />
+					</association>
+					<association property="contentDict" javaType="com.dotop.smartwater.project.module.core.water.vo.DictionaryVo">
+						<result column="field_content_dict_id" jdbcType="VARCHAR" property="dictionaryId" />
+					</association>
+					<association property="relationDictChild" javaType="com.dotop.smartwater.project.module.core.water.vo.DictionaryChildVo">
+						<result column="field_relation_dict_child_id" jdbcType="VARCHAR" property="childId" />
+					</association>
+				</collection>
+			</collection>
+		</association>
+		<collection property="tmplNodes" ofType="com.dotop.smartwater.project.module.core.water.vo.WorkCenterTmplNodeVo">
+			<result column="node_id" property="id" /> 
+			<result column="node_name" property="name" /> 
+			<result column="node_type" property="type" />
+			<result column="node_sort" property="sort" /> 
+			<result column="node_parent_id" property="parentId" /> 
+			<result column="node_handlers" property="handlers" /> 
+			<result column="node_carbon_copyers" property="carbonCopyers" /> 
+			<result column="node_handler_roles" property="handlerRoles" /> 
+			<result column="node_carbon_copyer_roles" property="carbonCopyerRoles" /> 
+			<result column="node_if_verify" property="ifVerify" /> 
+			<result column="node_verify_tmpl_node_id" property="verifyTmplNodeId" /> 
+			<result column="node_no_verify_tmpl_node_id" property="noVerifyTmplNodeId" /> 
+			<result column="node_if_notice" property="ifNotice" /> 
+			<result column="node_noticers" property="noticers" /> 
+			<result column="node_noticer_roles" property="noticerRoles" /> 
+			<result column="node_if_update" property="ifUpdate" /> 
+			<result column="node_if_photo" property="ifPhoto" /> 
+			<result column="node_photo_num" property="photoNum" /> 
+			<result column="node_if_upload" property="ifUpload" /> 
+			<result column="node_upload_num" property="uploadNum" /> 
+			<result column="node_if_opinion" property="ifOpinion" />
+			<result column="node_opinion_num" property="opinionNum" />
+			<association property="handleDict" javaType="com.dotop.smartwater.project.module.core.water.vo.DictionaryVo">
+				<result column="node_handle_dict_id" jdbcType="VARCHAR" property="dictionaryId" /> 
+			</association>
+			<association property="updateDictChild" javaType="com.dotop.smartwater.project.module.core.water.vo.DictionaryChildVo">
+				<result column="node_update_dict_child_id" jdbcType="VARCHAR" property="childId" />
+			</association>
+		</collection>
+	</resultMap>
+
+	<resultMap id="WorkCenterTmplVoMap2" type="com.dotop.smartwater.project.module.core.water.vo.WorkCenterTmplVo">
+		<result column="id" jdbcType="VARCHAR" property="id" />
+		<result column="code" jdbcType="VARCHAR" property="code" />
+		<result column="name" jdbcType="VARCHAR" property="name" />
+		<result column="desc" jdbcType="VARCHAR" property="desc" />
+		<result column="if_effect" jdbcType="VARCHAR" property="ifEffect" />
+		<result column="last_by" jdbcType="VARCHAR" property="lastBy" />
+		<result column="last_date" jdbcType="VARCHAR" property="lastDate" />
+		<result column="create_by" jdbcType="VARCHAR" property="createBy" />
+		<result column="create_date" jdbcType="VARCHAR" property="createDate" />
+		<result column="enterpriseid" jdbcType="VARCHAR" property="enterpriseid" />
+		<association property="form" javaType="com.dotop.smartwater.project.module.core.water.vo.WorkCenterFormVo">
+			<result column="form_id" jdbcType="VARCHAR" property="id" />
+			<result column="form_name" jdbcType="VARCHAR" property="name" />
+			<result column="form_body" jdbcType="VARCHAR" property="body" />
+			<result column="form_app_body" jdbcType="VARCHAR" property="appBody" />
+			<result column="form_body_map" property="bodyMap" />
+			<collection property="dbs" ofType="com.dotop.smartwater.project.module.core.water.vo.WorkCenterDbVo">
+				<result column="db_id" jdbcType="VARCHAR" property="id" />
+				<result column="db_name" jdbcType="VARCHAR" property="name" />
+				<result column="db_load_type" jdbcType="VARCHAR" property="loadType" />
+				<result column="db_load_status" jdbcType="VARCHAR" property="loadStatus" />
+				<result column="db_sql_str" jdbcType="VARCHAR" property="sqlStr" />
+				<result column="db_if_effect" jdbcType="VARCHAR" property="ifEffect" />
+				<collection property="dbFields" ofType="com.dotop.smartwater.project.module.core.water.vo.WorkCenterDbFieldVo">
+					<result column="field_id" jdbcType="VARCHAR" property="id" />
+					<result column="field_attribute" jdbcType="VARCHAR" property="attribute" />
+					<result column="field_name" jdbcType="VARCHAR" property="name" />
+					<result column="field_type" jdbcType="VARCHAR" property="fieldType" />
+					<association property="typeDictChild" javaType="com.dotop.smartwater.project.module.core.water.vo.DictionaryChildVo">
+						<result column="field_type_dict_child_id" jdbcType="VARCHAR" property="childId" />
+					</association>
+					<association property="contentDict" javaType="com.dotop.smartwater.project.module.core.water.vo.DictionaryVo">
+						<result column="field_content_dict_id" jdbcType="VARCHAR" property="dictionaryId" />
+					</association>
+					<association property="relationDictChild" javaType="com.dotop.smartwater.project.module.core.water.vo.DictionaryChildVo">
+						<result column="field_relation_dict_child_id" jdbcType="VARCHAR" property="childId" />
+					</association>
+				</collection>
+			</collection>
+		</association>
+		<collection property="nodes" ofType="com.dotop.smartwater.project.module.core.water.vo.WorkCenterTmplNodePointVo">
+			<result column="n_id" jdbcType="VARCHAR" property="id"/>
+			<result column="n_color" jdbcType="VARCHAR" property="color"/>
+			<result column="n_index" jdbcType="VARCHAR" property="index"/>
+			<result column="n_label" jdbcType="VARCHAR" property="label"/>
+			<result column="n_shape" jdbcType="VARCHAR" property="shape"/>
+			<result column="n_size" jdbcType="VARCHAR" property="size"/>
+			<result column="n_type" jdbcType="VARCHAR" property="type"/>
+			<result column="n_x" jdbcType="VARCHAR" property="x"/>
+			<result column="n_y" jdbcType="VARCHAR" property="y"/>
+			<result column="n_node_id" jdbcType="VARCHAR" property="nodeId"/>
+			<result column="n_tmpl_id" jdbcType="VARCHAR" property="tmplId"/>
+			<result column="n_enterpriseid" jdbcType="VARCHAR" property="enterpriseid"/>
+			<association property="params" javaType="com.dotop.smartwater.project.module.core.water.vo.WorkCenterTmplNodeVo">
+				<result column="p_id" jdbcType="VARCHAR" property="id"/>
+				<result column="p_name" jdbcType="VARCHAR" property="name"/>
+				<result column="p_desc" jdbcType="VARCHAR" property="desc"/>
+				<result column="p_type" jdbcType="VARCHAR" property="type"/>
+				<result column="p_sort" jdbcType="VARCHAR" property="sort"/>
+				<result column="p_tmpl_id" jdbcType="VARCHAR" property="tmplId"/>
+				<result column="p_parent_id" jdbcType="VARCHAR" property="parentId"/>
+				<result column="p_handlers" jdbcType="VARCHAR" property="handlers"/>
+				<result column="p_carbon_copyers" jdbcType="VARCHAR" property="carbonCopyers"/>
+				<result column="p_handler_roles" jdbcType="VARCHAR" property="handlerRoles"/>
+				<result column="p_carbon_copyer_roles" jdbcType="VARCHAR" property="carbonCopyerRoles"/>
+				<result column="p_if_verify" jdbcType="VARCHAR" property="ifVerify"/>
+				<result column="p_verify_tmpl_node_id" jdbcType="VARCHAR" property="verifyTmplNodeId"/>
+				<result column="p_no_verify_tmpl_node_id" jdbcType="VARCHAR" property="noVerifyTmplNodeId"/>
+				<result column="p_if_notice" jdbcType="VARCHAR" property="ifNotice"/>
+				<result column="p_noticers" jdbcType="VARCHAR" property="noticers"/>
+				<result column="p_noticer_roles" jdbcType="VARCHAR" property="noticerRoles"/>
+				<result column="p_if_update" jdbcType="VARCHAR" property="ifUpdate"/>
+				<result column="p_if_photo" jdbcType="VARCHAR" property="ifPhoto"/>
+				<result column="p_photo_num" jdbcType="VARCHAR" property="photoNum"/>
+				<result column="p_if_upload" jdbcType="VARCHAR" property="ifUpload"/>
+				<result column="p_upload_num" jdbcType="VARCHAR" property="uploadNum"/>
+				<result column="p_if_opinion" jdbcType="VARCHAR" property="ifOpinion"/>
+				<result column="p_opinion_num" jdbcType="VARCHAR" property="opinionNum"/>
+				<result column="p_last_by" jdbcType="VARCHAR" property="lastBy"/>
+				<result column="p_last_date" jdbcType="VARCHAR" property="lastDate"/>
+				<result column="p_create_by" jdbcType="VARCHAR" property="createBy"/>
+				<result column="p_create_date" jdbcType="VARCHAR" property="createDate"/>
+				<result column="p_enterpriseid" jdbcType="VARCHAR" property="enterpriseid"/>
+				<association property="handleDict"
+							 javaType="com.dotop.smartwater.project.module.core.water.vo.DictionaryVo">
+					<result column="p_handle_dict_id" jdbcType="VARCHAR" property="dictionaryId"/>
+				</association>
+				<association property="updateDictChild"
+							 javaType="com.dotop.smartwater.project.module.core.water.vo.DictionaryChildVo">
+					<result column="p_update_dict_child_id" jdbcType="VARCHAR" property="childId"/>
+				</association>
+			</association>
+		</collection>
+		<collection property="edges" ofType="com.dotop.smartwater.project.module.core.water.vo.WorkCenterTmplNodeEdgeVo">
+			<result column="e_id" jdbcType="VARCHAR" property="id"/>
+			<result column="e_index" jdbcType="VARCHAR" property="index"/>
+			<result column="e_label" jdbcType="VARCHAR" property="label"/>
+			<result column="e_shape" jdbcType="VARCHAR" property="shape"/>
+			<result column="e_color" jdbcType="VARCHAR" property="color"/>
+			<result column="e_type" jdbcType="VARCHAR" property="type"/>
+			<result column="e_source" jdbcType="VARCHAR" property="source"/>
+			<result column="e_source_anchor" jdbcType="VARCHAR" property="sourceAnchor"/>
+			<result column="e_target" jdbcType="VARCHAR" property="target"/>
+			<result column="e_target_anchor" jdbcType="VARCHAR" property="targetAnchor"/>
+			<result column="e_tmpl_id" jdbcType="VARCHAR" property="tmplId"/>
+			<result column="e_enterpriseid" jdbcType="VARCHAR" property="enterpriseid"/>
+		</collection>
+	</resultMap>
+
+	<select id="list" resultMap="WorkCenterTmplVoMap">
+		SELECT a.id,a.code,a.name,a.desc,a.form_id,a.if_effect
+		,a.is_del,a.create_by,a.create_date,a.last_by,a.last_date,a.enterpriseid
+		<!-- ,b.id AS node_id -->
+		,c.id AS form_id,c.name AS form_name
+        FROM wc_tmpl AS a 
+		<!-- LEFT JOIN wc_tmpl_node AS b ON a.id=b.tmpl_id AND a.is_del=#{isDel} AND b.is_del=#{isDel} -->
+		LEFT JOIN wc_form AS c ON a.form_id=c.id AND a.is_del=#{isDel} AND c.is_del=#{isDel}
+		<where>
+			<if test="enterpriseid != null and enterpriseid != ''">
+				AND a.enterpriseid=#{enterpriseid}
+			</if>
+			<if test="isDel != null">
+				AND a.is_del=#{isDel}
+			</if>
+			<if test="name != null and name != ''">
+				AND a.name LIKE CONCAT(CONCAT('%',#{name},'%'))
+			</if>
+			<if test="code != null and code != ''">
+				AND a.code LIKE CONCAT(CONCAT('%',#{code},'%'))
+			</if>
+			<if test="ifEffect != null and ifEffect != ''">
+				AND a.if_effect=#{ifEffect}
+			</if>
+			<if test="form != null and form.id != ''">
+				AND c.id=#{form.id}
+			</if>
+		</where>
+		<if test="ifSort">
+			ORDER BY a.last_date DESC
+		</if>
+		<if test="limit!=null and offset!=null">
+			LIMIT #{limit} OFFSET #{offset}
+		</if>
+	</select>
+	
+	<select id="listCount" resultType="java.lang.Integer">
+		SELECT count(distinct a.id)
+        FROM wc_tmpl AS a 
+		<!-- LEFT JOIN wc_tmpl_node AS b ON a.id=b.tmpl_id AND a.is_del=#{isDel} AND b.is_del=#{isDel} -->
+		JOIN wc_form AS c ON a.form_id=c.id AND a.is_del=#{isDel} AND c.is_del=#{isDel}
+		<where>
+			<if test="enterpriseid != null and enterpriseid != ''">
+				AND a.enterpriseid=#{enterpriseid}
+			</if>
+			<if test="isDel != null">
+				AND a.is_del=#{isDel}
+			</if>
+			<if test="ifEffect != null and ifEffect != ''">
+				AND a.if_effect=#{ifEffect}
+			</if>
+		</where>
+	</select>
+
+	<select id="get" resultMap="WorkCenterTmplVoMap2">
+		SELECT a.id,a.code,a.name,a.desc,a.form_id,a.if_effect
+		,a.is_del,a.create_by,a.create_date,a.last_by,a.last_date,a.enterpriseid
+
+		,n.id as n_id,n.color as n_color,n.index as n_index,n.label as n_label,n.shape as n_shape,n.size as n_size,n.type as n_type,n.x as n_x,n.y as n_y,n.tmpl_id as n_tmpl_id,n.node_id as n_node_id,n.enterpriseid as n_enterpriseid
+
+		,p.id as p_id,p.name as p_name,p.`desc` as p_desc,p.type as p_type,p.sort as p_sort,p.tmpl_id as p_tmpl_id,p.parent_id as p_parent_id,p.handlers as p_handlers,p.carbon_copyers as p_carbon_copyers,p.handler_roles as p_handler_roles,p.carbon_copyer_roles as p_carbon_copyer_roles
+		,p.handle_dict_id as p_handle_dict_id,p.if_verify as p_if_verify,p.verify_tmpl_node_id as p_verify_tmpl_node_id,p.no_verify_tmpl_node_id as p_no_verify_tmpl_node_id
+		,p.if_notice as p_if_notice,p.noticers as p_noticers,p.noticer_roles as p_noticer_roles,p.if_update as p_if_update,p.update_dict_child_id as p_update_dict_child_id,p.if_photo as p_if_photo,p.photo_num as p_photo_num,p.if_upload as p_if_upload,p.upload_num as p_upload_num,p.if_opinion as p_if_opinion,p.opinion_num as p_opinion_num
+		,p.is_del as p_is_del,p.create_by as p_create_by,p.create_date as p_create_date,p.last_by as p_last_by,p.last_date as p_last_date,p.enterpriseid as p_enterpriseid
+
+		,g.id AS e_id,g.index AS e_index,g.label AS e_label,g.shape AS e_shape,g.color AS e_color,g.type AS e_type,g.source AS e_source,g.source_anchor AS e_source_anchor,g.target AS e_target,g.target_anchor as e_target_anchor,g.tmpl_id AS e_tmpl_id,g.enterpriseid AS e_enterpriseid,g.is_del AS e_is_del
+
+		,c.id AS form_id,c.name AS form_name,c.body AS form_body,c.app_body as form_app_body,c.body_map AS form_body_map
+		,d.id AS db_id,d.name AS db_name,d.load_type AS db_load_type,d.load_status AS db_load_status,d.sql_str AS db_sql_str,d.if_effect AS db_if_effect
+		,e.id AS field_id,e.attribute AS field_attribute,e.name AS field_name,e.field_type
+		,e.type_dict_child_id AS field_type_dict_child_id,e.content_dict_id AS field_content_dict_id,e.relation_dict_child_id AS field_relation_dict_child_id
+		FROM wc_tmpl AS a
+		JOIN wc_tmpl_node_point AS n ON a.id=n.tmpl_id AND a.is_del=#{isDel} AND n.is_del=#{isDel}
+		JOIN wc_tmpl_node AS p ON n.node_id=p.id AND n.is_del=#{isDel} AND p.is_del=#{isDel}
+		LEFT JOIN wc_tmpl_node_edge AS g ON a.id=g.tmpl_id AND a.is_del=#{isDel} AND g.is_del=#{isDel}
+		JOIN wc_form AS c ON a.form_id=c.id AND a.is_del=#{isDel} AND c.is_del=#{isDel}
+		LEFT JOIN wc_db AS d ON c.id=d.form_id AND c.is_del=#{isDel} AND d.is_del=#{isDel}
+		LEFT JOIN wc_db_field AS e ON d.id=e.db_id AND d.is_del=#{isDel} AND e.is_del=#{isDel}
+		<where>
+			<if test="enterpriseid != null and enterpriseid != ''">
+				AND a.enterpriseid=#{enterpriseid}
+			</if>
+			<if test="isDel != null">
+				AND a.is_del=#{isDel}
+			</if>
+			<if test="id != null and id != ''">
+				AND a.id=#{id}
+			</if>
+			<if test="name != null and name != ''">
+				AND a.name LIKE CONCAT(CONCAT('%',#{name},'%'))
+			</if>
+			<if test="code != null and code != ''">
+				AND a.code LIKE CONCAT(CONCAT('%',#{code},'%'))
+			</if>
+			<if test="ifEffect != null and ifEffect != ''">
+				AND a.if_effect=#{ifEffect}
+			</if>
+		</where>
+	</select>
+
+	<!--<select id="get" resultMap="WorkCenterTmplVoMap">
+		SELECT a.id,a.code,a.name,a.desc,a.form_id,a.if_effect
+		,a.is_del,a.create_by,a.create_date,a.last_by,a.last_date,a.enterpriseid
+		,b.id AS node_id,b.name AS node_name,b.type AS node_type,b.sort AS node_sort,b.parent_id AS node_parent_id
+		,b.handlers AS node_handlers,b.carbon_copyers AS node_carbon_copyers,b.handler_roles AS node_handler_roles,b.carbon_copyer_roles AS node_carbon_copyer_roles
+		,b.handle_dict_id AS node_handle_dict_id,b.if_verify AS node_if_verify,b.verify_tmpl_node_id AS node_verify_tmpl_node_id,b.no_verify_tmpl_node_id AS node_no_verify_tmpl_node_id
+		,b.if_notice AS node_if_notice,b.noticers AS node_noticers,b.if_update AS node_if_update,b.update_dict_child_id AS node_update_dict_child_id
+		,b.if_photo AS node_if_photo,b.photo_num AS node_photo_num,b.if_upload AS node_if_upload,b.upload_num AS node_upload_num
+		,b.if_opinion AS node_if_opinion,b.opinion_num AS node_opinion_num
+		,c.id AS form_id,c.name AS form_name,c.body AS form_body,c.app_body as form_app_body,c.body_map AS form_body_map
+		,d.id AS db_id,d.name AS db_name,d.load_type AS db_load_type,d.load_status AS db_load_status,d.sql_str AS db_sql_str,d.if_effect AS db_if_effect
+		,e.id AS field_id,e.attribute AS field_attribute,e.name AS field_name,e.field_type
+		,e.type_dict_child_id AS field_type_dict_child_id,e.content_dict_id AS field_content_dict_id,e.relation_dict_child_id AS field_relation_dict_child_id
+        FROM wc_tmpl AS a
+        JOIN wc_tmpl_node AS b ON a.id=b.tmpl_id AND a.is_del=#{isDel} AND b.is_del=#{isDel}
+        JOIN wc_form AS c ON a.form_id=c.id AND a.is_del=#{isDel} AND c.is_del=#{isDel}
+       	LEFT JOIN wc_db AS d ON c.id=d.form_id AND c.is_del=#{isDel} AND d.is_del=#{isDel}
+        LEFT JOIN wc_db_field AS e ON d.id=e.db_id AND d.is_del=#{isDel} AND e.is_del=#{isDel}
+		<where>
+			<if test="enterpriseid != null and enterpriseid != ''">
+				AND a.enterpriseid=#{enterpriseid}
+			</if>
+			<if test="isDel != null">
+				AND a.is_del=#{isDel}
+			</if>
+			<if test="id != null and id != ''">
+				AND a.id=#{id}
+			</if>
+		</where>
+	</select>-->
+	
+	<insert id="add">
+		INSERT INTO wc_tmpl
+		(id,code,name,`desc`,form_id,if_effect
+		,is_del,create_by,create_date,last_by,last_date,enterpriseid)
+		VALUES
+		(#{id},#{code},#{name},#{desc},#{form.id},#{ifEffect}
+		,#{isDel},#{userBy},#{curr},#{userBy},#{curr},#{enterpriseid})
+	</insert>
+	
+	<update id="edit">
+		UPDATE wc_tmpl
+		<trim prefix="set" suffixOverrides=",">
+			<if test="code != null and code != ''">
+				code=#{code},
+			</if>
+			<if test="name != null and name != ''">
+				name=#{name},
+			</if>
+			<if test="desc != null and desc != ''">
+				`desc`=#{desc},
+			</if>
+			<if test="form != null and form.id != ''">
+				form_id=#{form.id},
+			</if>
+			<if test="ifEffect != null and ifEffect != ''">
+				if_effect=#{ifEffect},
+			</if>
+			<if test="userBy != null and userBy != ''">
+				last_by=#{userBy},
+			</if>
+			<if test="curr != null">
+				last_date=#{curr},
+			</if>
+		</trim>
+		WHERE enterpriseid=#{enterpriseid} AND id=#{id} AND is_del=#{isDel}
+	</update>
+	
+	<update id="del">
+		UPDATE wc_tmpl
+		<trim prefix="set" suffixOverrides=",">
+			<if test="newIsDel != null and newIsDel != ''">
+				is_del=#{newIsDel},
+			</if>
+			<if test="userBy != null and userBy != ''">
+				last_by=#{userBy},
+			</if>
+			<if test="curr != null">
+				last_date=#{curr},
+			</if>
+		</trim>
+		WHERE enterpriseid=#{enterpriseid} AND id=#{id} AND is_del=#{isDel}
+	</update>
+    
+</mapper>

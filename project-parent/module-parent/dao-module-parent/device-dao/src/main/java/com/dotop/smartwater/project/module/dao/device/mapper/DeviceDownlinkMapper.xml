@@ -1,0 +1,212 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper
+        namespace="com.dotop.smartwater.project.module.dao.device.IDeviceDownlinkDao">
+    <resultMap id="DeviceDownlinkVo"
+               type="com.dotop.smartwater.project.module.core.water.vo.DeviceDownlinkVo">
+
+        <id property="id" column="id"/>
+        <result property="deveui" column="deveui"/>
+        <result property="devid" column="devid"/>
+        <result property="downlinkdata" column="downlinkdata"/>
+        <result property="tagid" column="tagid"/>
+        <result property="tagvalue" column="tagvalue"/>
+        <result property="confirmed" column="confirmed"/>
+        <result property="rx2" column="rx2"/>
+        <result property="clientid" column="clientid"/>
+        <result property="status" column="status"/>
+        <result property="gentime" column="gentime"/>
+        <result property="txtime" column="txtime"/>
+        <result property="reqData" column="req_data"/>
+        <result property="reason" column="reason"/>
+
+        <result column="userid" jdbcType="VARCHAR" property="userid"/>
+        <result column="name" jdbcType="VARCHAR" property="name"/>
+        <result column="devno" jdbcType="VARCHAR" property="devno"/>
+        <result column="measurement_methods" jdbcType="VARCHAR" property="measurementMethods"/>
+        <result column="measurement_value" jdbcType="VARCHAR" property="measurementValue"/>
+        <result column="measurement_type" jdbcType="VARCHAR" property="measurementType"/>
+        <result column="measurement_unit" jdbcType="VARCHAR" property="measurementUnit"/>
+        <result column="network_interval" jdbcType="VARCHAR" property="networkInterval"/>
+        <result column="enterpriseid" jdbcType="VARCHAR" property="enterpriseid"/>
+        <result column="life" jdbcType="VARCHAR" property="life"/>
+        <result column="period" jdbcType="VARCHAR" property="period"/>
+        <result column="expire" jdbcType="VARCHAR" property="expire"/>
+        <result column="mode" jdbcType="VARCHAR" property="mode"/>
+        <result column="modeName" jdbcType="VARCHAR" property="modeName"/>
+        <result column="caliber" jdbcType="VARCHAR" property="caliber"/>
+    </resultMap>
+
+    <select id="get" resultMap="DeviceDownlinkVo">
+        SELECT * FROM device_downlink WHERE id=#{id}
+    </select>
+
+    <select id="list" resultMap="DeviceDownlinkVo">
+        SELECT
+        a.id,a.deveui ,
+        a.devid,a.downlinkdata,a.tagid,a.tagvalue,a.confirmed,a.rx2,a.clientid,a.`status`,a.gentime,a.txtime,a.req_data,
+        a.userid,a.`name`,a.measurement_methods,a.measurement_type,a.measurement_unit,a.measurement_value,a.network_interval,a.enterpriseid,a.life,a.period,
+        a.expire,a.reason,md.child_value as mode ,md.child_name as modeName , b.caliber , a.devno
+        FROM device_downlink a
+        LEFT JOIN device b on a.devid=b.devid
+        LEFT JOIN dictionary_child md
+        on b.mode = md.child_id WHERE 1=1
+        <if test="enterpriseid != null and enterpriseid != ''">
+            AND a.enterpriseid=#{enterpriseid}
+        </if>
+        <if test="devno != null and devno != ''">
+            AND a.devno LIKE CONCAT('%',#{devno},'%')
+        </if>
+        <if test="deveui != null and deveui != ''">
+            AND a.deveui LIKE CONCAT('%',#{deveui},'%')
+        </if>
+        <if test="status != null">
+            AND a.status = #{status}
+        </if>
+        ORDER BY a.gentime DESC
+    </select>
+
+    <select id="getHistory" resultMap="DeviceDownlinkVo">
+        SELECT
+        a.id,a.deveui ,
+        a.devid,a.downlinkdata,a.tagid,a.tagvalue,a.confirmed,a.rx2,a.clientid,a.`status`,a.gentime,a.txtime,a.req_data,
+        a.userid,a.`name`,a.measurement_methods,a.measurement_type,a.measurement_unit,a.measurement_value,a.network_interval,a.enterpriseid,a.life,a.period,
+        a.expire,a.reason,md.child_value as mode ,md.child_name as modeName , b.caliber , a.devno
+        FROM device_downlink a
+        LEFT JOIN device b on a.devid=b.devid
+        LEFT JOIN dictionary_child md on b.mode = md.child_id 
+        <where>
+            b.enterpriseid = #{enterpriseid}
+            <if test="userno != null and userno !=  '' ">
+                AND c.userno LIKE CONCAT('%',#{userno},'%')
+            </if>
+            <if test="username != null and username !=  '' ">
+                AND c.username LIKE CONCAT('%',#{username},'%')
+            </if>
+            <if test="devno != null and devno !=  '' ">
+                AND b.devno LIKE CONCAT('%',#{devno},'%')
+            </if>
+            <if test="phone != null and phone !=  '' ">
+                AND c.userphone LIKE CONCAT('%',#{phone},'%')
+            </if>
+            <if test="start != null and start != '' ">
+                AND a.gentime &gt;= #{start}
+            </if>
+            <if test="end != null and end != '' ">
+                AND a.gentime &lt; #{end}
+            </if>
+            <if test="list != null and flag != null">
+                AND c.communityid IN
+                <foreach item="item" collection="list" separator="," open="(" close=")" index="">
+                    #{item, jdbcType=NUMERIC}
+                </foreach>
+            </if>
+        </where>
+        ORDER BY a.gentime desc
+    </select>
+
+    <insert id="add">
+        insert into device_downlink (id, deveui, devid,
+      downlinkdata, tagid, tagvalue,
+      confirmed, rx2, clientid,
+      status, gentime, txtime,
+      userid, name, devno,
+      measurement_methods, measurement_value, measurement_type,
+      measurement_unit, network_interval, enterpriseid,
+      life, period, expire,req_data,reason)
+    values (#{id,jdbcType=VARCHAR}, #{deveui,jdbcType=VARCHAR}, #{devid,jdbcType=BIGINT},
+      #{downlinkdata,jdbcType=VARCHAR}, #{tagid,jdbcType=INTEGER}, #{tagvalue,jdbcType=VARCHAR},
+      #{confirmed,jdbcType=INTEGER}, #{rx2,jdbcType=INTEGER}, #{clientid,jdbcType=VARCHAR},
+      #{status,jdbcType=INTEGER}, #{gentime,jdbcType=TIMESTAMP}, #{txtime,jdbcType=TIMESTAMP},
+      #{userid,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR}, #{devno,jdbcType=VARCHAR},
+      #{measurementMethods,jdbcType=VARCHAR}, #{measurementValue,jdbcType=VARCHAR}, #{measurementType,jdbcType=VARCHAR},
+      #{measurementUnit,jdbcType=VARCHAR}, #{networkInterval,jdbcType=VARCHAR}, #{enterpriseid,jdbcType=VARCHAR},
+      #{life,jdbcType=VARCHAR}, #{period,jdbcType=VARCHAR}, #{expire,jdbcType=VARCHAR},
+      #{reqData,jdbcType=LONGVARCHAR},#{reason,jdbcType=VARCHAR})
+    </insert>
+
+    <select id="findByClientId" resultMap="DeviceDownlinkVo">
+        select * from device_downlink where clientid = #{clientid}
+    </select>
+
+    <update id="update">
+        update device_downlink
+        <set>
+            <if test="downlinkdata != null ">
+                downlinkdata = #{downlinkdata},
+            </if>
+            <if test="confirmed != null">
+                confirmed = #{confirmed},
+            </if>
+            <if test="rx2 != null">
+                rx2 = #{rx2},
+            </if>
+            <if test="clientid != null">
+                clientid = #{clientid},
+            </if>
+            <if test="status != null">
+                status = #{status},
+            </if>
+            <if test="tagvalue != null">
+                tagvalue = #{tagvalue},
+            </if>
+            <if test="gentime != null">
+                gentime = #{gentime},
+            </if>
+            <if test="txtime != null">
+                txtime = #{txtime},
+            </if>
+            <if test="devid != null">
+                devid = #{devid},
+            </if>
+            <if test="tagid != null">
+                tagid = #{tagid},
+            </if>
+            <if test="userid != null and userid != '' ">
+                userid = #{userid,jdbcType=VARCHAR},
+            </if>
+            <if test="name != null and name != '' ">
+                `name` = #{name,jdbcType=VARCHAR},
+            </if>
+            <if test="devno != null and devno != '' ">
+                devno = #{devno,jdbcType=VARCHAR},
+            </if>
+            <if test="measurementMethods != null and measurementMethods != '' ">
+                measurement_methods = #{measurementMethods,jdbcType=VARCHAR},
+            </if>
+            <if test="measurementValue != null and measurementValue != '' ">
+                measurement_value = #{measurementValue,jdbcType=VARCHAR},
+            </if>
+            <if test="measurementType != null and measurementType != '' ">
+                measurement_type = #{measurementType,jdbcType=VARCHAR},
+            </if>
+            <if test="measurementUnit != null and measurementUnit != '' ">
+                measurement_unit = #{measurementUnit,jdbcType=VARCHAR},
+            </if>
+            <if test="networkInterval != null and networkInterval != '' ">
+                network_interval = #{networkInterval,jdbcType=VARCHAR},
+            </if>
+            <if test="enterpriseid != null and enterpriseid != '' ">
+                enterpriseid = #{enterpriseid,jdbcType=VARCHAR},
+            </if>
+            <if test="reqData != null and reqData != '' ">
+                req_data = #{reqData,jdbcType=LONGVARCHAR},
+            </if>
+            <if test="life != null and life != '' ">
+                life = #{life,jdbcType=VARCHAR},
+            </if>
+            <if test="period != null and period != '' ">
+                period = #{period,jdbcType=VARCHAR},
+            </if>
+            <if test="expire != null and expire != '' ">
+                expire = #{expire,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+
+    <select id="getLastDownLink" resultMap="DeviceDownlinkVo">
+        SELECT * FROM device_downlink WHERE devid=#{devid}
+         order by gentime desc limit 1
+    </select>
+</mapper>

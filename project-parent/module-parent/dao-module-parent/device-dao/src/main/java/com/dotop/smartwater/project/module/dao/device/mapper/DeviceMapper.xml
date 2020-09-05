@@ -1,0 +1,771 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper
+        namespace="com.dotop.smartwater.project.module.dao.device.IDeviceDao">
+    <resultMap id="DeviceVo"
+               type="com.dotop.smartwater.project.module.core.water.vo.DeviceVo">
+
+        <id property="devid" column="devid"/>
+        <result property="name" column="name"/>
+        <result property="deveui" column="deveui"/>
+        <result property="devaddr" column="devaddr"/>
+        <result property="devno" column="devno"/>
+        <result property="typeid" column="typeid"/>
+        <result property="water" column="water"/>
+        <result property="status" column="status"/>
+        <result property="explain" column="explain"/>
+        <result property="flag" column="flag"/>
+        <result property="rssi" column="rssi"/>
+        <result property="lsnr" column="lsnr"/>
+        <result property="beginvalue" column="beginvalue"/>
+        <result property="enterpriseid" column="enterpriseid"/>
+        <result property="accesstime" column="accesstime"/>
+        <result property="uplinktime" column="uplinktime"/>
+        <result property="tapstatus" column="tapstatus"/>
+        <result property="taptype" column="taptype"/>
+        <result property="battery" column="battery"/>
+        <result property="version" column="version"/>
+        <result property="actdevType" column="actdev_type"/>
+        <result property="actdevMod" column="actdev_mod"/>
+        <result property="actdevVer" column="actdev_ver"/>
+        <result property="abnormalCurrent" column="abnormal_current"/>
+        <result property="timeSync" column="time_sync"/>
+        <result property="activeStatus" column="active_status"/>
+        <result property="timeConfig" column="time_config"/>
+        <result property="quantitativeConfig" column="quantitative_config"/>
+        <result property="upCopy" column="up_copy"/>
+        <result property="tapcycle" column="tapcycle"/>
+
+        <result property="mode" column="mode"/>
+        <result property="modeName" column="modeName"/>
+        <result property="communityName" column="communityName"/>
+
+        <result property="productId" column="product_id"/>
+        <result property="productName" column="productName"/>
+        <result property="productId" column="productId"/>
+
+        <result property="nfcInitPwd" column="nfc_init_pwd"/>
+        <result property="nfcComPwd" column="nfc_com_pwd"/>
+        <result property="nfcTag" column="nfc_tag"/>
+        <result property="iccid" column="iccid"/>
+
+        <result property="imsi" column="imsi"/>
+        <result property="batchNumber" column="batch_number"/>
+        <result property="deviceParId" column="device_par_id"/>
+        <result property="kind" column="kind"/>
+        <result property="caliber" column="caliber"/>
+        <result property="lifeStatus" column="life_status"/>
+        <result property="cellId" column="cell_id"/>
+        <result property="pci" column="pci"/>
+        <result property="ver" column="ver"/>
+
+        <result property="unit" column="unit"/>
+        <result property="sensorType" column="sensor_type"/>
+        <result property="unitName" column="unitName"/>
+        <result property="sensorTypeName" column="sensorTypeName"/>
+        <result property="processStatus" column="process_status"/>
+        <result property="reportingCycle" column="reporting_cycle"/>
+
+        <result property="factoryCode" column="factory_code"/>
+    </resultMap>
+
+    <insert id="add">
+        insert into device
+        (devid,deveui,status,accesstime,flag,beginvalue,
+        devno,typeid,taptype,water,tapstatus,enterpriseid,
+        `explain`,`mode`,batch_number,device_par_id,kind,pid,product_id,
+        caliber, devaddr, nfc_init_pwd,nfc_com_pwd,nfc_tag, factory, imsi, unit, sensor_type,
+        process_status, reporting_cycle, iccid)
+        values
+        (#{devid},#{deveui},#{status},#{accesstime},#{flag},#{beginvalue},
+        #{devno},#{typeid},#{taptype},#{water},#{tapstatus},
+        #{enterpriseid},#{explain},#{mode},#{batchNumber},#{deviceParId},
+        #{kind},#{pid},#{productId},#{caliber} , #{devaddr} ,#{nfcInitPwd},
+        #{nfcComPwd},#{nfcTag}, #{factory},#{imsi}, #{unit}, #{sensorType}, #{processStatus}, #{reportingCycle},#{iccid})
+    </insert>
+
+    <insert id="addDeviceExt">
+        insert into device_ext
+        (devid,rssi,lsnr,battery,version,actdev_type,actdev_mod,abnormal_current,
+		time_sync,time_config,quantitative_config,up_copy,tapcycle,pci,cell_id,ver)
+        values
+        (#{devid},#{rssi},#{lsnr},#{battery},#{version},#{actdevType},#{actdevMod},#{abnormalCurrent},
+        #{timeSync},#{timeConfig},#{quantitativeConfig},#{upCopy},#{tapcycle},#{pci},#{cellId},#{ver})
+    </insert>
+
+    <insert id="batchAdd">
+        insert into device
+        (devid,typeid,`mode`,kind, devno,deveui,imsi,caliber,water,`explain`,beginvalue,accesstime,taptype,
+        `flag`,`status`,product_id,pid,enterpriseid,factory, unit, sensor_type, process_status, reporting_cycle, iccid)
+        values
+        <foreach collection="list" item="item" index="index" separator=",">
+            (#{item.devid},#{item.typeid},#{item.mode},#{item.kind},#{item.devno},#{item.deveui},
+            #{item.imsi},#{item.caliber},#{item.water},#{item.explain},#{item.beginvalue},#{item.accesstime},
+            #{item.taptype},#{item.flag},#{item.status},#{item.productId},#{item.pid},#{item.enterpriseid},
+            #{item.factory}, #{item.unit}, #{item.sensorType}, #{item.processStatus}, #{item.reportingCycle}, #{item.iccid})
+        </foreach>
+    </insert>
+
+    <insert id="batchAddExt">
+        insert into device_ext
+        (devid,rssi,lsnr,battery,version,actdev_type,actdev_mod,abnormal_current,
+        time_sync,time_config,quantitative_config,up_copy,tapcycle,pci,cell_id,ver)
+        values
+        <foreach collection="list" item="item" index="index" separator=",">
+            (#{item.devid},#{item.rssi},#{item.lsnr},#{item.battery},#{item.version},#{item.actdevType},
+            #{item.actdevMod},#{item.abnormalCurrent},#{item.timeSync},#{item.timeConfig},#{item.quantitativeConfig},#{item.upCopy},
+            #{item.tapcycle},#{item.pci},#{item.cellId},#{item.ver})
+        </foreach>
+    </insert>
+
+
+    <update id="updateBeginValue">
+        update device set beginvalue=#{beginvalue} where devid=#{devid} 
+    </update>
+
+    <select id="getDeviceCount" resultType="java.lang.Long">
+        SELECT count(devid) as count FROM device where enterpriseid = #{enterpriseid} and flag != 4
+    </select>
+    
+    <select id="traditionCount" resultType="java.lang.Long">
+        SELECT count(devid) as count FROM device where enterpriseid = #{enterpriseid} and flag != 4 and typeid = 1
+    </select>
+    
+    <select id="remoteCount" resultType="java.lang.Long">
+        SELECT count(devid) as count FROM device where enterpriseid = #{enterpriseid} and flag != 4 and typeid = 2
+    </select>
+
+    <select id="unreportedsCount" resultType="java.lang.Long">
+		SELECT count(devid) as count FROM device WHERE enterpriseid = #{enterpriseid} and flag != 4 AND (DATEDIFF(NOW(),uplinktime) >= 1 OR uplinktime is NULL) 
+    </select>
+
+    <select id="getDeviceCountByAreaIds" resultType="java.lang.Long">
+        SELECT count(*)
+        FROM `device` a
+        INNER JOIN `owner` b on a.devid = b.devid
+        <where>
+            a.flag != 4
+            <if test="list != null ">
+                and b.communityid in
+                <foreach item="item" collection="list" separator="," open="(" close=")" index="">
+                    #{item, jdbcType=VARCHAR}
+                </foreach>
+            </if>
+        </where>
+    </select>
+
+    <select id="getDevices" resultMap="DeviceVo">
+        select * from device where enterpriseid=#{enterpriseid} and flag != 4
+    </select>
+
+    <select id="offlineDeviceCount" resultType="java.lang.Long">
+        SELECT count(devid) as count FROM device where `status` = 2 and flag != 4 and enterpriseid = #{enterpriseid}
+    </select>
+
+	<select id="offlineCount" resultType="java.lang.Long">
+        SELECT count(devid) as count FROM device where `status` = 2 and typeid = 2 and flag != 4 and enterpriseid = #{enterpriseid}
+    </select>
+
+    <select id="noactiveCount" resultType="java.lang.Long">
+        SELECT count(devid) as count FROM device where `status` = 3 and flag != 4 and enterpriseid = #{enterpriseid}
+    </select>
+
+    <select id="storageCount" resultType="java.lang.Long">
+        SELECT count(devid) as count FROM device where `status` = 4 and flag != 4 and enterpriseid = #{enterpriseid}
+    </select>
+
+    <select id="scrapCount" resultType="java.lang.Long">
+        SELECT count(devid) as count FROM device where `status` = 5 and flag != 4 and enterpriseid = #{enterpriseid}
+    </select>
+
+
+    <update id="updateStatus">
+        update device set `status` = #{status} , `explain` = #{explain} where devid=#{devid}
+    </update>
+
+    <update id="updateBatchDeviceStatus" parameterType="java.util.List">update `device` t
+        <trim prefix="set" suffixOverrides=",">
+            <trim prefix="t.status=case" suffix="end,">
+                <foreach collection="list" item="item" index="index">when devid=#{item.devid} then #{item.status}
+                </foreach>
+            </trim>
+            <trim prefix="t.explain=case" suffix="end,">
+                <foreach collection="list" item="item" index="index">when devid=#{item.devid} then #{item.explain}
+                </foreach>
+            </trim>
+        </trim>
+        where devid in
+        <foreach collection="list" index="index" item="item" separator="," open="(" close=")">
+            #{item.devid,jdbcType=VARCHAR}
+        </foreach>
+    </update>
+
+    <select id="findOffline" resultType="com.dotop.smartwater.project.module.core.water.vo.customize.OfflineVo">
+        select d.devid as id,o.userno as userno,o.username as
+        username,d.explain,
+        o.useraddr as useraddr,d.devno as devno,d.water as
+        water,
+        o.userphone as phone,d.uplinktime as uplinktime,d.rssi as rssi,
+        d.lsnr as lsnr,
+        (
+        case d.tapstatus
+        when 0 then '关'
+        when 1 then '开'
+        else ''
+        end
+        )as status ,
+
+        (
+        case d.typeid
+        when 0 then '水表'
+        when 1 then '燃气表'
+        when 2 then '热表'
+        else ''
+        end
+        )as type
+        from device d
+        left join owner o on o.devid = d.devid
+        <where>
+            d.flag != 4
+            <if test="devno != null and devno != '' ">
+                and d.devno = #{devno}
+            </if>
+            <if test="typeid != null and typeid != '' ">
+                and d.typeid = #{typeid}
+            </if>
+            <if test="communityid != null and communityid != '-1' ">
+                and o.communityid = #{communityid}
+            </if>
+            and d.status = 2
+        </where>
+        order by d.uplinktime desc
+    </select>
+
+    <select id="findById" resultMap="DeviceVo">
+        select * from device where devid = #{id} and flag != 4
+    </select>
+
+    <select id="getDevById" resultMap="DeviceVo">
+        select * from device where devid = #{id} and flag != 4
+    </select>
+
+    <select id="findByDevEUI" resultMap="DeviceVo">
+        select d.*,e.*,o.ownerid as ownerid,o.userno as userno,o.username as username,o.useraddr as useraddr,
+        (case d.tapstatus when 0 then '关' when 1 then '开' else '' end )as tap
+        ,if(TIMESTAMPDIFF(HOUR,d.uplinktime,now())>24,DATEDIFF(now(),d.uplinktime),0) as `interval`
+        ,dc.child_name as purposename
+        ,md.child_name as modeName
+        ,if((r.`name`) is not NULL , CONCAT(r.`name` , '(' , r.`code`, ')') , r.`name`)  as communityName
+        ,p.`name` as productName
+        ,p.productNo as productNo
+        ,p.productId as productId
+        ,un.child_name as unitName
+        ,se.child_name as sensorTypeName
+        from device d 
+        left join device_ext e ON d.devid = e.devid
+        left join owner o on o.devid = d.devid
+        left join dictionary_child dc on o.purposeid = dc.child_id
+        left join dictionary_child md on d.mode = md.child_id
+        left join area r on o.communityid = r.id
+        left join store_product p ON d.product_id = p.productId
+        left join dictionary_child un on d.unit = un.child_id
+        left join dictionary_child se on d.sensor_type = se.child_id
+        where d.deveui = #{devEUI} and d.flag != 4
+    </select>
+
+    <update id="unband">
+        update device set devno=null where devid=#{devid}
+    </update>
+
+    <select id="findByCommunity" resultMap="DeviceVo">
+        select d.* from device
+        d,owner o where o.status = 1 and o.communityid = #{id} and o.devid =
+        d.devid
+        and d.flag != 4 and d.status = 0
+    </select>
+
+
+    <select id="findByDevNo" resultMap="DeviceVo">
+        select a.*, b.child_name as modeName from device a left join dictionary_child b on a.mode = b.child_id 
+        where a.devno = #{devno} and a.flag != 4 limit 1
+    </select>
+
+    <update id="deleteById">
+        update device set flag = 4 where devid = #{devid} 
+    </update>
+
+    <update id="update">
+        update device
+        <set>
+            <if test="enterpriseid != null">
+                enterpriseid = #{enterpriseid},
+            </if>
+            <if test="status != null">
+                status = #{status},
+            </if>
+            <if test="explain != null">
+                `explain` = #{explain},
+            </if>
+            <if test="typeid != null">
+                typeid = #{typeid},
+            </if>
+            <if test="devno != null">
+                devno = #{devno},
+            </if>
+            <if test="flag != null">
+                flag = #{flag},
+            </if>
+            <if test="water != null">
+                water = #{water},
+            </if>
+            <if test="uplinktime != null">
+                uplinktime = #{uplinktime},
+            </if>
+            <if test="beginvalue != null">
+                beginvalue = #{beginvalue},
+            </if>
+            <if test="taptype != null">
+                taptype = #{taptype},
+            </if>
+            <if test="tapstatus != null">
+                tapstatus = #{tapstatus},
+            </if>
+            <if test="mode != null">
+                mode = #{mode},
+            </if>
+            <if test="imsi != null">
+                imsi = #{imsi},
+            </if>
+            <if test="kind != null">
+                kind = #{kind},
+            </if>
+            <if test="batchNumber != null">
+                batch_number = #{batchNumber},
+            </if>
+            <if test="pid != null">
+                pid = #{pid},
+            </if>
+            <if test="caliber != null and caliber != '' ">
+                caliber = #{caliber,jdbcType=VARCHAR},
+            </if>
+            <if test="cellId != null and cellId != '' ">
+                cell_id = #{cellId,jdbcType=VARCHAR},
+            </if>
+            <if test="devaddr != null and devaddr != '' ">
+                devaddr = #{devaddr,jdbcType=VARCHAR},
+            </if>
+            <if test="factory != null and factory != '' ">
+                factory = #{factory},
+            </if>
+            <if test="unit != null and unit != '' ">
+                unit = #{unit},
+            </if>
+            <if test="sensorType != null and sensorType != '' ">
+                sensor_type = #{sensorType},
+            </if>
+            <if test="processStatus != null and processStatus != '' ">
+                process_status = #{processStatus},
+            </if>
+            <if test="reportingCycle != null and reportingCycle != '' ">
+                reporting_cycle = #{reportingCycle},
+            </if>
+        </set>
+        where devid = #{devid}
+    </update>
+
+
+    <select id="findBypage" resultMap="DeviceVo">
+        select d.*,o.userno as userno,o.username as username,
+        (case d.tapstatus when 0 then '关' when 1 then '开' else '' end )as tap
+        ,if(TIMESTAMPDIFF(HOUR,d.uplinktime,now())>24,DATEDIFF(now(),d.uplinktime),0) as `interval`
+        ,dc.child_name as purposename
+        ,if(md.child_name is null, '-',md.child_name) as modeName
+        ,if((r.`name`) is not NULL , CONCAT(r.`name` , '(' , r.`code`, ')') , r.`name`) as communityName
+        from device d left join owner o on o.devid = d.devid
+        left join dictionary_child dc on o.purposeid=dc.child_id
+        left join dictionary_child md on d.mode = md.child_id
+        left join area r on o.communityid = r.id
+        <where>
+            d.enterpriseid = #{enterpriseid} and d.flag != 4
+            <if test="pid != null ">
+                and d.pid=#{pid}
+            </if>
+            <if test="status != null ">
+                and d.status=#{status}
+            </if>
+            <if test="devno != null and devno != '' ">
+                and d.devno like CONCAT('%',#{devno},'%')
+            </if>
+            <if test="deveui != null and deveui != '' ">
+                and d.deveui like CONCAT('%',#{deveui},'%')
+            </if>
+            <if test="nodeIds != null and nodeIds.size() > 0 ">
+                and o.communityid in
+                <foreach item="item" collection="nodeIds" separator="," open="(" close=")" index="">
+                    #{item}
+                </foreach>
+            </if>
+            <if test="interval != null ">
+                and DATEDIFF(now(),d.uplinktime) &gt;= #{interval}
+            </if>
+            <if test="tapstatus != null ">
+                and d.tapstatus=#{tapstatus}
+            </if>
+            <if test="mode != null ">
+                and d.mode=#{mode}
+            </if>
+            <if test="taptype != null ">
+                and d.taptype=#{taptype}
+            </if>
+
+            <if test="kind != null and kind != ''">
+                and d.kind=#{kind}
+            </if>
+            <if test="typeid != null and typeid != ''">
+                and d.typeid=#{typeid}
+            </if>
+            <if test="batchNumber != null and batchNumber != ''">
+                and d.batch_number like concat('%',#{batchNumber},'%')
+            </if>
+            <if test="factory != null and factory != ''">
+                and d.factory = #{factory}
+            </if>
+            <if test="userStatus != null">
+                and o.`status` = #{userStatus}
+            </if>
+        </where>
+        <if test="sortList != null">
+            <foreach item="item" index="index" collection="sortList" open="order by" separator=",">
+	            <if test="item.sortName == 'uplinktime'">
+		            d.uplinktime ${item.sortValue}
+		        </if>
+		        <if test="item.sortName == 'userno'">
+		            o.userno ${item.sortValue}
+		        </if>
+	        </foreach>
+        </if>
+        <if test="sortList == null">
+            order by d.uplinktime desc
+        </if>
+        <if test="limit!=null and offset!=null">
+            LIMIT #{limit} OFFSET #{offset}
+        </if>
+    </select>
+
+    <select id="list" resultMap="DeviceVo">
+        select d.*,o.userno as userno,o.username as username,
+        (
+        case d.tapstatus
+        when 0 then '关'
+        when 1 then '开'
+        else ''
+        end
+        )as tap
+        ,DATEDIFF(now(),d.uplinktime) as `interval`
+        ,p.name as purposename
+        ,md.child_name as modeName
+        from device d left join owner o on o.devid = d.devid
+        left join purpose p on o.purposeid = p.id
+        left join dictionary_child md on d.mode = md.child_id
+        <where>
+            d.flag != 4
+            <if test="enterpriseid != null and enterpriseid != ''">
+                and d.enterpriseid = #{enterpriseid}
+            </if>
+            <if test="pid != null and pid != ''">
+                and d.pid=#{pid}
+            </if>
+        </where>
+        order by d.uplinktime desc
+    </select>
+
+    <select id="findAll" resultMap="DeviceVo">
+        select d.* from
+        device d ,owner o where o.status = 1 and o.devid = d.devid and
+        d.status = 0
+        and d.flag != 4
+    </select>
+
+
+    <update id="updateByPrimaryKeyExt">
+        update device_ext
+        <set>
+            devid = #{devid},
+            <if test="rssi != null">
+                rssi = #{rssi,jdbcType=BIGINT},
+            </if>
+            <if test="lsnr != null">
+                lsnr = #{lsnr,jdbcType=DOUBLE},
+            </if>
+            <if test="battery != null">
+                battery = #{battery,jdbcType=INTEGER},
+            </if>
+            <if test="version != null">
+                version = #{version,jdbcType=VARBINARY},
+            </if>
+            <if test="actdevType != null">
+                actdev_type = #{actdevType,jdbcType=VARCHAR},
+            </if>
+            <if test="abnormalCurrent != null">
+                abnormal_current = #{abnormalCurrent,jdbcType=INTEGER},
+            </if>
+            <if test="timeSync != null">
+                time_sync = #{timeSync,jdbcType=INTEGER},
+            </if>
+            <if test="tapcycle != null">
+                tapcycle = #{tapcycle},
+            </if>
+            <if test="pci != null and pci != '' ">
+                pci = #{pci,jdbcType=VARCHAR},
+            </if>
+            <if test="cellId != null and cellId != '' ">
+                cell_id = #{cellId,jdbcType=VARCHAR},
+            </if>
+            <if test="ver != null and ver != '' ">
+                ver = #{ver,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where devid = #{devid}
+    </update>
+
+
+    <update id="updateByPrimaryKeySelective">
+        update device
+        <set>
+            <if test="deveui != null">
+                deveui = #{deveui,jdbcType=VARCHAR},
+            </if>
+            <if test="devaddr != null">
+                devaddr = #{devaddr,jdbcType=VARCHAR},
+            </if>
+            <if test="devno != null">
+                devno = #{devno,jdbcType=VARCHAR},
+            </if>
+            <if test="typeid != null">
+                typeid = #{typeid,jdbcType=BIGINT},
+            </if>
+            <if test="water != null">
+                water = #{water,jdbcType=DOUBLE},
+            </if>
+            <if test="lifeStatus != null">
+                life_status = #{lifeStatus,jdbcType=INTEGER},
+            </if>
+            <if test="status != null">
+                status = #{status,jdbcType=INTEGER},
+            </if>
+            <if test="explain != null">
+                `explain` = #{explain,jdbcType=VARCHAR},
+            </if>
+            <if test="flag != null">
+                flag = #{flag,jdbcType=INTEGER},
+            </if>
+            <if test="beginvalue != null">
+                beginvalue = #{beginvalue,jdbcType=DOUBLE},
+            </if>
+            <if test="enterpriseid != null">
+                enterpriseid = #{enterpriseid,jdbcType=BIGINT},
+            </if>
+            <if test="accesstime != null">
+                accesstime = #{accesstime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="uplinktime != null">
+                uplinktime = #{uplinktime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="tapstatus != null">
+                tapstatus = #{tapstatus,jdbcType=INTEGER},
+            </if>
+            <if test="taptype != null">
+                taptype = #{taptype,jdbcType=INTEGER},
+            </if>
+            <if test="mode != null">
+                mode = #{mode},
+            </if>
+            <if test="imsi != null">
+                imsi = #{imsi},
+            </if>
+            <if test="kind != null">
+                kind = #{kind},
+            </if>
+            <if test="batchNumber != null">
+                batch_number = #{batchNumber},
+            </if>
+            <if test="deviceParId != null">
+                device_par_id = #{deviceParId},
+            </if>
+            <if test="pid != null">
+                pid = #{pid},
+            </if>
+            <if test="caliber != null and caliber != '' ">
+                caliber = #{caliber,jdbcType=VARCHAR},
+            </if>
+            <if test="iccid != null and iccid != '' ">
+                iccid = #{iccid,jdbcType=VARCHAR},
+            </if>
+            <if test="processStatus != null and processStatus != '' ">
+                process_status = #{processStatus},
+            </if>
+            <if test="reportingCycle != null and reportingCycle != '' ">
+                reporting_cycle = #{reportingCycle},
+            </if>
+            <if test="unit != null and unit != '' ">
+                unit = #{unit},
+            </if>
+            <if test="factoryCode != null and factoryCode != '' ">
+                factory_code = #{factoryCode},
+            </if>
+        </set>
+        where devid = #{devid}
+    </update>
+
+
+    <select id="getExportDeviceList"
+            resultType="com.dotop.smartwater.project.module.core.water.vo.customize.ExportDeviceVo">
+        select
+        d.devid, d.typeid, d.mode, d.kind, d.devno, d.deveui, d.imsi, d.caliber, d.water, d.water,
+        d.`explain`, d.beginvalue ,d.accesstime ,d.accesstime as accesstimeText, d.uplinktime, d.tapstatus, d.taptype,
+        d.status, d.product_id as productId,
+        d.device_par_id as deviceParId, d.batch_number as batchNumber, d.pid, d.imsi,
+        d.nfc_init_pwd as nfcInitPwd ,d.nfc_com_pwd as nfcComPwd , d.iccid,
+        (case d.tapstatus when 0 then '关' when 1 then '开' else '-' end )as tap,
+        (case d.taptype when 0 then '不带阀' when 1 then '带阀' else '-' end) as isValve
+        ,dc.child_name as purposename
+        ,md.child_name as modeName
+        ,if((r.`name`) is not NULL , CONCAT(r.`name` , '(' , r.`code`, ')') , r.`name`) as communityName
+        ,p.`name` as productName
+        ,p.productNo as productNo
+        ,o.`username`
+        ,o.`userno`
+        ,un.child_name as unitName
+        ,se.child_name as sensorTypeName
+        from device d left join owner o on o.devid = d.devid
+        left join dictionary_child dc on o.purposeid=dc.child_id
+        left join dictionary_child md on d.mode = md.child_id
+        LEFT JOIN store_product p ON d.product_id = p.productId
+        left join area r on o.communityid = r.id
+        left join dictionary_child un on d.unit = un.child_id
+        left join dictionary_child se on d.sensor_type = se.child_id
+        <where>
+            d.flag != 4
+            <if test="enterpriseid != null and enterpriseid != '' ">
+                and d.enterpriseid = #{enterpriseid}
+            </if>
+            <if test="pid != null ">
+                and d.pid=#{pid}
+            </if>
+            <if test="status != null ">
+                and d.status=#{status}
+            </if>
+            <if test="devno != null and devno != '' ">
+                and d.devno like CONCAT('%',#{devno},'%')
+            </if>
+            <if test="deveui != null and deveui != '' ">
+                and d.deveui like CONCAT('%',#{deveui},'%')
+            </if>
+            <if test="nodeIds != null and nodeIds.size() > 0 ">
+                and o.communityid in
+                <foreach item="item" collection="nodeIds" separator="," open="(" close=")" index="">
+                    #{item}
+                </foreach>
+            </if>
+            <if test="interval != null ">
+                and DATEDIFF(now(),d.uplinktime) &gt;= #{interval}
+            </if>
+            <if test="tapstatus != null ">
+                and d.tapstatus=#{tapstatus}
+            </if>
+            <if test="mode != null ">
+                and d.mode=#{mode}
+            </if>
+            <if test="taptype != null ">
+                and d.taptype=#{taptype}
+            </if>
+            <if test="kind != null and kind != ''">
+                and d.kind=#{kind}
+            </if>
+            <if test="typeid != null and typeid != ''">
+                and d.typeid=#{typeid}
+            </if>
+            <if test="batchNumber != null and batchNumber != ''">
+                and d.batch_number like concat('%',#{batchNumber},'%')
+            </if>
+            <if test="userStatus != null">
+                and o.`status` = #{userStatus}
+            </if>
+        </where>
+        order by d.uplinktime desc
+    </select>
+
+
+    <select id="findByNfcTagDev" resultMap="DeviceVo">
+		SELECT * FROM device WHERE nfc_tag = #{nfcTag} ORDER BY accesstime DESC LIMIT 1
+	</select>
+
+    <select id="getkeyWordDevice" resultMap="DeviceVo">
+        SELECT a.mode,a.imsi,a.deveui,a.`status` , a.accesstime, a.devno , a.beginvalue, a.water,
+        a.uplinktime,a.caliber,
+        a.tapstatus,a.taptype,a.mode,a.typeid,a.`explain`,a.kind,(a.water - a.beginvalue) as totalwater,a.device_par_id,
+        a.unit,a.sensor_type,
+        e.rssi,e.lsnr
+        ,dc.child_name as purposename
+        ,md.child_name as modeName
+        ,if((r.`name`) is not NULL , CONCAT(r.`name` , '(' , r.`code`, ')') , r.`name`) as communityName
+        ,p.`name` as productName,
+        b.userno,b.username, b.userphone, b.cardid, b.useraddr, b.installmonth ,
+        b.alreadypay , CASE a.`status` WHEN 0 THEN '在线' WHEN 1 THEN '弃用' ELSE '离线' END AS devicestatus ,
+        CASE a.`tapstatus` WHEN 0 THEN '关阀' WHEN 1 THEN '开阀' ELSE '' END AS devicetapstatus ,
+        CASE a.`mode` WHEN 1 THEN 'LORA' WHEN 2 THEN '移动NB' WHEN 3 THEN '电信NB' ELSE '' END AS devicemode ,
+        CASE a.`taptype` WHEN 1 THEN '带阀' WHEN 0 THEN '不带阀' ELSE '' END AS devicetaptype ,
+        CASE b.`status` WHEN 0 THEN '销户' WHEN 1 THEN '已开户' ELSE '未开户' END AS ownerstatus,
+        un.child_name as unitName, se.child_name as sensorTypeName
+        FROM device a
+        LEFT JOIN device_ext e on a.devid = e.devid
+        LEFT JOIN `owner` b ON a.devid = b.devid
+        left join dictionary_child dc on b.purposeid=dc.child_id
+        left join dictionary_child md on a.mode = md.child_id
+        left join area r on b.communityid = r.id
+        left join store_product p ON a.product_id = p.productId
+        left join dictionary_child un on a.unit = un.child_id
+        left join dictionary_child se on a.sensor_type = se.child_id
+        <where>
+            a.flag != 4
+            <if test="enterpriseid != null and enterpriseid != '' ">
+                and a.enterpriseid = #{enterpriseid}
+            </if>
+            <if test="keywords != null and keywords !=''">
+                AND (a.devno = #{keywords} OR a.deveui=#{keywords} OR b.userno = #{keywords} OR b.userphone =#{keywords}
+                OR b.cardid=#{keywords})
+            </if>
+        </where>
+    </select>
+
+    <select id="findDevByDevNos" resultMap="DeviceVo">
+        select * from `device` where flag != 4 and devno in
+        <foreach item="item" index="index" collection="list" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </select>
+
+    <select id="findByOrderPreviewList" resultMap="DeviceVo">
+        select * from `device` where pid != 0 and flag !=4 and devno in
+        <foreach item="item" index="index" collection="list" open="(" separator="," close=")">
+            #{item.devno}
+        </foreach>
+    </select>
+
+    <update id="batchUpdateWater">
+        <foreach collection="list" item="item" separator=";" open="" close="">
+            update `device`
+            <set>
+                <if test="item.water != null">
+                    water=#{item.water},
+                </if>
+                <if test="item.uplinktime != null and item.uplinktime != '' ">
+                    uplinktime=#{item.uplinktime},
+                </if>
+            </set>
+            where enterpriseid = #{item.enterpriseid} and devid = #{item.devid}
+        </foreach>
+    </update>
+
+
+</mapper>

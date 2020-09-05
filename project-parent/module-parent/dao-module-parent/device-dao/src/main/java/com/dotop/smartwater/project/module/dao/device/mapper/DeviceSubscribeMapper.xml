@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dotop.smartwater.project.module.dao.device.IDeviceSubscribeDao">
+  <resultMap id="BaseResultMap" type="com.dotop.smartwater.project.module.core.water.vo.DeviceSubscribeVo">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="devno" jdbcType="VARCHAR" property="devno" />
+    <result column="enterpriseid" jdbcType="VARCHAR" property="enterpriseid" />
+    <result column="subscribe_time" jdbcType="TIMESTAMP" property="subscribeTime" />
+  </resultMap>
+
+  <select id="get"  resultMap="BaseResultMap">
+    select *
+    from device_subscribe
+    where devno = #{devno,jdbcType=VARCHAR} and enterpriseid = #{enterpriseid,jdbcType=VARCHAR}
+  </select>
+  <delete id="del">
+    delete from device_subscribe
+    where devno = #{devno,jdbcType=VARCHAR} and enterpriseid = #{enterpriseid,jdbcType=VARCHAR}
+  </delete>
+  <insert id="add" parameterType="com.dotop.smartwater.project.module.core.water.dto.DeviceSubscribeDto">
+    insert into device_subscribe (devno, enterpriseid,
+      subscribe_time)
+    values (#{devno,jdbcType=VARCHAR}, #{enterpriseid,jdbcType=VARCHAR},
+      #{subscribeTime,jdbcType=TIMESTAMP})
+  </insert>
+</mapper>

@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper
+        namespace="com.dotop.smartwater.project.module.dao.operation.IUserOperationRecordDao">
+    <resultMap id="UserOperationRecordVo"
+               type="com.dotop.smartwater.project.module.core.water.vo.UserOperationRecordVo">
+
+        <id property="id" column="id"/>
+        <result property="operateuser" column="operateuser"/>
+        <result property="operateusername" column="operateusername"/>
+        <result property="operate" column="operate"/>
+        <result property="operatetime" column="operatetime"/>
+        <result property="userid" column="userid"/>
+        <result property="enterpriseid" column="enterpriseid"/>
+        <result property="ip" column="ip"/>
+        <result property="operatetype" column="operatetype"/>
+    </resultMap>
+
+    <insert id="add" keyColumn="id" useGeneratedKeys="true">
+        INSERT INTO user_operation_record (id,operateuser,operateusername,operate,operatetime,userid,enterpriseid,ip,operatetype)
+        VALUES (#{id},#{operateuser},#{operateusername},#{operate},#{operatetime},#{userid},#{enterpriseid},#{ip},#{operatetype})
+    </insert>
+
+    <select id="list" resultMap="UserOperationRecordVo">
+        SELECT id,ip,operateuser,operateusername,operate,operatetime,userid,operatetype,enterpriseid
+        FROM user_operation_record WHERE 1=1
+        <if test="ip != null and ip != ''">
+            AND ip LIKE CONCAT('%',#{ip},'%')
+        </if>
+        <if test="operateuser != null and operateuser != ''">
+            AND operateuser LIKE CONCAT('%',#{operateuser},'%')
+        </if>
+        <if test="operateusername != null and operateusername != ''">
+            AND operateusername LIKE CONCAT('%',#{operateusername},'%')
+        </if>
+        <if test="operatetype != null and operatetype!=''">
+            AND operatetype=#{operatetype}
+        </if>
+        <if test="startTime != null">
+            AND operatetime &gt;= DATE_FORMAT(#{startTime},'%Y-%m-%d 00:00:00')
+        </if>
+        <if test="endTime != null">
+            AND operatetime &lt;= DATE_FORMAT(#{endTime},'%Y-%m-%d 23:59:59')
+        </if>
+        <if test="enterpriseid != null and enterpriseid != ''">
+            AND enterpriseid=#{enterpriseid}
+        </if>
+        order by operatetime desc
+    </select>
+
+</mapper>

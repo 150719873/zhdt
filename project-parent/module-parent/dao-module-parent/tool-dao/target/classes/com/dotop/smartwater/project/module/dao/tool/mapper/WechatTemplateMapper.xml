@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper
+	namespace="com.dotop.smartwater.project.module.dao.tool.IWechatTemplateDao">
+
+	<insert id="add">
+		INSERT INTO
+		`wechat_template`(`id`,`enterpriseid`,`name`,`smsptid`,`content`,`status`,`remarks`,`delflag`,
+		`createuser`,`createtime`,`updateuser`,`updatetime`,`smstype`,`smstypename`,`bindtime`)
+		VALUES(#{id},#{enterpriseid},#{name},#{smsptid},#{content},#{status},#{remarks},
+		#{delflag},#{createuser},#{createtime},
+		#{updateuser},#{updatetime},#{smstype},#{smstypename},#{bindtime})
+	</insert>
+
+	<select id="list"
+		resultType="com.dotop.smartwater.project.module.core.water.vo.WechatTemplateVo">
+		SELECT
+		a.id,a.enterpriseid,a.`name`,a.smsptid,a.content,a.`status`,a.remarks,a.delflag,a.smstypename,
+		a.smstype,a.createtime,a.updatetime,b.name as enterprisename
+		FROM
+		wechat_template AS a inner join enterprise as b
+		on a.enterpriseid =
+		b.enterpriseid
+		<where>
+			<if test="enterpriseid != null and enterpriseid != ''">
+				AND a.enterpriseid like CONCAT('%',#{enterpriseid},'%')
+			</if>
+			<if test="name != null and name != ''">
+				AND a.name like CONCAT('%',#{name},'%')
+			</if>
+			<if test="status != null">
+				AND a.status = #{status}
+			</if>
+			<if test="smsptid != null and smsptid != ''">
+				AND a.smsptid like CONCAT('%',#{smsptid},'%')
+			</if>
+			<if test="smstype != null">
+				AND a.smstype = #{smstype}
+			</if>
+			<if test="smsptid != null and smsptid != ''">
+				AND a.smsptid like CONCAT('%',#{smsptid},'%')
+			</if>
+			and a.delflag = 0
+		</where>
+		<if test="limit!=null and offset!=null">
+			ORDER BY a.createtime desc
+			LIMIT #{limit} OFFSET #{offset}
+		</if>
+
+	</select>
+
+	<update id="edit" parameterType="java.util.Map">
+		UPDATE `wechat_template`
+		<trim prefix="set" suffixOverrides=",">
+			<if test="updatetime != null">
+				updatetime=#{updatetime},
+			</if>
+			<if test="delflag != null ">
+				delflag=#{delflag},
+			</if>
+			<if test="name != null and name != ''">
+				name=#{name},
+			</if>
+			<if test="smsptid != null and smsptid != ''">
+				smsptid=#{smsptid},
+			</if>
+			<if test="content != null  ">
+				content=#{content},
+			</if>
+			<if test="status != null ">
+				status=#{status},
+			</if>
+			<if test="remarks != null and remarks != '' ">
+				remarks=#{remarks},
+			</if>
+			<if test="enterpriseid != null ">
+				enterpriseid=#{enterpriseid},
+			</if>
+		</trim>
+		WHERE
+		id=#{id}
+	</update>
+
+	<select id="get"
+		resultType="com.dotop.smartwater.project.module.core.water.vo.WechatTemplateVo">
+		SELECT
+		a.id,a.enterpriseid,a.`name`,a.smsptid,a.content,a.`status`,a.remarks,a.delflag,a.smstypename,
+		a.smstype,a.createtime,a.updatetime,b.name as enterprisename
+		FROM
+		wechat_template AS a inner join enterprise as b
+		on a.enterpriseid =  b.enterpriseid
+		WHERE a.id =#{id}
+	</select>
+
+	<select id="isExist" resultType="java.lang.Boolean">
+		SELECT EXISTS
+		(
+		SELECT id FROM wechat_template
+		<where>
+			and delflag=0
+			<if test="smstype != null and smstype != ''">
+				and smstype=#{smstype}
+			</if>
+
+			<if test="enterpriseid != null and enterpriseid != ''">
+				and enterpriseid= #{enterpriseid}
+			</if>
+		</where>
+		)
+	</select>
+
+	<select id="getByEnterpriseidAndsmsType" resultType="com.dotop.smartwater.project.module.core.water.vo.WechatTemplateVo">
+		SELECT * FROM wechat_template where delflag=0 and status=0 and
+		smstype=#{smsType}
+		and enterpriseid= #{enterpriseid} order by bindtime desc limit 1
+	</select>
+
+</mapper>

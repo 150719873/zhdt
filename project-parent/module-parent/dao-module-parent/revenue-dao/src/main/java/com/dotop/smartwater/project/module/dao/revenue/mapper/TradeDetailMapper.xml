@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dotop.smartwater.project.module.dao.revenue.ITradeDetailDao">
+  <resultMap id="BaseResultMap" type="com.dotop.smartwater.project.module.core.water.vo.TradeDetailVo">
+    <id column="id" jdbcType="VARCHAR" property="id" />
+    <result column="number" jdbcType="VARCHAR" property="number" />
+    <result column="trade_number" jdbcType="VARCHAR" property="tradeNumber" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="amount" jdbcType="VARCHAR" property="amount" />
+    <result column="net_receipts" jdbcType="VARCHAR" property="netReceipts" />
+    <result column="give_change" jdbcType="VARCHAR" property="giveChange" />
+    <result column="mode" jdbcType="VARCHAR" property="mode" />
+    <result column="status" jdbcType="VARCHAR" property="status" />
+    <result column="operator_id" jdbcType="VARCHAR" property="operatorId" />
+    <result column="operator_name" jdbcType="VARCHAR" property="operatorName" />
+    <result column="enterprise_id" jdbcType="VARCHAR" property="enterpriseid" />
+    <result column="create_by" jdbcType="VARCHAR" property="createBy" />
+    <result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
+    <result column="last_by" jdbcType="VARCHAR" property="lastBy" />
+    <result column="last_date" jdbcType="TIMESTAMP" property="lastDate" />
+    <result column="third_party_num" jdbcType="VARCHAR" property="thirdPartyNum" />
+    <result column="explan" jdbcType="VARCHAR" property="explan" />
+  </resultMap>
+
+  <delete id="del" parameterType="java.lang.String">
+    delete from trade_detail
+    where id = #{id,jdbcType=VARCHAR}
+  </delete>
+  
+  
+  <select id="getDetail" resultMap="BaseResultMap">
+  	select * from trade_detail where number=#{number} and enterprise_id=#{enterpriseid}
+  </select>
+  
+
+  <insert id="add" parameterType="com.dotop.smartwater.project.module.core.water.dto.TradeDetailDto">
+    insert into trade_detail (id, number, trade_number, 
+      create_time, amount, net_receipts, 
+      give_change, mode, status, 
+      operator_id, operator_name, enterprise_id, 
+      create_by, create_date, last_by, 
+      last_date, third_party_num, explan
+      )
+    values (#{id,jdbcType=VARCHAR}, #{number,jdbcType=VARCHAR}, #{tradeNumber,jdbcType=VARCHAR}, 
+      #{createTime,jdbcType=TIMESTAMP}, #{amount,jdbcType=VARCHAR}, #{netReceipts,jdbcType=VARCHAR}, 
+      #{giveChange,jdbcType=VARCHAR}, #{mode,jdbcType=VARCHAR}, #{status,jdbcType=VARCHAR}, 
+      #{operatorId,jdbcType=VARCHAR}, #{operatorName,jdbcType=VARCHAR}, #{enterpriseid,jdbcType=VARCHAR}, 
+      #{userBy,jdbcType=VARCHAR}, #{curr,jdbcType=TIMESTAMP}, #{userBy,jdbcType=VARCHAR}, 
+      #{curr,jdbcType=TIMESTAMP}, #{thirdPartyNum,jdbcType=VARCHAR}, #{explan,jdbcType=LONGVARCHAR}
+      )
+  </insert>
+
+  <update id="edit">
+    update trade_detail
+    <set>
+      <if test="amount != null and amount != '' ">
+        `amount` = #{amount,jdbcType=VARCHAR},
+      </if>
+      <if test="netReceipts != null and netReceipts != '' ">
+        net_receipts = #{netReceipts,jdbcType=VARCHAR},
+      </if>
+      <if test="giveChange != null and giveChange != '' ">
+        give_change = #{giveChange,jdbcType=VARCHAR},
+      </if>
+      <if test="mode != null and mode != '' ">
+        `mode` = #{mode,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null and status != '' ">
+        `status` = #{status,jdbcType=VARCHAR},
+      </if>
+      <if test="operatorId != null and operatorId != '' ">
+        operator_id = #{operatorId,jdbcType=VARCHAR},
+      </if>
+      <if test="operatorName != null and operatorName != '' ">
+        operator_name = #{operatorName,jdbcType=VARCHAR},
+      </if>
+      <if test="enterpriseid != null and enterpriseid != '' ">
+        enterprise_id = #{enterpriseid,jdbcType=VARCHAR},
+      </if>
+      <if test="userBy != null and userBy != '' ">
+        last_by = #{userBy,jdbcType=VARCHAR},
+      </if>
+      <if test="curr != null ">
+        last_date = #{curr,jdbcType=TIMESTAMP},
+      </if>
+      <if test="thirdPartyNum != null and thirdPartyNum != '' ">
+        third_party_num = #{thirdPartyNum,jdbcType=VARCHAR},
+      </if>
+      <if test="explan != null and explan != '' ">
+        `explan` = #{explan,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+
+</mapper>

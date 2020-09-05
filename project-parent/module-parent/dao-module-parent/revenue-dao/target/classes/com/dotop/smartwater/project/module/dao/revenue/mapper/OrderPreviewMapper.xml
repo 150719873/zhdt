@@ -1,0 +1,341 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dotop.smartwater.project.module.dao.revenue.IOrderPreviewDao">
+    <resultMap id="BaseResultMap" type="com.dotop.smartwater.project.module.core.water.vo.OrderPreviewVo">
+        <id column="ownerid" jdbcType="VARCHAR" property="ownerid"/>
+        <result column="enterpriseid" jdbcType="VARCHAR" property="enterpriseid"/>
+        <result column="tradeno" jdbcType="VARCHAR" property="tradeno"/>
+        <result column="year" jdbcType="VARCHAR" property="year"/>
+        <result column="month" jdbcType="VARCHAR" property="month"/>
+        <result column="communityid" jdbcType="VARCHAR" property="communityid"/>
+        <result column="communityno" jdbcType="VARCHAR" property="communityno"/>
+        <result column="communityname" jdbcType="VARCHAR" property="communityname"/>
+        <result column="userno" jdbcType="VARCHAR" property="userno"/>
+        <result column="username" jdbcType="VARCHAR" property="username"/>
+        <result column="phone" jdbcType="VARCHAR" property="phone"/>
+        <result column="cardid" jdbcType="VARCHAR" property="cardid"/>
+        <result column="addr" jdbcType="VARCHAR" property="addr"/>
+        <result column="pricetypeid" jdbcType="VARCHAR" property="pricetypeid"/>
+        <result column="pricetypename" jdbcType="VARCHAR" property="pricetypename"/>
+        <result column="deveui" jdbcType="VARCHAR" property="deveui"/>
+        <result column="devno" jdbcType="VARCHAR" property="devno"/>
+        <result column="devstatus" jdbcType="INTEGER" property="devstatus"/>
+        <result column="explain" jdbcType="VARCHAR" property="explain"/>
+        <result column="tapstatus" jdbcType="INTEGER" property="tapstatus"/>
+        <result column="taptype" jdbcType="INTEGER" property="taptype"/>
+        <result column="upreadtime" jdbcType="TIMESTAMP" property="upreadtime"/>
+        <result column="upreadwater" jdbcType="DECIMAL" property="upreadwater"/>
+        <result column="readtime" jdbcType="TIMESTAMP" property="readtime"/>
+        <result column="readwater" jdbcType="DECIMAL" property="readwater"/>
+        <result column="day" jdbcType="INTEGER" property="day"/>
+        <result column="water" jdbcType="DECIMAL" property="water"/>
+        <result column="payno" jdbcType="VARCHAR" property="payno"/>
+        <result column="original" jdbcType="DECIMAL" property="original"/>
+        <result column="amount" jdbcType="DECIMAL" property="amount"/>
+        <result column="balance" jdbcType="DECIMAL" property="balance"/>
+        <result column="realamount" jdbcType="DECIMAL" property="realamount"/>
+        <result column="paytype" jdbcType="INTEGER" property="paytype"/>
+        <result column="paystatus" jdbcType="INTEGER" property="paystatus"/>
+        <result column="paytime" jdbcType="TIMESTAMP" property="paytime"/>
+        <result column="operatorid" jdbcType="VARCHAR" property="operatorid"/>
+        <result column="operatorname" jdbcType="VARCHAR" property="operatorname"/>
+        <result column="operatortime" jdbcType="TIMESTAMP" property="operatortime"/>
+        <result column="tradestatus" jdbcType="INTEGER" property="tradestatus"/>
+        <result column="errortype" jdbcType="INTEGER" property="errortype"/>
+        <result column="describe" jdbcType="VARCHAR" property="describe"/>
+        <result column="generateuserid" jdbcType="VARCHAR" property="generateuserid"/>
+        <result column="generateusername" jdbcType="VARCHAR" property="generateusername"/>
+        <result column="generatetime" jdbcType="TIMESTAMP" property="generatetime"/>
+        <result column="reduceid" jdbcType="VARCHAR" property="reduceid"/>
+        <result column="purposeid" jdbcType="VARCHAR" property="purposeid"/>
+
+        <result column="approval_status" jdbcType="INTEGER" property="approval_status"/>
+        <result column="approval_result" jdbcType="VARCHAR" property="approval_result"/>
+        <result column="typeid" jdbcType="VARCHAR" property="typeid"/>
+    </resultMap>
+
+    <select id="findOrderPreview"
+            parameterType="com.dotop.smartwater.project.module.core.water.form.customize.PreviewForm"
+            resultMap="BaseResultMap">
+        select * from `order_preview` where 1=1
+        <if test="type != null">
+            <if test="type == 'A'.toString()">
+                and communityid in
+                <foreach item="item" index="index" collection="communityIds.split(',')" open="(" separator=","
+                         close=")">
+                    '${item}'
+                </foreach>
+            </if>
+            <if test="type == 'B'.toString()">
+                and userno in
+                <foreach item="item" index="index" collection="usernos.split(',')" open="(" separator="," close=")">
+                    '${item}'
+                </foreach>
+            </if>
+        </if>
+        <if test="tradeStatus != null">
+            and tradestatus = #{tradeStatus}
+        </if>
+        <if test="enterpriseid != null and enterpriseid != ''">
+            and enterpriseid = #{enterpriseid}
+        </if>
+        order by generatetime desc
+    </select>
+
+    <delete id="deletePreview" parameterType="java.lang.String">
+    delete from order_preview
+    where ownerid = #{ownerid,jdbcType=VARCHAR}
+  </delete>
+
+    <delete id="clearPreview" parameterType="java.lang.String">
+    delete from order_preview where 1=1 ${condition}
+  </delete>
+
+    <insert id="insert">
+    insert into order_preview (ownerid, enterpriseid, tradeno, 
+      year, month, communityid, 
+      communityno, communityname, userno, 
+      username, phone, cardid, 
+      addr, pricetypeid, pricetypename, 
+      deveui, devno, devstatus, 
+      explain, tapstatus, taptype, 
+      upreadtime, upreadwater, readtime, 
+      readwater, day, water, 
+      payno, original, amount, 
+      balance, realamount, paytype, 
+      paystatus, paytime, operatorid, 
+      operatorname, operatortime, tradestatus, 
+      errortype, describe, generateuserid, 
+      generateusername, generatetime, reduceid, 
+      purposeid)
+    values (#{ownerid,jdbcType=VARCHAR}, #{enterpriseid,jdbcType=VARCHAR}, #{tradeno,jdbcType=VARCHAR}, 
+      #{year,jdbcType=VARCHAR}, #{month,jdbcType=VARCHAR}, #{communityid,jdbcType=VARCHAR}, 
+      #{communityno,jdbcType=VARCHAR}, #{communityname,jdbcType=VARCHAR}, #{userno,jdbcType=VARCHAR}, 
+      #{username,jdbcType=VARCHAR}, #{phone,jdbcType=VARCHAR}, #{cardid,jdbcType=VARCHAR}, 
+      #{addr,jdbcType=VARCHAR}, #{pricetypeid,jdbcType=VARCHAR}, #{pricetypename,jdbcType=VARCHAR}, 
+      #{deveui,jdbcType=VARCHAR}, #{devno,jdbcType=VARCHAR}, #{devstatus,jdbcType=INTEGER}, 
+      #{explain,jdbcType=VARCHAR}, #{tapstatus,jdbcType=INTEGER}, #{taptype,jdbcType=INTEGER}, 
+      #{upreadtime,jdbcType=TIMESTAMP}, #{upreadwater,jdbcType=DECIMAL}, #{readtime,jdbcType=TIMESTAMP}, 
+      #{readwater,jdbcType=DECIMAL}, #{day,jdbcType=INTEGER}, #{water,jdbcType=DECIMAL}, 
+      #{payno,jdbcType=VARCHAR}, #{original,jdbcType=DECIMAL}, #{amount,jdbcType=DECIMAL}, 
+      #{balance,jdbcType=DECIMAL}, #{realamount,jdbcType=DECIMAL}, #{paytype,jdbcType=INTEGER}, 
+      #{paystatus,jdbcType=INTEGER}, #{paytime,jdbcType=TIMESTAMP}, #{operatorid,jdbcType=VARCHAR}, 
+      #{operatorname,jdbcType=VARCHAR}, #{operatortime,jdbcType=TIMESTAMP}, #{tradestatus,jdbcType=INTEGER}, 
+      #{errortype,jdbcType=INTEGER}, #{describe,jdbcType=VARCHAR}, #{generateuserid,jdbcType=VARCHAR}, 
+      #{generateusername,jdbcType=VARCHAR}, #{generatetime,jdbcType=TIMESTAMP}, #{reduceid,jdbcType=VARCHAR}, 
+      #{purposeid,jdbcType=VARCHAR})
+  </insert>
+
+    <update id="update">
+        update order_preview
+        <set>
+            <if test="enterpriseid != null">
+                enterpriseid = #{enterpriseid,jdbcType=VARCHAR},
+            </if>
+            <if test="tradeno != null">
+                tradeno = #{tradeno,jdbcType=VARCHAR},
+            </if>
+            <if test="year != null">
+                year = #{year,jdbcType=VARCHAR},
+            </if>
+            <if test="month != null">
+                month = #{month,jdbcType=VARCHAR},
+            </if>
+            <if test="communityid != null">
+                communityid = #{communityid,jdbcType=VARCHAR},
+            </if>
+            <if test="communityno != null">
+                communityno = #{communityno,jdbcType=VARCHAR},
+            </if>
+            <if test="communityname != null">
+                communityname = #{communityname,jdbcType=VARCHAR},
+            </if>
+            <if test="userno != null">
+                userno = #{userno,jdbcType=VARCHAR},
+            </if>
+            <if test="username != null">
+                username = #{username,jdbcType=VARCHAR},
+            </if>
+            <if test="phone != null">
+                phone = #{phone,jdbcType=VARCHAR},
+            </if>
+            <if test="cardid != null">
+                cardid = #{cardid,jdbcType=VARCHAR},
+            </if>
+            <if test="addr != null">
+                addr = #{addr,jdbcType=VARCHAR},
+            </if>
+            <if test="pricetypeid != null">
+                pricetypeid = #{pricetypeid,jdbcType=VARCHAR},
+            </if>
+            <if test="pricetypename != null">
+                pricetypename = #{pricetypename,jdbcType=VARCHAR},
+            </if>
+            <if test="deveui != null">
+                deveui = #{deveui,jdbcType=VARCHAR},
+            </if>
+            <if test="devno != null">
+                devno = #{devno,jdbcType=VARCHAR},
+            </if>
+            <if test="devstatus != null">
+                devstatus = #{devstatus,jdbcType=INTEGER},
+            </if>
+            <if test="explain != null">
+                explain = #{explain,jdbcType=VARCHAR},
+            </if>
+            <if test="tapstatus != null">
+                tapstatus = #{tapstatus,jdbcType=INTEGER},
+            </if>
+            <if test="taptype != null">
+                taptype = #{taptype,jdbcType=INTEGER},
+            </if>
+            <if test="upreadtime != null">
+                upreadtime = #{upreadtime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="upreadwater != null">
+                upreadwater = #{upreadwater,jdbcType=DECIMAL},
+            </if>
+            <if test="readtime != null">
+                readtime = #{readtime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="readwater != null">
+                readwater = #{readwater,jdbcType=DECIMAL},
+            </if>
+            <if test="day != null">
+                day = #{day,jdbcType=INTEGER},
+            </if>
+            <if test="water != null">
+                water = #{water,jdbcType=DECIMAL},
+            </if>
+            <if test="payno != null">
+                payno = #{payno,jdbcType=VARCHAR},
+            </if>
+            <if test="original != null">
+                original = #{original,jdbcType=DECIMAL},
+            </if>
+            <if test="amount != null">
+                amount = #{amount,jdbcType=DECIMAL},
+            </if>
+            <if test="balance != null">
+                balance = #{balance,jdbcType=DECIMAL},
+            </if>
+            <if test="realamount != null">
+                realamount = #{realamount,jdbcType=DECIMAL},
+            </if>
+            <if test="paytype != null">
+                paytype = #{paytype,jdbcType=INTEGER},
+            </if>
+            <if test="paystatus != null">
+                paystatus = #{paystatus,jdbcType=INTEGER},
+            </if>
+            <if test="paytime != null">
+                paytime = #{paytime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="operatorid != null">
+                operatorid = #{operatorid,jdbcType=VARCHAR},
+            </if>
+            <if test="operatorname != null">
+                operatorname = #{operatorname,jdbcType=VARCHAR},
+            </if>
+            <if test="operatortime != null">
+                operatortime = #{operatortime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="tradestatus != null">
+                tradestatus = #{tradestatus,jdbcType=INTEGER},
+            </if>
+            <if test="errortype != null">
+                errortype = #{errortype,jdbcType=INTEGER},
+            </if>
+            <if test="describe != null">
+                describe = #{describe,jdbcType=VARCHAR},
+            </if>
+            <if test="generateuserid != null">
+                generateuserid = #{generateuserid,jdbcType=VARCHAR},
+            </if>
+            <if test="generateusername != null">
+                generateusername = #{generateusername,jdbcType=VARCHAR},
+            </if>
+            <if test="generatetime != null">
+                generatetime = #{generatetime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="reduceid != null">
+                reduceid = #{reduceid,jdbcType=VARCHAR},
+            </if>
+            <if test="purposeid != null">
+                purposeid = #{purposeid,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where ownerid = #{ownerid,jdbcType=VARCHAR}
+    </update>
+
+    <select id="AuditingOrderPreviewList"
+            parameterType="com.dotop.smartwater.project.module.core.water.form.customize.PreviewForm"
+            resultMap="BaseResultMap">
+        select a.*,b.typeid from `order_preview` a left join device b on a.deveui = b.deveui and b.flag != 4
+        <where>
+            <if test="enterpriseid != null and enterpriseid != ''">
+                and a.enterpriseid = #{enterpriseid}
+            </if>
+            <if test="communityIds != null and communityIds != ''">
+                and a.communityid in
+                <foreach item="item" index="index" collection="communityIds.split(',')" open="(" separator=","
+                         close=")">
+                    '${item}'
+                </foreach>
+            </if>
+            <if test="devno != null and devno != ''">
+                and a.devno = #{devno}
+            </if>
+            <if test="username != null and username != ''">
+                and a.username = #{username}
+            </if>
+            <if test="usernos != null and usernos != ''">
+                and a.userno = #{usernos}
+            </if>
+            <if test="tradeStatus != null">
+                and a.tradestatus = #{tradeStatus}
+            </if>
+        </where>
+
+        order by a.generatetime desc
+    </select>
+
+    <update id="updateOrderPreviewApprovalResult"
+            parameterType="com.dotop.smartwater.project.module.core.water.form.customize.PreviewForm">
+        update`order_preview`
+        <set>
+            <if test="approvalResult != null and approvalResult != ''">
+                approval_result = #{approvalResult},
+            </if>
+            <if test="approvalStatus != null and approvalStatus != ''">
+                approval_status = #{approvalStatus}
+            </if>
+        </set>
+        <where>
+            <if test="enterpriseid != null and enterpriseid != ''">
+                and enterpriseid = #{enterpriseid}
+            </if>
+            <if test="communityIds != null and communityIds != ''">
+                and communityid in
+                <foreach item="item" index="index" collection="communityIds.split(',')" open="(" separator=","
+                         close=")">
+                    '${item}'
+                </foreach>
+            </if>
+            <if test="devno != null and devno != ''">
+                and devno = #{devno}
+            </if>
+            <if test="username != null and username != ''">
+                and username = #{username}
+            </if>
+            <if test="usernos != null and usernos != ''">
+                and userno = #{usernos}
+            </if>
+            <if test="tradeStatus != null">
+                and tradestatus = #{tradeStatus}
+            </if>
+        </where>
+    </update>
+
+
+</mapper>

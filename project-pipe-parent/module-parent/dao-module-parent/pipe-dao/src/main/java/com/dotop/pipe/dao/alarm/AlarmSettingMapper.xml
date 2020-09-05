@@ -1,0 +1,227 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.dotop.pipe.api.dao.alarm.IAlarmSettingDao">
+
+    <resultMap id="AlarmSettingVoMap"
+               type="com.dotop.pipe.core.vo.alarm.AlarmSettingVo">
+        <result column="id" jdbcType="VARCHAR" property="id"/>
+        <result column="device_id" jdbcType="VARCHAR" property="deviceId"/>
+        <result column="tag" jdbcType="VARCHAR" property="tag"/>
+        <result column="field" jdbcType="VARCHAR" property="field"/>
+        <result column="max_value" jdbcType="VARCHAR" property="maxValue"/>
+        <result column="min_value" jdbcType="VARCHAR" property="minValue"/>
+        <result column="min_compare" jdbcType="VARCHAR" property="minCompare"/>
+        <result column="max_compare" jdbcType="VARCHAR" property="maxCompare"/>
+        <result column="des" jdbcType="VARCHAR" property="des"/>
+        <result column="last_by" jdbcType="VARCHAR" property="lastBy"/>
+        <result column="last_date" jdbcType="TIMESTAMP" property="lastDate"/>
+        <!-- <association property="device"
+            javaType="DeviceVo">
+            <result column="device_id" jdbcType="VARCHAR" property="deviceId" />
+            <result column="device_name" jdbcType="VARCHAR" property="name" />
+            <result column="device_code" jdbcType="VARCHAR" property="code" />
+            <association property="product" javaType="ProductVo">
+                <association property="category" javaType="DictionaryVo">
+                    <result column="product_category_name" jdbcType="VARCHAR"   property="name" />
+                </association>
+                <association property="type" javaType="DictionaryVo">
+                    <result column="product_type_name"  jdbcType="VARCHAR"   property="name" />
+                </association>
+            </association>
+            <association property="area" javaType="AreaModelVo">
+             <result column="area_id"  jdbcType="VARCHAR"   property="areaId" />
+            </association>
+        </association> -->
+    </resultMap>
+
+    <resultMap id="DeviceVoMap" type="com.dotop.pipe.core.vo.device.DeviceVo">
+        <result column="device_id" jdbcType="VARCHAR" property="deviceId"/>
+        <result column="code" jdbcType="VARCHAR" property="code"/>
+        <result column="name" jdbcType="VARCHAR" property="name"/>
+        <result column="des" jdbcType="VARCHAR" property="des"/>
+        <result column="address" jdbcType="VARCHAR" property="address"/>
+        <result column="length" jdbcType="VARCHAR" property="length"/>
+        <result column="depth" jdbcType="VARCHAR" property="depth"/>
+        <result column="pipe_elevation" jdbcType="VARCHAR" property="pipeElevation"/>
+        <result column="ground_elevation" jdbcType="VARCHAR" property="groundElevation"/>
+        <result column="acreage" jdbcType="VARCHAR" property="acreage"/>
+        <result column="scale" jdbcType="VARCHAR" property="scale"/>
+        <result column="device_count" jdbcType="VARCHAR" property="deviceCount"/>
+        <result column="install_date" jdbcType="TIMESTAMP" property="installDate"/>
+        <result column="remark" jdbcType="VARCHAR" property="remark"/>
+        <result column="version" jdbcType="VARCHAR" property="version"/>
+        <result column="last_by" jdbcType="VARCHAR" property="lastBy"/>
+        <result column="last_date" jdbcType="TIMESTAMP" property="lastDate"/>
+        <result column="enterprise_id" jdbcType="VARCHAR" property="enterpriseId"/>
+        <result column="deviceCount" jdbcType="VARCHAR" property="deviceCount"/>
+        <result column="device_map_id" jdbcType="VARCHAR" property="deviceMapId"/>
+        <result column="product_category" jdbcType="VARCHAR" property="productCategory"/>
+        <association property="area" javaType="com.dotop.pipe.core.vo.area.AreaModelVo">
+            <result column="area_id" jdbcType="VARCHAR" property="areaId"/>
+            <result column="area_code" jdbcType="VARCHAR" property="areaCode"/>
+            <result column="area_name" jdbcType="VARCHAR" property="name"/>
+            <result column="area_des" jdbcType="VARCHAR" property="des"/>
+        </association>
+        <association property="product" javaType="com.dotop.pipe.core.vo.product.ProductVo">
+            <result column="product_id" jdbcType="VARCHAR" property="productId"/>
+            <result column="product_code" jdbcType="VARCHAR" property="code"/>
+            <result column="product_name" jdbcType="VARCHAR" property="name"/>
+            <result column="product_des" jdbcType="VARCHAR" property="des"/>
+            <association property="category" javaType="com.dotop.pipe.core.vo.common.DictionaryVo">
+                <result column="product_category_name" jdbcType="VARCHAR" property="name"/>
+                <result column="product_category_val" jdbcType="VARCHAR" property="val"/>
+            </association>
+            <association property="type" javaType="com.dotop.pipe.core.vo.common.DictionaryVo">
+                <result column="product_type_name" jdbcType="VARCHAR" property="name"/>
+                <result column="product_type_val" jdbcType="VARCHAR" property="val"/>
+            </association>
+        </association>
+        <collection property="alarmSettingVos" ofType="com.dotop.pipe.core.vo.alarm.AlarmSettingVo"
+                    javaType="java.util.List" column="{deviceId=device_id,enterpriseId=enterprise_id,isDel = is_del}"
+                    select="gets">
+            <result column="tag" jdbcType="VARCHAR" property="tag"/>
+            <result column="field" jdbcType="VARCHAR" property="field"/>
+            <result column="max_value" jdbcType="VARCHAR" property="maxValue"/>
+            <result column="min_value" jdbcType="VARCHAR" property="minValue"/>
+            <result column="min_compare" jdbcType="VARCHAR" property="minCompare"/>
+            <result column="max_compare" jdbcType="VARCHAR" property="maxCompare"/>
+            <result column="des" jdbcType="VARCHAR" property="des"/>
+        </collection>
+    </resultMap>
+
+    <!-- 预警值批量添加 -->
+    <insert id="add">
+        INSERT INTO pls_alarm_setting
+        (id,device_id,tag,field,max_compare,max_value,min_compare,min_value,des,create_by,create_date,last_by,last_date,is_del,enterprise_id)
+        VALUE
+        <foreach collection="deviceIds" index="index" item="deviceId" separator=",">
+            <foreach collection="properties" index="index" item="item" separator=",">
+                <if test="item.maxValue != null and item.maxValue != '' and item.minValue != null and item.minValue != '' ">
+                    (UUID(),#{deviceId},#{item.tag},#{item.field},#{item.maxCompare},#{item.maxValue},#{item.minCompare},#{item.minValue},#{item.des},#{userBy},#{curr},#{userBy},#{curr},#{isDel},#{enterpriseId})
+                </if>
+            </foreach>
+        </foreach>
+    </insert>
+
+    <delete id="del">
+        delete from pls_alarm_setting where device_id in
+        <foreach collection="deviceIds" index="index" item="deviceId" separator="," open="(" close=")">
+            #{deviceId}
+        </foreach>
+        and enterprise_id = #{enterpriseId}
+    </delete>
+
+    <select id="gets" resultMap="AlarmSettingVoMap">
+        select device_id,field,tag,min_value,max_value,des,max_compare,min_compare
+        from pls_alarm_setting
+        <where>
+            <if test="enterpriseId != null and enterpriseId != '' ">
+                and enterprise_id = #{enterpriseId}
+            </if>
+            <if test="deviceId != null and deviceId != '' ">
+                and device_id = #{deviceId}
+            </if>
+            <if test="isDel != null and isDel !='' ">
+                and is_del = #{isDel}
+            </if>
+            <if test="id != null and id !='' ">
+                and id = #{id}
+            </if>
+        </where>
+    </select>
+
+    <select id="page" resultMap="DeviceVoMap" parameterType="java.util.Map">
+
+        SELECT a.device_id,a.code, a.name, a.des, a.address,a.length,a.depth,a.pipe_elevation,a.ground_elevation,
+        a.laying, a.install_date, a.remark,a.version,a.last_by, a.last_date,a.is_del, a.enterprise_id,
+        a.product_id,a.product_category,
+        c.area_id AS area_id, c.area_code AS area_code,c.name AS area_name
+        FROM pls_device AS a
+        JOIN pls_area AS c ON a.area_id=c.area_id AND a.is_del=#{isDel} AND c.is_del=#{isDel}
+        <if test="productCategory != 'sensor' and productCategory != 'hydrant'">
+            join pls_product as e on a.product_id = e.product_id and e.is_del = 0
+        </if>
+        left join pls_alarm_setting as b on a.device_id = b.device_id
+        <where>
+            <if test="enterpriseId != null and enterpriseId != ''">
+                AND a.enterprise_id=#{enterpriseId}
+            </if>
+            <if test="isDel != null">
+                AND a.is_del=#{isDel}
+            </if>
+            <if test="name != null and name != ''">
+                AND a.name LIKE concat('%',#{name},'%')
+            </if>
+            <if test="code != null and code != ''">
+                AND a.code LIKE concat('%',#{code},'%')
+            </if>
+            <if test="deviceId != null and deviceId != ''">
+                AND a.device_id=#{deviceId}
+            </if>
+            <if test="areaId != null and areaId != ''">
+                AND c.area_id=#{areaId}
+            </if>
+            <if test="productCategory != null and productCategory != ''">
+                AND a.product_category = #{productCategory}
+            </if>
+            <if test="productCategory != 'sensor' and productCategory != 'hydrant' ">
+                AND a.product_category in ('region','water_factory','slops_factory')
+            </if>
+            <if test="productType != null and productType != ''">
+                AND a.product_type = #{productType}
+            </if>
+        </where>
+        group by a.device_id
+        order by b.last_date DESC,a.last_date DESC
+    </select>
+
+    <select id="areaAlarmSettingPage" resultMap="DeviceVoMap" parameterType="java.util.Map">
+        SELECT 'area' as product_category ,c.area_id as device_id,c.enterprise_id as enterprise_id,c.is_del as is_del,
+        c.area_code AS code,c.name AS name,c.des as des ,
+        c.area_id AS area_id, c.area_code AS area_code,c.name AS area_name
+        FROM pls_area AS c
+        left join pls_alarm_setting as b on c.area_id = b.device_id
+        <where>
+            <if test="enterpriseId != null and enterpriseId != ''">
+                AND c.enterprise_id=#{enterpriseId}
+            </if>
+            <if test="isDel != null">
+                AND c.is_del=#{isDel}
+            </if>
+            <if test="name != null and name != ''">
+                AND c.name LIKE concat('%',#{name},'%')
+            </if>
+            <if test="code != null and code != ''">
+                AND c.area_code LIKE concat('%',#{code},'%')
+            </if>
+            <if test="areaId != null and areaId != ''">
+                AND c.area_id=#{areaId}
+            </if>
+        </where>
+        group by c.area_id
+        order by b.last_date DESC,c.last_date DESC
+    </select>
+
+
+    <!-- 批量导入用到 -->
+    <insert id="delList" parameterType="Map">
+        delete from pls_alarm_setting where device_id in
+        <foreach collection="list" index="index" item="alarmSettingDto" separator="," open="(" close=")">
+            #{alarmSettingDto.deviceId}
+        </foreach>
+    </insert>
+    <!-- 批量导入用到 -->
+    <insert id="addList">
+        INSERT INTO pls_alarm_setting
+        (id,device_id,tag,field,max_compare,max_value,min_compare,min_value,des,create_by,create_date,last_by,last_date,is_del,enterprise_id)
+        VALUE
+        <foreach collection="list" index="index" item="alarmSettingDto" separator=",">
+            <foreach collection="alarmSettingDto.properties" index="index" item="item" separator=",">
+                <if test="item.maxValue != null and item.maxValue != '' and item.minValue != null and item.minValue != '' ">
+                    (UUID(),#{alarmSettingDto.deviceId},#{item.tag},#{item.field},#{item.maxCompare},#{item.maxValue},#{item.minCompare},#{item.minValue},#{item.des},#{userBy},#{curr},#{userBy},#{curr},#{isDel},#{enterpriseId})
+                </if>
+            </foreach>
+        </foreach>
+    </insert>
+
+</mapper>

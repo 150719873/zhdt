@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.dotop.smartwater.project.module.dao.store.IOutStorageDao">
+
+	<!-- <resultMap id="OutStorageVoMap"
+		type="com.dotop.smartwater.project.module.core.water.vo.OutStorageVo">
+		<result column="recordNo" jdbcType="VARCHAR" property="recordNo" />
+		<result column="repoNo" jdbcType="VARCHAR" property="repoNo" />
+		<result column="repoName" jdbcType="VARCHAR" property="repoName" />
+		<result column="productNo" jdbcType="VARCHAR" property="productNo" />
+		<result column="name" jdbcType="VARCHAR" property="name" />
+		<result column="price" jdbcType="VARCHAR" property="price" />
+		<result column="quantity" jdbcType="VARCHAR" property="quantity" />
+		<result column="unit" jdbcType="VARCHAR" property="unit" />
+		<result column="total" jdbcType="VARCHAR" property="total" />
+		<result column="outStorageDate" jdbcType="TIMESTAMP" property="outStorageDate" />
+		<result column="outUserId" jdbcType="VARCHAR" property="outUserId" />
+		<result column="outUsername" jdbcType="VARCHAR" property="outUsername" />
+		<result column="enterpriseId" jdbcType="VARCHAR" property="enterpriseid" />
+		<result column="remark" jdbcType="VARCHAR" property="remark" />
+		<result column="status" jdbcType="VARCHAR" property="status" />
+		<association property="storage" javaType="com.dotop.smartwater.project.module.core.water.vo.StorageVo">
+			<result column="price" jdbcType="VARCHAR" property="price" /> 
+		</association>
+	</resultMap> -->
+
+	<select id="getOutStorByCon" resultType="com.dotop.smartwater.project.module.core.water.vo.OutStorageVo">
+		SELECT distinct a.recordNo, a.repoNo, a.repoName, a.productNo, a.name, a.quantity,
+		a.unit, c.price, a.total, a.status, a.outstorageDate, a.outUsername
+		FROM store_outstorage AS a,store_storage AS b, store_product AS c 
+		WHERE a.repoNo = b.repoNo AND a.productNo = b.productNo AND a.productNo = c.productNo AND b.`status` = 2
+		AND a.enterpriseId = #{enterpriseid} AND b.enterpriseId = #{enterpriseid} AND c.enterpriseId = #{enterpriseid}
+		<if test="productNo != null and productNo != ''">
+			AND a.productNo like concat('%',#{productNo},'%')
+		</if>
+		<if test="name != null and name != ''">
+			AND a.name like concat('%',#{name},'%')
+		</if>
+		<if test="status != null">
+			AND a.status = status
+		</if>
+		<if test="outstorageDate != null">
+			AND outStorageDate &gt;= outstorageDate 
+		</if>
+		<if test="outDatePlus != null">
+			AND outStorageDate &lt; outDatePlus 
+		</if>
+		ORDER BY outStorageDate DESC
+	</select>
+	
+	<select id="getOutStorByNo" resultType="com.dotop.smartwater.project.module.core.water.vo.OutStorageVo">
+		select * from store_outstorage where recordNo = #{recordNo} and enterpriseId = #{enterpriseid}
+	</select>
+	
+	<insert id="addOutStor">
+		insert into store_outstorage(recordNo,repoNo,repoName,productNo,name,quantity,unit,total,
+		outstorageDate,outUserId,outUsername,enterpriseId,remark,status) values
+		(#{recordNo},#{repoNo}, #{repoName}, #{productNo}, #{name}, #{quantity}, #{unit},
+		#{total}, #{outstorageDate}, #{outUserId}, #{outUsername}, #{enterpriseid}, #{remark}, #{status})
+	</insert>
+	
+	<update id="editOutStor">
+		update store_outstorage
+		<trim prefix="set" suffixOverrides=",">
+			<if test="repoNo != null and repoNo != ''">
+				repoNo = #{repoNo},
+			</if>
+			<if test="repoName != null and repoName != ''">
+				repoName = #{repoName},
+			</if>
+			<if test="productNo != null and productNo != ''">
+				productNo = #{productNo},
+			</if>
+			<if test="name != null and name != ''">
+				name = #{name},
+			</if>
+			<if test="quantity != null">
+				quantity = #{quantity},
+			</if>
+			<if test="unit != null and unit != ''">
+				unit = #{unit},
+			</if>
+			<if test="total != null">
+				total = #{total},
+			</if>
+			<if test="outstorageDate != null">
+				outstorageDate = #{outstorageDate},
+			</if>
+			<if test="outUserId != null and repoNo != ''">
+				outUserId = #{outUserId},
+			</if>
+			<if test="outUsername != null and outUsername != ''">
+				outUsername = #{outUsername},
+			</if>
+			<if test="1 == 1">
+				remark = #{remark},
+			</if>
+			<if test="status != null">
+				status = #{status}
+			</if>
+		</trim>
+		where enterpriseId = #{enterpriseid} and recordNo = #{recordNo}
+	</update>
+
+	<delete id="deleteOutStor">
+		delete from store_outstorage where recordNo = #{recordNo} and enterpriseId = #{enterpriseid}
+	</delete>
+	
+	<update id="confirmOutStor">
+		update store_outstorage set status = 0, outstorageDate = #{outstorageDate}, outUserId = #{outUserId},
+			outUsername = #{outUsername} where recordNo = #{recordNo} and enterpriseId = #{enterpriseid}
+	</update>
+	
+	<select id="getProCount" resultType="Integer">
+		select sum(quantity) from store_storage where enterpriseId = #{enterpriseid} and 
+			repoNo = #{repoNo} and productNo = #{productNo} and status = 2 group by productNo
+	</select>
+
+</mapper>

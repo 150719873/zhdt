@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper
+	namespace="com.dotop.smartwater.project.module.dao.revenue.IBillCheckDao">
+	<resultMap id="BillCheckVoMap"
+	type="com.dotop.smartwater.project.module.core.water.vo.BillCheckVo">
+
+	<result column="bill_check_id" jdbcType="VARCHAR"
+		property="billCheckId" />
+	<result column="serial_number" jdbcType="VARCHAR"
+		property="serialNumber" />
+	<result column="bill_title" jdbcType="VARCHAR"
+		property="billTitle" />
+	<result column="bill_status" jdbcType="VARCHAR"
+		property="billStatus" />
+	<result column="original_paid" jdbcType="DECIMAL"
+		property="originalPaid" />
+	<result column="original_not_paid" jdbcType="DECIMAL"
+		property="originalNotPaid" />
+	<result column="amount_not_paid" jdbcType="DECIMAL"
+		property="amountNotPaid" />
+	<result column="amount_paid" jdbcType="DECIMAL"
+		property="amountPaid" />
+	<result column="reduce" jdbcType="DECIMAL" property="reduce" />
+	<result column="penalty_paid" jdbcType="DECIMAL"
+		property="penaltyPaid" />
+
+	<result column="penalty_not_paid" jdbcType="DECIMAL"
+		property="penaltyNotPaid" />
+	<result column="cash" jdbcType="DECIMAL" property="cash" />
+	<result column="wechat" jdbcType="DECIMAL" property="wechat" />
+	<result column="wechat_card" jdbcType="DECIMAL"
+		property="wechatCard" />
+	<result column="alipay" jdbcType="DECIMAL" property="alipay" />
+	<result column="voucher" jdbcType="DECIMAL" property="voucher" />
+	<result column="coupon" jdbcType="DECIMAL" property="coupon" />
+	<result column="start_date" jdbcType="VARCHAR"
+		property="startDate" />
+	<result column="end_date" jdbcType="VARCHAR" property="endDate" />
+	<result column="process_status" jdbcType="VARCHAR"
+		property="processStatus" />
+	<result column="process_id" jdbcType="VARCHAR"
+		property="processId" />
+	<result column="last_by" jdbcType="VARCHAR" property="lastBy" />
+	<result column="last_date" jdbcType="TIMESTAMP"
+		property="lastDate" />
+		<result column="create_date" jdbcType="TIMESTAMP"
+		property="createDate" />
+     <result column="process_create_by" jdbcType="VARCHAR" property="processCreateBy" />
+	</resultMap>
+	<insert id="add">
+		insert into
+		bill_check(bill_check_id,serial_number,bill_title,bill_status,
+		original_paid,original_not_paid,reduce,penalty_paid,penalty_not_paid,
+		cash,wechat,wechat_card,alipay,voucher,coupon,amount_not_paid,amount_paid,
+		start_date,end_date,
+		process_status,process_id,create_by,create_date,last_by,last_date,is_del,enterprise_id)
+		VALUES(#{billCheckId},#{serialNumber},#{billTitle},#{billStatus},
+		#{originalPaid},#{originalNotPaid},#{reduce},#{penaltyPaid},#{penaltyNotPaid},
+		#{cash},#{wechat},#{wechatCard},#{alipay},#{voucher},#{coupon},#{amountNotPaid},#{amountPaid},
+		#{startDate},#{endDate},
+		#{processStatus},#{processId},#{userBy},#{curr},#{userBy},#{curr},#{isDel},#{enterpriseid})
+	</insert>
+
+	<select id="list" resultMap="BillCheckVoMap"
+		parameterType="java.util.Map">
+		<!-- SELECT bill_check_id,serial_number,bill_title,bill_status,start_date,
+		end_date,process_status,process_id,last_by,last_date,create_date -->
+		 select a.bill_check_id,a.serial_number, a.bill_title,a.bill_status,a.process_status,
+       a.process_status,a.original_not_paid,a.original_paid,a.amount_not_paid,a.amount_paid,
+       a.reduce,a.penalty_not_paid,a.penalty_paid,a.cash,a.wechat,a.wechat_card,a.alipay,a.voucher,a.coupon,a.start_date,a.end_date,
+	   a.last_by,a.last_date,a.create_date,a.process_create_by
+		from bill_check a 
+		<where>
+			<if test="isDel != null">
+				AND a.is_del=#{isDel}
+			</if>
+			<if test="billTitle != null and billTitle != ''">
+				AND a.bill_title like CONCAT('%',#{billTitle},'%')
+			</if>
+			<if test="enterpriseid != null and enterpriseid != ''">
+				AND a.enterprise_id = #{enterpriseid}
+			</if>
+		</where>
+		ORDER BY a.last_date DESC
+		<if test="limit!=null and offset!=null">
+			LIMIT #{limit} OFFSET #{offset}
+		</if>
+	</select>
+
+	 <update id="edit" parameterType="java.util.Map">
+		UPDATE bill_check
+		<trim prefix="set" suffixOverrides=",">
+			<if test="processStatus != null and processStatus != ''  ">
+				process_status=#{processStatus},
+			</if>
+			<if test="processId != null and processId != ''  ">
+				process_id=#{processId},
+			</if>
+			<if test="userBy != null and userBy != ''">
+				last_by=#{userBy},
+			</if>
+			<if test="curr != null">
+				last_date=#{curr},
+			</if>
+			<if test="processCreateBy != null">
+				process_create_by=#{processCreateBy},
+			</if>
+			
+		</trim>
+		WHERE
+		bill_check_id=#{billCheckId} AND is_del=#{isDel} AND enterprise_id = #{enterpriseid}
+		
+	</update> 
+	
+	 <update id="editStatus" parameterType="java.util.Map">
+		UPDATE bill_check
+		<trim prefix="set" suffixOverrides=",">
+			<if test="processStatus != null and processStatus != ''  ">
+				process_status=#{processStatus},
+			</if>
+			<if test="processId != null and processId != ''  ">
+				process_id=#{processId},
+			</if>
+			<if test="userBy != null and userBy != ''">
+				last_by=#{userBy},
+			</if>
+			<if test="curr != null">
+				last_date=#{curr},
+			</if>
+			<if test="processCreateBy != null">
+				process_create_by=#{processCreateBy},
+			</if>
+		</trim>
+		WHERE
+		bill_check_id=#{billCheckId} AND is_del=#{isDel} AND enterprise_id = #{enterpriseid}
+		<if test="processId != null and processId != ''  ">
+				and process_id=#{processId}
+		</if>
+	</update> 
+
+	<select id="get" resultMap="BillCheckVoMap" >
+	   select a.bill_check_id,a.serial_number, a.bill_title,a.bill_status,a.process_status,
+       a.process_status,a.original_not_paid,a.original_paid,a.amount_not_paid,a.amount_paid,
+       a.reduce,a.penalty_not_paid,a.penalty_paid,a.cash,a.wechat,a.wechat_card,a.alipay,a.voucher,a.coupon,a.start_date,a.end_date,
+	   a.last_by,a.last_date,a.create_date
+ 	   from bill_check as a 
+ 	   where a.bill_check_id = #{billCheckId}
+	</select>
+
+	<update id="del" parameterType="java.util.Map">
+		UPDATE bill_check
+		<trim prefix="set" suffixOverrides=",">
+			<if test="newIsDel != null and newIsDel != ''  ">
+				is_del=#{newIsDel},
+			</if>
+			<if test="userBy != null and userBy != ''">
+				last_by=#{userBy},
+			</if>
+			<if test="curr != null">
+				last_date=#{curr}
+			</if>
+		</trim>
+		WHERE bill_check_id=#{billCheckId} AND is_del=#{isDel} and enterprise_id = #{enterpriseid}
+	</update>
+
+	<select id="isExist" resultType="java.lang.Boolean">
+		SELECT EXISTS
+		(
+		SELECT id FROM sms_config
+		<where>
+			AND is_del=#{isDel}
+			<if test="code != null and code != ''">
+				AND code=#{code}
+			</if>
+			<if test="id != null and id != ''">
+				AND id=#{id}
+			</if>
+		</where>
+		)
+	</select>
+
+</mapper>

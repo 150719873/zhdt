@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.dotop.smartwater.project.module.dao.tool.IMessageDao">
+	
+	<select id="list" resultType="com.dotop.smartwater.project.module.core.water.vo.MessageVo">
+		select * from message_center where 1=1 
+		<if test="enterpriseid != null and enterpriseid != ''">
+			AND enterpriseid = #{enterpriseid}
+		</if>
+		<if test="batchNo != null and batchNo != ''">
+			AND batchNo LIKE CONCAT('%',#{batchNo},'%')
+		</if>
+		<if test="title != null and title != ''">
+			AND title LIKE CONCAT('%',#{title},'%')
+		</if>
+		<if test="sendusername != null and sendusername != ''">
+			AND sendusername LIKE CONCAT('%',#{sendusername},'%')
+		</if>
+		<if test="sendaddress != null and sendaddress != ''">
+			AND sendaddress LIKE CONCAT('%',#{sendaddress},'%')
+		</if>
+		<if test="receiveusername != null and receiveusername != ''">
+			AND receiveusername LIKE CONCAT('%',#{receiveusername},'%')
+		</if>
+		<if test="receiveaddress != null and receiveaddress != ''">
+			AND receiveaddress LIKE CONCAT('%',#{receiveaddress},'%')
+		</if>
+		<if test="starttime != null ">
+			AND sendtime &gt;= STR_TO_DATE(DATE_FORMAT(#{starttime},'%Y-%m-%d %H:%i:%s'),'%Y-%m-%d %H:%i:%s')
+		</if>
+		<if test="endtime != null ">
+			AND sendtime &lt;=STR_TO_DATE(DATE_FORMAT(#{endtime},'%Y-%m-%d %H:%i:%s'),'%Y-%m-%d %H:%i:%s')
+		</if>
+		ORDER BY sendtime DESC
+	</select>
+	
+	<select id="get"  resultType="com.dotop.smartwater.project.module.core.water.vo.MessageVo">
+		select * from message_center where id = #{id}
+	</select>
+	
+	<insert id="addMessage">
+		insert into message_center(id,batchNo,enterpriseid,messagetype,modeltype,sendusername,sendaddress,receiveusername,receiveaddress,title,params,content,sendtime)
+		values(#{id}, #{batchNo},#{enterpriseid},#{messagetype}, #{modeltype},#{sendusername}, #{sendaddress}, #{receiveusername}, #{receiveaddress}, #{title}, #{params}, #{content},#{sendtime})
+	</insert>
+	
+	<delete id="del">
+		delete from message_center where id = #{id}
+	</delete>
+	
+</mapper>

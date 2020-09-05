@@ -1,0 +1,688 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dotop.smartwater.project.module.dao.revenue.IOrderDao">
+    <resultMap id="BaseResultMap" type="com.dotop.smartwater.project.module.core.water.vo.OrderVo">
+        <id column="id" jdbcType="VARCHAR" property="id"/>
+        <result column="ownerid" jdbcType="VARCHAR" property="ownerid"/>
+        <result column="enterpriseid" jdbcType="VARCHAR" property="enterpriseid"/>
+        <result column="tradeno" jdbcType="VARCHAR" property="tradeno"/>
+        <result column="year" jdbcType="VARCHAR" property="year"/>
+        <result column="month" jdbcType="VARCHAR" property="month"/>
+        <result column="communityid" jdbcType="VARCHAR" property="communityid"/>
+        <result column="communityno" jdbcType="VARCHAR" property="communityno"/>
+        <result column="communityname" jdbcType="VARCHAR" property="communityname"/>
+        <result column="userno" jdbcType="VARCHAR" property="userno"/>
+        <result column="username" jdbcType="VARCHAR" property="username"/>
+        <result column="phone" jdbcType="VARCHAR" property="phone"/>
+        <result column="cardid" jdbcType="VARCHAR" property="cardid"/>
+        <result column="addr" jdbcType="VARCHAR" property="addr"/>
+        <result column="pricetypeid" jdbcType="VARCHAR" property="pricetypeid"/>
+        <result column="pricetypename" jdbcType="VARCHAR" property="pricetypename"/>
+        <result column="deveui" jdbcType="VARCHAR" property="deveui"/>
+        <result column="devno" jdbcType="VARCHAR" property="devno"/>
+        <result column="devstatus" jdbcType="INTEGER" property="devstatus"/>
+        <result column="explain" jdbcType="VARCHAR" property="explain"/>
+        <result column="tapstatus" jdbcType="INTEGER" property="tapstatus"/>
+        <result column="taptype" jdbcType="INTEGER" property="taptype"/>
+        <result column="upreadtime" jdbcType="TIMESTAMP" property="upreadtime"/>
+        <result column="upreadwater" jdbcType="DECIMAL" property="upreadwater"/>
+        <result column="readtime" jdbcType="TIMESTAMP" property="readtime"/>
+        <result column="readwater" jdbcType="DECIMAL" property="readwater"/>
+        <result column="day" jdbcType="INTEGER" property="day"/>
+        <result column="water" jdbcType="DECIMAL" property="water"/>
+        <result column="payno" jdbcType="VARCHAR" property="payno"/>
+        <result column="original" jdbcType="DECIMAL" property="original"/>
+        <result column="amount" jdbcType="DECIMAL" property="amount"/>
+        <result column="couponmoney" jdbcType="DECIMAL" property="couponmoney"/>
+        <result column="balance" jdbcType="DECIMAL" property="balance"/>
+        <result column="realamount" jdbcType="DECIMAL" property="realamount"/>
+        <result column="paytype" jdbcType="INTEGER" property="paytype"/>
+        <result column="paystatus" jdbcType="INTEGER" property="paystatus"/>
+        <result column="paytime" jdbcType="TIMESTAMP" property="paytime"/>
+        <result column="operatorid" jdbcType="VARCHAR" property="operatorid"/>
+        <result column="operatorname" jdbcType="VARCHAR" property="operatorname"/>
+        <result column="operatortime" jdbcType="TIMESTAMP" property="operatortime"/>
+        <result column="tradestatus" jdbcType="INTEGER" property="tradestatus"/>
+        <result column="describe" jdbcType="VARCHAR" property="describe"/>
+        <result column="generateuserid" jdbcType="VARCHAR" property="generateuserid"/>
+        <result column="generateusername" jdbcType="VARCHAR" property="generateusername"/>
+        <result column="generatetime" jdbcType="TIMESTAMP" property="generatetime"/>
+        <result column="reduceid" jdbcType="VARCHAR" property="reduceid"/>
+        <result column="purposeid" jdbcType="VARCHAR" property="purposeid"/>
+        <result column="isprint" jdbcType="INTEGER" property="isprint"/>
+        <result column="issub" jdbcType="INTEGER" property="issub"/>
+        <result column="frequency" jdbcType="INTEGER" property="frequency"/>
+        <result column="paytypeinfo" jdbcType="VARCHAR" property="paytypeinfo"/>
+        <result column="chargeinfo" jdbcType="VARCHAR" property="chargeinfo"/>
+    </resultMap>
+
+    <resultMap id="LastUpLinkMap"
+               type="com.dotop.smartwater.project.module.core.water.vo.customize.LastUpLinkVo">
+        <result column="devid" jdbcType="VARCHAR" property="devid"/>
+        <result column="rxtime" jdbcType="VARCHAR" property="rxtime"/>
+        <result column="water" jdbcType="VARCHAR" property="water"/>
+        <result column="days" jdbcType="INTEGER" property="days"/>
+    </resultMap>
+
+    <resultMap id="IncomeMap"
+               type="com.dotop.smartwater.project.module.core.water.vo.customize.IncomeVo">
+        <result column="alreadyAmount" jdbcType="DECIMAL" property="alreadyAmount"/>
+        <result column="uncollectedAmount" jdbcType="DECIMAL" property="uncollectedAmount"/>
+    </resultMap>
+
+    <select id="findById" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select *  from `order` where id = #{id,jdbcType=VARCHAR}
+  </select>
+
+    <delete id="delete" parameterType="java.lang.String">
+        delete from `order`
+        where id = #{id,jdbcType=VARCHAR}
+    </delete>
+    
+    <delete id="deleteTradePay" parameterType="java.lang.String">
+        delete from `trade_pay` where payno=#{payno}
+    </delete>
+    
+    <update id="updateCouponStatus">
+     update coupon set status=0 where bill = #{tradeno}
+    </update>
+
+    <insert id="addOrder">
+    insert into `order` (id, ownerid, enterpriseid,
+      tradeno, `year`, `month`,
+      communityid, communityno, communityname, 
+      userno, username, phone, 
+      cardid, addr, pricetypeid, 
+      pricetypename, deveui, devno, 
+      devstatus, `explain`, tapstatus,
+      taptype, upreadtime, upreadwater, 
+      readtime, readwater, `day`,
+      water, payno, original, 
+      amount, couponmoney, balance, 
+      realamount, paytype, paystatus, 
+      paytime, operatorid, operatorname, 
+      operatortime, tradestatus, `describe`,
+      generateuserid, generateusername, generatetime, 
+      reduceid, purposeid, isprint, 
+      issub)
+    values (#{id,jdbcType=VARCHAR}, #{ownerid,jdbcType=VARCHAR}, #{enterpriseid,jdbcType=VARCHAR}, 
+      #{tradeno,jdbcType=VARCHAR}, #{year,jdbcType=VARCHAR}, #{month,jdbcType=VARCHAR}, 
+      #{communityid,jdbcType=VARCHAR}, #{communityno,jdbcType=VARCHAR}, #{communityname,jdbcType=VARCHAR}, 
+      #{userno,jdbcType=VARCHAR}, #{username,jdbcType=VARCHAR}, #{phone,jdbcType=VARCHAR}, 
+      #{cardid,jdbcType=VARCHAR}, #{addr,jdbcType=VARCHAR}, #{pricetypeid,jdbcType=VARCHAR}, 
+      #{pricetypename,jdbcType=VARCHAR}, #{deveui,jdbcType=VARCHAR}, #{devno,jdbcType=VARCHAR}, 
+      #{devstatus,jdbcType=INTEGER}, #{explain,jdbcType=VARCHAR}, #{tapstatus,jdbcType=INTEGER}, 
+      #{taptype,jdbcType=INTEGER}, #{upreadtime,jdbcType=TIMESTAMP}, #{upreadwater,jdbcType=DECIMAL}, 
+      #{readtime,jdbcType=TIMESTAMP}, #{readwater,jdbcType=DECIMAL}, #{day,jdbcType=INTEGER}, 
+      #{water,jdbcType=DECIMAL}, #{payno,jdbcType=VARCHAR}, #{original,jdbcType=DECIMAL}, 
+      #{amount,jdbcType=DECIMAL}, #{couponmoney,jdbcType=DECIMAL}, #{balance,jdbcType=DECIMAL}, 
+      #{realamount,jdbcType=DECIMAL}, #{paytype,jdbcType=INTEGER}, #{paystatus,jdbcType=INTEGER}, 
+      #{paytime,jdbcType=TIMESTAMP}, #{operatorid,jdbcType=VARCHAR}, #{operatorname,jdbcType=VARCHAR}, 
+      #{operatortime,jdbcType=TIMESTAMP}, #{tradestatus,jdbcType=INTEGER}, #{describe,jdbcType=VARCHAR}, 
+      #{generateuserid,jdbcType=VARCHAR}, #{generateusername,jdbcType=VARCHAR}, #{generatetime,jdbcType=TIMESTAMP}, 
+      #{reduceid,jdbcType=VARCHAR}, #{purposeid,jdbcType=VARCHAR}, #{isprint,jdbcType=INTEGER}, 
+      #{issub,jdbcType=INTEGER})
+  </insert>
+  
+   <update id="updateOrder">
+        update `order`
+        <set>
+            <if test="ownerid != null and ownerid != ''">
+                ownerid = #{ownerid,jdbcType=VARCHAR},
+            </if>
+            <if test="enterpriseid != null and enterpriseid != ''">
+                enterpriseid = #{enterpriseid,jdbcType=VARCHAR},
+            </if>
+            <if test="tradeno != null and tradeno != ''">
+                tradeno = #{tradeno,jdbcType=VARCHAR},
+            </if>
+            <if test="year != null and year != ''">
+                `year` = #{year,jdbcType=VARCHAR},
+            </if>
+            <if test="month != null and month != ''">
+                `month` = #{month,jdbcType=VARCHAR},
+            </if>
+            <if test="communityid != null and communityid != ''">
+                communityid = #{communityid,jdbcType=VARCHAR},
+            </if>
+            <if test="communityno != null and communityno != ''">
+                communityno = #{communityno,jdbcType=VARCHAR},
+            </if>
+            <if test="communityname != null and ownerid != ''">
+                communityname = #{communityname,jdbcType=VARCHAR},
+            </if>
+            <if test="userno != null and userno != ''">
+                userno = #{userno,jdbcType=VARCHAR},
+            </if>
+            <if test="username != null and username != ''">
+                username = #{username,jdbcType=VARCHAR},
+            </if>
+            <if test="phone != null and phone != ''">
+                phone = #{phone,jdbcType=VARCHAR},
+            </if>
+            <if test="cardid != null and cardid != ''">
+                cardid = #{cardid,jdbcType=VARCHAR},
+            </if>
+            <if test="addr != null and addr != ''">
+                addr = #{addr,jdbcType=VARCHAR},
+            </if>
+            <if test="pricetypeid != null and pricetypeid != ''">
+                pricetypeid = #{pricetypeid,jdbcType=VARCHAR},
+            </if>
+            <if test="pricetypename != null and pricetypename != ''">
+                pricetypename = #{pricetypename,jdbcType=VARCHAR},
+            </if>
+            <if test="deveui != null and deveui != ''">
+                deveui = #{deveui,jdbcType=VARCHAR},
+            </if>
+            <if test="devno != null and devno != ''">
+                devno = #{devno,jdbcType=VARCHAR},
+            </if>
+            <if test="devstatus != null">
+                devstatus = #{devstatus,jdbcType=INTEGER},
+            </if>
+            <if test="explain != null and explain != ''">
+                `explain` = #{explain,jdbcType=VARCHAR},
+            </if>
+            <if test="tapstatus != null">
+                tapstatus = #{tapstatus,jdbcType=INTEGER},
+            </if>
+            <if test="taptype != null">
+                taptype = #{taptype,jdbcType=INTEGER},
+            </if>
+            <if test="upreadtime != null">
+                upreadtime = #{upreadtime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="upreadwater != null">
+                upreadwater = #{upreadwater,jdbcType=DECIMAL},
+            </if>
+            <if test="readtime != null">
+                readtime = #{readtime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="readwater != null">
+                readwater = #{readwater,jdbcType=DECIMAL},
+            </if>
+            <if test="day != null">
+                `day` = #{day,jdbcType=INTEGER},
+            </if>
+            <if test="water != null">
+                water = #{water,jdbcType=DECIMAL},
+            </if>
+            <if test="payno != null and payno != ''">
+                payno = #{payno,jdbcType=VARCHAR},
+            </if>
+            <if test="original != null">
+                original = #{original,jdbcType=DECIMAL},
+            </if>
+            <if test="amount != null">
+                amount = #{amount,jdbcType=DECIMAL},
+            </if>
+            <if test="couponmoney != null">
+                couponmoney = #{couponmoney,jdbcType=DECIMAL},
+            </if>
+            <if test="balance != null">
+                balance = #{balance,jdbcType=DECIMAL},
+            </if>
+            <if test="realamount != null">
+                realamount = #{realamount,jdbcType=DECIMAL},
+            </if>
+            <if test="paytype != null">
+                paytype = #{paytype,jdbcType=INTEGER},
+            </if>
+            <if test="paystatus != null">
+                paystatus = #{paystatus,jdbcType=INTEGER},
+            </if>
+            <if test="paytime != null">
+                paytime = #{paytime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="operatorid != null and operatorid != ''">
+                operatorid = #{operatorid,jdbcType=VARCHAR},
+            </if>
+            <if test="operatorname != null and operatorname != ''">
+                operatorname = #{operatorname,jdbcType=VARCHAR},
+            </if>
+            <if test="operatortime != null">
+                operatortime = #{operatortime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="tradestatus != null">
+                tradestatus = #{tradestatus,jdbcType=INTEGER},
+            </if>
+            <if test="describe != null and describe != ''">
+                `describe` = #{describe,jdbcType=VARCHAR},
+            </if>
+            <if test="generateuserid != null and generateuserid != ''">
+                generateuserid = #{generateuserid,jdbcType=VARCHAR},
+            </if>
+            <if test="generateusername != null and generateusername != ''">
+                generateusername = #{generateusername,jdbcType=VARCHAR},
+            </if>
+            <if test="generatetime != null">
+                generatetime = #{generatetime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="reduceid != null and reduceid != ''">
+                reduceid = #{reduceid,jdbcType=VARCHAR},
+            </if>
+            <if test="purposeid != null and purposeid != ''">
+                purposeid = #{purposeid,jdbcType=VARCHAR},
+            </if>
+            <if test="isprint != null">
+                isprint = #{isprint,jdbcType=INTEGER},
+            </if>
+            <if test="issub != null">
+                issub = #{issub,jdbcType=INTEGER},
+            </if>
+        </set>
+        where id = #{id,jdbcType=VARCHAR}
+    </update>
+
+    <select id="orderList" resultMap="BaseResultMap">
+        select * from `order`
+        where issub = 0
+        <if test="year != null">
+            and `year` = #{year}
+        </if>
+        <if test="month != null">
+            and `month` = #{month}
+        </if>
+        <if test="enterpriseid != null and enterpriseid !=''">
+            and `enterpriseid` = #{enterpriseid}
+        </if>
+        <if test="paystatus != null">
+            and `paystatus` = #{paystatus}
+        </if>
+        <if test="ownerid != null">
+            and `ownerid` = #{ownerid}
+        </if>
+        <if test="communityid != null">
+            and `communityid` = #{communityid}
+        </if>
+        <if test="cids != null">
+            and `communityid` in
+            <foreach item="item" index="index" collection="cids.split(',')" open="(" separator="," close=")">
+                '${item}'
+            </foreach>
+        </if>
+        <if test="userno != null and userno !=''">
+            and `userno` like CONCAT('%',#{userno}, '%')
+        </if>
+        <if test="username != null and username !=''">
+            and `username` like CONCAT("%",#{username}, "%")
+        </if>
+        <if test="phone != null and phone !=''">
+            and `phone` like CONCAT("%",#{phone}, "%")
+        </if>
+        <if test="cardid != null and cardid!=''">
+            and `cardid` like CONCAT("%",#{cardid}, "%")
+        </if>
+        <if test="devno != null and devno!=''">
+            and `devno` like CONCAT("%",#{devno}, "%")
+        </if>
+        <if test="generatetime != null and generatetime!='' and generateTimeEnd != null and generateTimeEnd != ''">
+            and DATE_FORMAT(generatetime,'%Y%m') between #{generatetime} and #{generateTimeEnd}
+        </if>
+        order by generatetime desc
+    </select>
+
+    <select id="orderListByWeChat" resultMap="BaseResultMap">
+        select * from `order`
+        where issub = 0
+        <if test="enterpriseid != null and enterpriseid !=''">
+            and `enterpriseid` = #{enterpriseid}
+        </if>
+        <if test="ownerid != null">
+            and `ownerid` = #{ownerid}
+        </if>
+        order by generatetime asc
+    </select>
+
+    <select id="findByUserNo" resultMap="BaseResultMap">
+    select * from `order` where enterpriseid=#{enterpriseid}
+    and userno=#{userno} and issub = 0 order by tradeno desc limit 1
+  </select>
+
+    <select id="findLastUplink" resultMap="LastUpLinkMap">
+        select a.water,a.rxtime,TIMESTAMPDIFF(DAY,a.rxtime, #{meterTime}) as days
+        from (select water,rxtime from device_uplink${currentMonth} where devid=#{devid} and rxtime &lt; #{meterTime}
+        UNION ALL
+        select water,rxtime from device_uplink${lastMonth} where devid=#{devid} and rxtime &lt; #{meterTime} ) as a
+        where water is NOT NULL ORDER BY a.rxtime DESC LIMIT 1
+    </select>
+
+    <select id="bills" resultMap="BaseResultMap">
+        select * ,(SELECT count(id) count from bill where businessid = id OR businessid = tradeno) as frequency
+        from `order` where issub = 0
+        <if test="year != null">
+            and `year` = #{year}
+        </if>
+        <if test="month != null">
+            and `month` = #{month}
+        </if>
+        <if test="enterpriseid != null">
+            and `enterpriseid` = #{enterpriseid}
+        </if>
+        <if test="paystatus != null">
+            and `paystatus` = #{paystatus}
+        </if>
+        <if test="ownerid != null">
+            and `ownerid` = #{ownerid}
+        </if>
+        <if test="communityid != null">
+            and `communityid` = #{communityid}
+        </if>
+        <if test="cids != null">
+            and `communityid` in
+            <foreach item="item" index="index" collection="cids.split(',')" open="(" separator="," close=")">
+                '${item}'
+            </foreach>
+        </if>
+        <if test="userno != null">
+            and `userno` like CONCAT("%",#{userno}, "%")
+        </if>
+        <if test="username != null">
+            and `username` like CONCAT("%",#{username}, "%")
+        </if>
+        <if test="phone != null">
+            and `phone` like CONCAT("%",#{phone}, "%")
+        </if>
+        <if test="cardid != null">
+            and `cardid` like CONCAT("%",#{cardid}, "%")
+        </if>
+        <if test="devno != null">
+            and `devno` like CONCAT("%",#{devno}, "%")
+        </if>
+        order by generatetime desc
+    </select>
+
+
+    <select id="findLastUplinkList" resultMap="LastUpLinkMap"
+            parameterType="com.dotop.smartwater.project.module.core.water.dto.OrderLastUplinkDto">
+        SELECT o.devid , o.water,TIMESTAMPDIFF(DAY,o.rxtime, #{meterTime}) as days,o.rxtime FROM (
+        SELECT MAX(rxtime) as  rxtime from device_uplink${lastMonth}
+        where devid in (SELECT devid from `owner` where 1=1
+        <if test="type != null">
+            <if test="type == 'A'.toString()">
+                and communityid in
+                <foreach item="item" index="index" collection="communityIds.split(',')" open="(" separator=","
+                         close=")">
+                    '${item}'
+                </foreach>
+            </if>
+            <if test="type == 'B'.toString()">
+                and userno in
+                <foreach item="item" index="index" collection="usernos.split(',')" open="(" separator="," close=")">
+                    '${item}'
+                </foreach>
+            </if>
+        </if>
+        )
+        AND rxtime &lt; #{meterTime} AND water is not null
+        GROUP BY deveui
+        ) n INNER JOIN device_uplink${lastMonth} o ON n.rxtime = o.rxtime where o.water is not null
+        UNION ALL
+        SELECT o.devid , o.water,TIMESTAMPDIFF(DAY,o.rxtime, #{meterTime}) as days,o.rxtime FROM (
+        SELECT MAX(rxtime) as  rxtime from device_uplink${currentMonth}
+        where devid in (SELECT devid from `owner` where 1=1
+        <if test="type != null">
+            <if test="type == 'A'.toString()">
+                and communityid in
+                <foreach item="item" index="index" collection="communityIds.split(',')" open="(" separator=","
+                         close=")">
+                    '${item}'
+                </foreach>
+            </if>
+            <if test="type == 'B'.toString()">
+                and userno in
+                <foreach item="item" index="index" collection="usernos.split(',')" open="(" separator="," close=")">
+                    '${item}'
+                </foreach>
+            </if>
+        </if>
+        )
+        AND rxtime &lt; #{meterTime} AND water is not null
+        GROUP BY deveui
+        ) n INNER JOIN device_uplink${currentMonth} o ON n.rxtime = o.rxtime where o.water is not null
+
+    </select>
+
+    <select id="findByUserNoMap" resultMap="BaseResultMap">
+        SELECT o.* FROM (
+        SELECT MAX(tradeno) as tradeno from `order`
+        where issub = 0 and enterpriseid = #{enterpriseid}
+        <if test="usernos != null">
+            and userno in
+            <foreach item="item" index="index" collection="usernos.split(',')" open="(" separator="," close=")">
+                '${item}'
+            </foreach>
+        </if>
+        GROUP BY userno
+        ) n INNER JOIN `order` o ON n.tradeno = o.tradeno
+    </select>
+
+    <insert id="addOrders">
+        insert into `order`(id, tradestatus, ownerid, enterpriseid, tradeno,year, month, communityid, communityno,
+        communityname, userno,username, phone,cardid, addr,
+        pricetypeid, pricetypename, deveui,devno, devstatus, `explain`, tapstatus, taptype, upreadtime, upreadwater,
+        readtime, readwater,
+        day, water, payno, original, amount,balance,
+        realamount,paystatus,`describe`,generateuserid,generateusername,generatetime,
+        reduceid,purposeid,couponmoney,isprint
+        ) select tradeno as id, tradestatus, ownerid, enterpriseid, tradeno,year, month, communityid, communityno,
+        communityname,
+        userno,username, phone ,cardid, addr,
+        pricetypeid, pricetypename, deveui,devno, devstatus, `explain`, tapstatus, taptype, upreadtime, upreadwater,
+        readtime, readwater,
+        day, water, payno, original, amount,balance,
+        realamount,paystatus,`describe`,generateuserid,generateusername,generatetime,
+        reduceid,purposeid, 0 as couponmoney, 0 as isprint from order_preview where 1=1 and tradestatus = 1
+        <if test="type != null">
+            <if test="type == 'A'.toString()">
+                and communityid in
+                <foreach item="item" index="index" collection="communityIds.split(',')" open="(" separator=","
+                         close=")">
+                    '${item}'
+                </foreach>
+            </if>
+            <if test="type == 'B'.toString()">
+                and userno in
+                <foreach item="item" index="index" collection="usernos.split(',')" open="(" separator="," close=")">
+                    '${item}'
+                </foreach>
+            </if>
+        </if>
+    </insert>
+
+    <select id="findByOwnerId" resultMap="BaseResultMap">
+        select * from `order_preview` where tradestatus = 0 and ownerid=#{ownerId}
+    </select>
+
+    <select id="findSubOrderCountByTradeNo" parameterType="java.lang.String" resultType="java.lang.Integer">
+       select count(*) from order_sub where tradeno = #{tradeno}
+    </select>
+    
+    <select id="findSubOrderCountByTradeNoMap" parameterType="java.lang.String" resultType="java.util.HashMap">
+      select tradeno, count(*) as count from order_sub 
+      <where>
+       <if test="tradenos != null">
+             tradeno in
+                <foreach item="item" index="index" collection="tradenos" open="(" separator="," close=")">
+                    #{item}
+                </foreach>
+       </if>
+      </where>
+      group by tradeno
+    </select>
+
+    <select id="findOwnerPayByPayNo" parameterType="java.lang.String" resultType="java.lang.Double">
+       select ownerpay from trade_pay where payno=#{payno} limit 1
+    </select>
+
+    <select id="findOrderByTradeNo" parameterType="java.lang.String" resultMap="BaseResultMap">
+      select * from `order` where tradeno=#{tradeno}
+    </select>
+
+    <select id="statisIncome" resultMap="IncomeMap">
+       select
+        (SELECT sum(amount) FROM `order` where paystatus = 1 AND issub = 0 AND enterpriseid = #{enterpriseid}) as alreadyAmount ,
+        (SELECT sum(amount) FROM `order` where paystatus = 0 AND issub = 0 AND enterpriseid = #{enterpriseid}) as uncollectedAmount
+    </select>
+
+    <select id="findByIds" resultMap="BaseResultMap" parameterType="java.lang.String">
+        select * from `order` where issub = 0 and id in
+        <foreach item="item" index="index" collection="orderids.split(',')" open="(" separator="," close=")">
+            '${item}'
+        </foreach>
+        ORDER BY id DESC
+    </select>
+
+    <insert id="insertOrderSubInf">
+           INSERT INTO order_sub(tradeno,subtradeno) value (#{newTradeNo} , #{subTradeNo})
+    </insert>
+
+    <update id="updateOrderSub">
+        update `order` set issub = 1 where id in
+        <foreach item="item" index="index" collection="orderids.split(',')" open="(" separator="," close=")">
+            '${item}'
+        </foreach>
+    </update>
+
+    <update id="updateSubOrder">
+       UPDATE `order` o INNER JOIN (SELECT tradeno , subtradeno FROM order_sub where tradeno = #{tradeno}) r
+       ON o.tradeno = r.subtradeno SET o.paystatus = 1
+    </update>
+
+    <update id="addPayDetail">
+      insert into pay_detail (id, ownerid, ownerno,
+      ownername, paymoney, createtime,
+      createuser, username, type,
+      beforemoney, aftermoney, payno,
+      tradeno, remark)
+      values (#{id,jdbcType=VARCHAR}, #{ownerid,jdbcType=VARCHAR}, #{ownerno,jdbcType=VARCHAR},
+      #{ownername,jdbcType=VARCHAR}, #{paymoney,jdbcType=DECIMAL}, #{createtime,jdbcType=TIMESTAMP},
+      #{createuser,jdbcType=VARCHAR}, #{username,jdbcType=VARCHAR}, #{type,jdbcType=INTEGER},
+      #{beforemoney,jdbcType=DECIMAL}, #{aftermoney,jdbcType=DECIMAL}, #{payno,jdbcType=VARCHAR},
+      #{tradeno,jdbcType=VARCHAR}, #{remark,jdbcType=VARCHAR})
+    </update>
+
+    <update id="couponIsUsed">
+      update coupon set updateusername=#{updateusername},bill=#{bill},updateuser=#{updateuser},
+      updatetime=now(),status=#{status} where couponid = #{couponid}
+    </update>
+
+    <update id="updateOwnerAlreadypay">
+      update `owner` set alreadypay=#{alreadypay} where ownerid=#{ownerid}
+    </update>
+
+    
+    <!-- 账单对账调用  查询对账时间内 状态为未缴的 账单信息-->
+    <select id="getListBetweenDate" resultMap="BaseResultMap">
+        select  b.* ,a.paytypeinfo ,a.chargeinfo
+        FROM `order` as b 
+        left join order_ext as a 
+        on b.tradeno = a.tradeno 
+        where  b.issub = 0  and  CONCAT(b.year,'-',b.month) &gt;= #{startDate} 
+          and  CONCAT(b.year,'-',b.month) &lt;= #{endDate} 
+          and  enterpriseid = #{operEid}
+         ORDER BY id DESC
+    </select>
+
+    <insert id="addOrderPreviewList">
+        INSERT INTO order_preview (ownerid, enterpriseid, tradeno,
+        year, month, communityid,
+        communityno, communityname, userno,
+        username, phone , cardid, addr,
+        pricetypeid, pricetypename, deveui,
+        devno, devstatus, `explain`,
+        tapstatus, taptype, upreadtime,
+        upreadwater, readtime, readwater,
+        day, water, payno, amount,
+        balance, realamount, paytype,
+        paystatus, paytime, operatorid,
+        operatorname, operatortime, tradestatus,
+        `describe`, errortype, generateuserid, generateusername,
+        generatetime,reduceid,purposeid,original) VALUES
+        <foreach collection="list" item="item1" index="index" separator=",">
+            (#{item1.ownerid}, #{item1.enterpriseid}, #{item1.tradeno},
+            #{item1.year}, #{item1.month}, #{item1.communityid},
+            #{item1.communityno}, #{item1.communityname}, #{item1.userno},
+            #{item1.username}, #{item1.phone} , #{item1.cardid}, #{item1.addr},
+            #{item1.pricetypeid}, #{item1.pricetypename}, #{item1.deveui},
+            #{item1.devno}, #{item1.devstatus}, #{item1.explain},
+            #{item1.tapstatus}, #{item1.taptype}, #{item1.upreadtime},
+            #{item1.upreadwater}, #{item1.readtime}, #{item1.readwater},
+            #{item1.day}, #{item1.water}, #{item1.payno}, #{item1.amount},
+            #{item1.balance}, #{item1.realamount}, #{item1.paytype},
+            #{item1.paystatus}, #{item1.paytime}, #{item1.operatorid},
+            #{item1.operatorname}, #{item1.operatortime}, #{item1.tradestatus},
+            #{item1.describe}, #{item1.errortype}, #{item1.generateuserid}, #{item1.generateusername},
+            #{item1.generatetime},#{item1.reduceid},#{item1.purposeid},#{item1.original})
+        </foreach>
+    </insert>
+
+    <insert id="addOrderExtList">
+        insert into `order_ext` (tradeno, paytypeinfo, reduceinfo, purposeinfo , chargeinfo) VALUES
+        <foreach collection="list" item="item1" index="index"  separator=",">
+            (#{item1.tradeno},#{item1.paytypeinfo},#{item1.reduceinfo},#{item1.purposeinfo},#{item1.chargeinfo})
+        </foreach>
+    </insert>
+    
+	<update id="revokeOrder">
+		update `order` set payno=#{payno} ,
+		couponmoney=#{couponmoney} ,
+		balance=#{balance} ,
+		realamount=#{realamount},paystatus=#{paystatus},paytime=null 
+		where tradeno=#{tradeno}
+	</update>
+
+	<update id="updateTradePayStatus">
+	 update `trade_pay` set paystatus = #{paystatus},remark = #{remark} where payno=#{payno}
+	</update>
+	
+
+    <insert id="addOrdersByAuditing">
+        insert into `order`(id, tradestatus, ownerid, enterpriseid, tradeno,year, month, communityid, communityno,
+        communityname, userno,username, phone,cardid, addr,
+        pricetypeid, pricetypename, deveui,devno, devstatus, `explain`, tapstatus, taptype, upreadtime, upreadwater,
+        readtime, readwater,
+        day, water, payno, original, amount,balance,
+        realamount,paystatus,`describe`,generateuserid,generateusername,generatetime,
+        reduceid,purposeid,couponmoney,isprint
+        ) select tradeno as id, tradestatus, ownerid, enterpriseid, tradeno,year, month, communityid, communityno,
+        communityname,
+        userno,username, phone ,cardid, addr,
+        pricetypeid, pricetypename, deveui,devno, devstatus, `explain`, tapstatus, taptype, upreadtime, upreadwater,
+        readtime, readwater,
+        day, water, payno, original, amount,balance,
+        realamount,paystatus,`describe`,generateuserid,generateusername,generatetime,
+        reduceid,purposeid, 0 as couponmoney, 0 as isprint from order_preview
+        <where>
+            and tradestatus = 1
+            <if test="enterpriseid != null and enterpriseid != ''">
+                and enterpriseid = #{enterpriseid}
+            </if>
+            <if test="communityIds != null and communityIds != ''">
+                and communityid in
+                <foreach item="item" index="index" collection="communityIds.split(',')" open="(" separator="," close=")">
+                    '${item}'
+                </foreach>
+            </if>
+            <if test="devno != null and devno != ''">
+                and devno = #{devno}
+            </if>
+            <if test="username != null and username != ''">
+                and username = #{username}
+            </if>
+            <if test="usernos != null and usernos != ''">
+                and userno = #{usernos}
+            </if>
+        </where>
+    </insert>
+
+    <select id="getAutoPay"  resultType="com.dotop.smartwater.project.module.core.water.vo.customize.AutoPayVo">
+        select a.ischargebacks,a.alreadypay,a.cardid,c.purposeinfo,b.* from owner a
+        INNER JOIN `order` b on a.ownerid = b.ownerid
+        INNER JOIN (SELECT MAX(tradeno) as tradeno  from `order` where issub = 0 GROUP BY ownerid ) n ON n.tradeno = b.tradeno
+        INNER JOIN order_ext c on b.tradeno = c.tradeno
+        where b.tradestatus = 1 and b.paystatus = 0
+        and a.alreadypay >= b.amount and a.enterpriseid = #{enterpriseid}
+    </select>
+</mapper>

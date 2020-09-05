@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dotop.smartwater.project.module.dao.revenue.IOwnerRecordDao">
+    <resultMap id="BaseResultMap" type="com.dotop.smartwater.project.module.core.water.vo.OwnerRecordVo">
+        <id column="id" jdbcType="VARCHAR" property="id"/>
+        <result column="enterpriseid" jdbcType="VARCHAR" property="enterpriseid"/>
+        <result column="communityid" jdbcType="VARCHAR" property="communityid"/>
+        <result column="type" jdbcType="INTEGER" property="type"/>
+        <result column="ownerid" jdbcType="VARCHAR" property="ownerid"/>
+        <result column="username" jdbcType="VARCHAR" property="username"/>
+        <result column="oldownerid" jdbcType="VARCHAR" property="oldownerid"/>
+        <result column="oldusername" jdbcType="VARCHAR" property="oldusername"/>
+        <result column="olduserphone" jdbcType="VARCHAR" property="olduserphone"/>
+        <result column="devid" jdbcType="VARCHAR" property="devid"/>
+        <result column="devno" jdbcType="VARCHAR" property="devno"/>
+        <result column="devnum" jdbcType="DOUBLE" property="devnum"/>
+        <result column="olddevid" jdbcType="VARCHAR" property="olddevid"/>
+        <result column="olddevno" jdbcType="VARCHAR" property="olddevno"/>
+        <result column="olddevnum" jdbcType="DOUBLE" property="olddevnum"/>
+        <result column="operateuser" jdbcType="VARCHAR" property="operateuser"/>
+        <result column="operatename" jdbcType="VARCHAR" property="operatename"/>
+        <result column="operatetime" jdbcType="TIMESTAMP" property="operatetime"/>
+        <result column="reason" jdbcType="VARCHAR" property="reason"/>
+        <result column="descr" jdbcType="VARCHAR" property="descr"/>
+        <result column="oldalreadypay" jdbcType="DOUBLE" property="oldalreadypay"/>
+    </resultMap>
+
+    <insert id="addOwnerRecord">
+        insert into owner_record (id, enterpriseid, communityid, type, ownerid, username, oldownerid, oldusername, olduserphone,
+			devid, devno, devnum, olddevid, olddevno, olddevnum, operateuser, operatename, operatetime,
+			reason, descr, oldalreadypay) values
+			(#{id}, #{enterpriseid}, #{communityid}, #{type}, #{ownerid}, #{username}, #{oldownerid}, #{oldusername}, #{olduserphone},
+			#{devid}, #{devno}, #{devnum}, #{olddevid}, #{olddevno}, #{olddevnum}, #{operateuser}, #{operatename},
+			#{operatetime}, #{reason}, #{descr},
+			#{oldalreadypay})
+    </insert>
+
+    <select id="getRecordList" resultMap="BaseResultMap">
+        SELECT a.* FROM owner_record as a WHERE 1=1
+        <if test="ownerid != null">
+           and ( a.ownerid = #{ownerid,jdbcType=VARCHAR} or a.oldownerid = #{oldownerid,jdbcType=VARCHAR} )
+        </if>
+        <if test="enterpriseid != null">
+           and a.enterpriseid = #{enterpriseid,jdbcType=VARCHAR}
+        </if>
+        order by a.operatetime desc
+    </select>
+
+</mapper>

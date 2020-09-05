@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper
+        namespace="com.dotop.smartwater.project.module.dao.tool.INumRuleSetDao">
+    <resultMap id="BaseResultMap" type="com.dotop.smartwater.project.module.core.water.vo.NumRuleSetVo">
+        <id column="id" jdbcType="VARCHAR" property="id"/>
+        <result column="enterpriseid" jdbcType="VARCHAR" property="enterpriseid"/>
+        <result column="ruleid" jdbcType="INTEGER" property="ruleid"/>
+        <result column="title" jdbcType="VARCHAR" property="title"/>
+        <result column="timesformat" jdbcType="VARCHAR" property="timesformat"/>
+        <result column="max_value" jdbcType="VARCHAR" property="max_value"/>
+        <result column="status" jdbcType="INTEGER" property="status"/>
+        <result column="ctime" jdbcType="TIMESTAMP" property="ctime"/>
+        <result column="name" jdbcType="VARCHAR" property="name"/>
+    </resultMap>
+
+    <insert id="add" parameterType="com.dotop.smartwater.project.module.core.water.dto.NumRuleSetDto">
+        insert into num_rule_set (id, enterpriseid, ruleid,
+          title, timesformat, max_value,
+          status, ctime)
+        values (#{id,jdbcType=VARCHAR}, #{enterpriseid,jdbcType=VARCHAR}, #{ruleid,jdbcType=INTEGER},
+          #{title,jdbcType=VARCHAR}, #{timesformat,jdbcType=VARCHAR}, #{max_value,jdbcType=VARCHAR},
+          #{status,jdbcType=INTEGER}, #{ctime,jdbcType=TIMESTAMP})
+    </insert>
+
+    <update id="edit" parameterType="com.dotop.smartwater.project.module.core.water.dto.NumRuleSetDto">
+        update num_rule_set
+        <set>
+            <if test="enterpriseid != null and enterpriseid != '' ">
+                enterpriseid = #{enterpriseid,jdbcType=VARCHAR},
+            </if>
+            <if test="ruleid != null">
+                ruleid = #{ruleid,jdbcType=INTEGER},
+            </if>
+            <if test="title != null and title != '' ">
+                title = #{title,jdbcType=VARCHAR},
+            </if>
+            <if test="timesformat != null and timesformat != '' ">
+                timesformat = #{timesformat,jdbcType=VARCHAR},
+            </if>
+            <if test="max_value != null and max_value != '' ">
+                max_value = #{max_value,jdbcType=VARCHAR},
+            </if>
+            <if test="status != null">
+                status = #{status,jdbcType=INTEGER},
+            </if>
+            <if test="ctime != null">
+                ctime = #{ctime,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where `enterpriseid` = #{enterpriseid} and ruleid = #{ruleid}
+    </update>
+
+    <select id="findByEnterpriseIdAndRuleId" resultMap="BaseResultMap">
+        select *
+        from num_rule_set
+        <where>
+            <if test="enterpriseid != null and enterpriseid != '' ">
+                and enterpriseid = #{enterpriseid,jdbcType=VARCHAR}
+            </if>
+            <if test="ruleid != null">
+                and ruleid = #{ruleid,jdbcType=INTEGER}
+            </if>
+        </where>
+        order by ctime desc limit 1
+    </select>
+
+    <select id="findByEnterpriseId" resultMap="BaseResultMap">
+        select a.*,b.name from `num_rule_set` a inner join `num_rule_base` b on a.ruleid = b.ruleid
+        <where>
+            <if test="enterpriseid != null and enterpriseid != '' ">
+                a.enterpriseid = #{enterpriseid,jdbcType=VARCHAR}
+            </if>
+        </where>
+        order by a.ctime desc
+    </select>
+
+    <select id="getBaseRuleList" resultMap="BaseResultMap">
+        select * from `num_rule_base`
+    </select>
+
+    <delete id="deleteByEnterpriseIdAndRuleId">
+        delete from `num_rule_set` where `enterpriseid` = #{enterpriseid} and ruleid = #{ruleid}
+    </delete>
+
+</mapper>

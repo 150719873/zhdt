@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.dotop.pipe.api.dao.patrol.IPatrolRouteDao">
+
+
+    <resultMap id="BaseResultMap"
+               type="com.dotop.pipe.core.vo.patrol.PatrolRouteVo">
+        <result column="patrol_route_id" jdbcType="VARCHAR" property="patrolRouteId"/>
+        <result column="code" jdbcType="VARCHAR" property="code"/>
+        <result column="name" jdbcType="VARCHAR" property="name"/>
+        <result column="task_ids" jdbcType="VARCHAR" property="taskIds"/>
+        <result column="desc" jdbcType="VARCHAR" property="desc"/>
+        <result column="reason" jdbcType="VARCHAR" property="reason"/>
+        <result column="patrol_task_id" jdbcType="VARCHAR" property="patrolTaskId"/>
+        <result column="enterprise_id" jdbcType="VARCHAR" property="enterpriseId"/>
+        <result column="create_by" jdbcType="VARCHAR" property="createBy"/>
+        <result column="create_date" jdbcType="TIMESTAMP" property="createDate"/>
+        <result column="is_del" jdbcType="VARCHAR" property="isDel"/>
+        <result column="last_by" jdbcType="VARCHAR" property="lastBy"/>
+        <result column="last_date" jdbcType="TIMESTAMP" property="lastDate"/>
+        <result column="patrol_route_point_ids" jdbcType="VARCHAR" property="patrolRoutePointIds"/>
+    </resultMap>
+
+    <sql id="selectColumns">
+        pr.patrol_route_id,
+        pr.`code`,
+        pr.`name`,
+        pr.task_ids,
+        pr.`desc`,
+        pr.reason,
+        pr.patrol_task_id,
+        pr.enterprise_id,
+        pr.create_by,
+        pr.create_date,
+        pr.is_del,
+        pr.last_by,
+        pr.last_date,
+        pr.patrol_route_point_ids
+	</sql>
+
+    <select id="list" resultMap="BaseResultMap">
+        SELECT
+        <include refid="selectColumns"/>
+        FROM
+        pls_patrol_route pr
+        <where>
+            <if test="patrolRouteId != null and patrolRouteId != ''">
+                and pr.patrol_route_id = #{patrolRouteId}
+            </if>
+            <if test="code != null and code != ''">
+                and pr.`code` like CONCAT('%',#{code},'%')
+            </if>
+            <if test="name != null and name != ''">
+                and pr.`name` like CONCAT('%',#{name},'%')
+            </if>
+            <if test="startDateTemp != null">
+                and pr.create_date <![CDATA[>=]]> #{startDateTemp}
+            </if>
+            <if test="endDateTemp != null">
+                and pr.create_date <![CDATA[<=]]> #{endDateTemp}
+            </if>
+
+            <if test="enterpriseId != null and enterpriseId != ''">
+                and pr.enterprise_id = #{enterpriseId}
+            </if>
+                and pr.is_del = 0
+        </where>
+         ORDER BY pr.last_date desc
+    </select>
+
+
+    <select id="get" resultMap="BaseResultMap">
+        SELECT
+        <include refid="selectColumns"/>
+        FROM
+        pls_patrol_route pr
+        <where>
+            <if test="patrolRouteId != null and patrolRouteId != ''">
+                pr.patrol_route_id = #{patrolRouteId}
+            </if>
+           <!-- <if test="code != null and code != ''">
+                and  pr.`code` = #{code}
+            </if>
+            <if test="name != null and name != ''">
+                and pr.`name` like CONCAT('%',#{name},'%')
+            </if> -->
+            <if test="enterpriseId != null and enterpriseId != ''">
+                and pr.enterprise_id = #{enterpriseId}
+            </if>
+        </where>
+    </select>
+
+    <insert id="add">
+        insert into pls_patrol_route(patrol_route_id, `code`, `name`, task_ids, `desc`, reason,
+            patrol_route_point_ids,
+            enterprise_id, create_by, create_date, is_del, last_by, last_date)
+        values
+            (#{patrolRouteId}, #{code}, #{name},#{taskIds,javaType=java.util.List,jdbcType=VARCHAR},#{desc},#{reason},
+            #{patrolRoutePointIds,javaType=java.util.List,jdbcType=VARCHAR},
+            #{enterpriseId}, #{userBy}, #{curr}, #{isDel}, #{userBy}, #{curr})
+    </insert>
+
+    <update id="edit">
+        update pls_patrol_route
+        <set>
+            <if test="code != null and code != ''">
+                `code`=#{code},
+            </if>
+            <if test="name != null and name != ''">
+                `name`=#{name},
+            </if>
+            <if test="desc != null and desc != ''">
+                `desc`=#{desc},
+            </if>
+            <if test="reason != null and reason != ''">
+                reason=#{reason},
+            </if>
+            <if test="taskIds.size() > 0">
+                task_ids=#{taskIds,javaType=java.util.List,jdbcType=VARCHAR},
+            </if>
+            <if test="patrolRoutePointIds.size() > 0">
+                patrol_route_point_ids=#{patrolRoutePointIds,javaType=java.util.List,jdbcType=VARCHAR},
+            </if>
+            <if test="userBy != null and userBy != '' ">
+                last_by=#{userBy},
+            </if>
+            <if test="curr != null">
+                last_date=#{curr},
+            </if>
+            <if test="patrolTaskId != null and patrolTaskId != '' ">
+                patrol_task_id=#{patrolTaskId},
+            </if>
+        </set>
+        where patrol_route_id=#{patrolRouteId} and enterprise_id=#{enterpriseId}
+    </update>
+
+    <delete id="del">
+         update pls_patrol_route set is_del=#{isDel}
+        where patrol_route_id=#{patrolRouteId} and enterprise_id=#{enterpriseId}
+    </delete>
+
+</mapper>

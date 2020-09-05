@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper
+	namespace="com.dotop.smartwater.project.module.dao.revenue.ILogoDao">
+
+	<resultMap id="LogoVoMap"
+		type="com.dotop.smartwater.project.module.core.auth.vo.LogoVo">
+		<result column="enterpriseid" jdbcType="VARCHAR" property="enterpriseid" />
+		<result column="content" jdbcType="VARCHAR" property="content" />
+		<result column="stat" jdbcType="VARCHAR" property="stat" />
+		<result column="name" jdbcType="VARCHAR" property="name" />
+		<result column="ossurl" jdbcType="VARCHAR" property="ossurl" />
+	</resultMap>
+
+	<insert id="add">
+		REPLACE into logo (enterpriseid, name, stat,ossurl)
+		values (#{enterpriseid}, #{name}, #{stat},#{ossurl})
+	</insert>
+
+    <select id="get" resultMap="LogoVoMap">
+       select enterpriseid, ossurl,name,stat from logo where enterpriseid=#{enterpriseid}
+    </select>
+    
+    <delete id="del">
+    	delete from logo where enterpriseid=#{enterpriseid}
+    </delete>
+
+</mapper>

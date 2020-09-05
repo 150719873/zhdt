@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <parent>
+        <artifactId>service-module-parent</artifactId>
+        <groupId>com.dotop.smartwater.project.third.module.service</groupId>
+        <version>2.6.0</version>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
+
+    <artifactId>meter-service</artifactId>
+
+    <dependencies>
+        <dependency>
+            <groupId>com.dotop.smartwater.dependence</groupId>
+            <artifactId>dependence-core</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.dotop.smartwater.project.third.module.core</groupId>
+            <artifactId>meter-core</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.dotop.smartwater.project.module.core</groupId>
+            <artifactId>water-core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.dotop.smartwater.project.third.module.dao</groupId>
+            <artifactId>meter-dao</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.dotop.smartwater.dependence</groupId>
+            <artifactId>dependence-cache</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.dotop.smartwater.project.module.core</groupId>
+            <artifactId>auth-core</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.httpcomponents</groupId>
+            <artifactId>httpclient</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.github.pagehelper</groupId>
+            <artifactId>pagehelper-spring-boot-starter</artifactId>
+            <version>${pagehelper.version}</version>
+            <scope>provided</scope>
+        </dependency>
+    </dependencies>
+
+</project>

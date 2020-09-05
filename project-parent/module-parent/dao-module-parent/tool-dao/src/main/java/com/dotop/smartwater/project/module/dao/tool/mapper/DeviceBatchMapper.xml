@@ -1,0 +1,224 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dotop.smartwater.project.module.dao.tool.IDeviceBatchDao">
+    <resultMap id="BaseResultMap" type="com.dotop.smartwater.project.module.core.water.vo.DeviceBatchVo">
+        <id column="id" jdbcType="VARCHAR" property="id"/>
+        <result column="serial_number" jdbcType="VARCHAR" property="serialNumber"/>
+        <result column="start_time" jdbcType="VARCHAR" property="startTime"/>
+        <result column="end_time" jdbcType="VARCHAR" property="endTime"/>
+        <result column="quantity" jdbcType="TINYINT" property="quantity"/>
+        <result column="surplus" jdbcType="TINYINT" property="surplus"/>
+        <result column="status" jdbcType="VARCHAR" property="status"/>
+        <result column="remark" jdbcType="VARCHAR" property="remark"/>
+        
+        <result column="device_par_id" jdbcType="VARCHAR" property="deviceParId"/>
+        <result column="device_name" jdbcType="VARCHAR" property="deviceName"/>
+        <result column="mode" jdbcType="VARCHAR" property="mode"/>
+        <result column="taptype" jdbcType="TINYINT" property="taptype"/>
+        <result column="unit" jdbcType="VARCHAR" property="unit"/>
+        <result column="sensor_type" jdbcType="VARCHAR" property="sensorType"/>
+        
+        <result column="product_id" jdbcType="VARCHAR" property="productId"/>
+        <result column="product_no" jdbcType="VARCHAR" property="productNo"/>
+        <result column="product_name" jdbcType="VARCHAR" property="productName"/>
+        <result column="product_model" jdbcType="VARCHAR" property="productModel"/>
+        <result column="product_caliber" jdbcType="VARCHAR" property="productCaliber"/>
+        <result column="product_vender" jdbcType="VARCHAR" property="productVender"/>
+        
+        <result column="enterprise_id" jdbcType="VARCHAR" property="enterpriseid" />
+		<result column="create_by" jdbcType="VARCHAR" property="createBy" />
+		<result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
+		<result column="last_by" jdbcType="VARCHAR" property="lastBy" />
+		<result column="last_date" jdbcType="TIMESTAMP" property="lastDate" />
+		<result column="is_del" jdbcType="TINYINT" property="isDel"/>
+        
+    </resultMap>
+
+    <select id="get" parameterType="com.dotop.smartwater.project.module.core.water.vo.DeviceBatchVo"
+            resultMap="BaseResultMap">
+    	SELECT 
+			b.* , count(br.id) as surplus 
+		FROM device_batch b 
+		LEFT JOIN(
+			select r.* FROM device_batch_relation r INNER JOIN device d ON r.devid = d.devid 
+			where d.flag != 4 and r.is_del = 0
+		) br ON b.id = br.batch_id 
+    	<where>
+    		b.enterprise_id =#{enterpriseid}
+    		<if test="id != null and id != ''">
+                and b.id = #{id}
+            </if>
+    		<if test="serialNumber != null and serialNumber != ''">
+                and b.serial_number = #{serialNumber}
+            </if>
+		</where>
+		GROUP BY b.id 
+  </select>
+
+    <select id="list" parameterType="com.dotop.smartwater.project.module.core.water.vo.DeviceBatchVo"
+            resultMap="BaseResultMap">
+        SELECT 
+			b.* , count(br.id) as surplus 
+		FROM device_batch b 
+		LEFT JOIN(
+			select r.* FROM device_batch_relation r INNER JOIN device d ON r.devid = d.devid 
+			where d.flag != 4 and r.is_del = 0
+		) br ON b.id = br.batch_id 
+        <where>
+        	b.enterprise_id =#{enterpriseid}
+            <if test="serialNumber != null and serialNumber != ''">
+                and b.serial_number like CONCAT('%',#{serialNumber},'%')
+            </if>
+            <if test="status != null and status != ''">
+                and b.status = #{status}
+            </if>
+            <if test="limit!=null and offset!=null">
+        		LIMIT #{limit} OFFSET #{offset}
+        	</if>
+        </where>
+        GROUP BY b.id order by b.last_date DESC
+    </select>
+
+	
+	<select id="devicePage" resultType="com.dotop.smartwater.project.module.core.water.vo.DeviceVo">
+        SELECT 
+			d.*
+ 		FROM device_batch_relation r LEFT JOIN device d ON r.devid = d.devid 
+ 		<where>
+ 			r.batch_id = #{batchId} and d.enterpriseid = #{enterpriseid} and d.flag != 4 and r.is_del = 0
+ 			<if test="devno != null and devno != ''">
+                and d.devno like CONCAT('%',#{devno},'%')
+            </if>
+ 			<if test="deveui != null and deveui != ''">
+                and d.deveui like CONCAT('%',#{deveui},'%')
+            </if>
+            <if test="iccid != null and iccid != ''">
+                and d.iccid like CONCAT('%',#{iccid},'%')
+            </if>
+            <if test="imsi != null and imsi != ''">
+                and d.imsi like CONCAT('%',#{imsi},'%')
+            </if>
+            <if test="status != null and status != ''">
+                and d.status = #{status}
+            </if>
+            <if test="limit!=null and offset!=null">
+        		LIMIT #{limit} OFFSET #{offset}
+        	</if>
+ 		</where>
+    </select>
+
+
+	<delete id="delete" parameterType="com.dotop.smartwater.project.module.core.water.vo.DeviceBatchVo">
+    	delete from device_batch where id = #{id} and enterprise_id = #{enterpriseid}
+  	</delete>
+
+	<update id="deleteDevice" parameterType="com.dotop.smartwater.project.module.core.water.vo.DeviceBatchRelationVo">
+		update device_batch_relation set is_del = 1 where devid = #{devid} and batch_id = #{batchId}
+	</update>
+
+	<update id="end" parameterType="com.dotop.smartwater.project.module.core.water.vo.DeviceBatchVo">
+        update device_batch
+        <set>
+            <if test="status != null">
+                status = #{status},
+            </if>
+            <if test="userBy != null">
+                last_by = #{userBy},
+            </if>
+            <if test="curr != null">
+                last_date = #{curr},
+            </if>
+        </set>
+        where id = #{id} and enterprise_id =#{enterpriseid}
+    </update>
+
+	<select id="checkBatchIsExist" resultType="java.lang.Integer">
+        select count(id) as count from device_batch where `serial_number` = #{serialNumber}
+        <if test="enterpriseid != null and enterpriseid != ''">
+            and enterprise_id = #{enterpriseid}
+        </if>
+    </select>
+	
+
+    <insert id="add" parameterType="com.dotop.smartwater.project.module.core.water.vo.DeviceBatchVo">
+	    insert into device_batch (
+	    id,serial_number,start_time,end_time,quantity,status,remark,device_par_id,device_name,mode,taptype,unit,sensor_type,product_id,
+		product_no,product_name,product_model,product_caliber,product_vender,enterprise_id,last_by,last_date)
+	    values (#{id}, #{serialNumber}, #{startTime},#{endTime},#{quantity},#{status},#{remark},#{deviceParId},
+	    #{deviceName},#{mode},#{taptype},#{unit},#{sensorType},#{productId},
+	    #{productNo},#{productName},#{productModel},#{productCaliber},#{productVender}, #{enterpriseid}, #{userBy}, #{curr})
+  </insert>
+  
+  <insert id="saveRelation" parameterType="com.dotop.smartwater.project.module.core.water.vo.DeviceBatchRelationVo">
+	    insert into device_batch_relation (id,batch_id,devid,is_del)
+	    values (#{id}, #{batchId}, #{devid},#{isDel})
+  </insert>
+
+    <update id="edit" parameterType="com.dotop.smartwater.project.module.core.water.vo.DeviceBatchVo">
+        update device_batch
+        <set>
+            <if test="serialNumber != null">
+                serial_number = #{serialNumber},
+            </if>
+            <if test="startTime != null">
+                start_time = #{startTime},
+            </if>
+            <if test="endTime != null">
+                end_time = #{endTime},
+            </if>
+            <if test="quantity != null">
+                quantity = #{quantity},
+            </if>
+            <if test="status != null">
+                status = #{status},
+            </if>
+            <if test="remark != null">
+                remark = #{remark},
+            </if>
+            <if test="deviceParId != null">
+                device_par_id = #{deviceParId},
+            </if>
+            <if test="deviceName != null">
+                device_name = #{deviceName},
+            </if>
+            <if test="mode != null">
+                mode = #{mode},
+            </if>
+            <if test="taptype != null">
+                taptype = #{taptype},
+            </if>
+            <if test="unit != null">
+                unit = #{unit},
+            </if>
+             <if test="sensorType != null">
+                sensor_type = #{sensorType},
+            </if>
+            <if test="productId != null">
+                product_id = #{productId},
+            </if>
+            <if test="productNo != null">
+                product_no = #{productNo},
+            </if>
+            <if test="productName != null">
+                product_name = #{productName},
+            </if>
+            <if test="productModel != null">
+                product_model = #{productModel},
+            </if>
+            <if test="productCaliber != null">
+                product_caliber = #{productCaliber},
+            </if>
+            <if test="productVender != null">
+                product_vender = #{productVender},
+            </if>
+            <if test="userBy != null">
+                last_by = #{userBy},
+            </if>
+            <if test="curr != null">
+                last_date = #{curr},
+            </if>
+        </set>
+        where id = #{id} and enterprise_id =#{enterpriseid}
+    </update>
+
+</mapper>

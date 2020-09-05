@@ -1,0 +1,333 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper
+        namespace="com.dotop.smartwater.project.module.dao.device.IMeterReadingDetailDao">
+    <resultMap id="MeterReadingDetailVo"
+               type="com.dotop.smartwater.project.module.core.water.vo.MeterReadingDetailVo">
+
+        <id property="id" column="id"/>
+        <result property="batchId" column="batch_id"/>
+        <result property="area" column="area"/>
+        <result property="userCode" column="user_code"/>
+        <result property="userName" column="user_name"/>
+        <result property="phone" column="phone"/>
+        <result property="address" column="address"/>
+        <result property="meterCode" column="meter_code"/>
+        <result property="meterPurpose" column="meter_purpose"/>
+        <result property="meterReader" column="meter_reader"/>
+        <result property="readTime" column="read_time"/>
+        <result property="readValue" column="read_value"/>
+        <result property="deadline" column="deadline"/>
+        <result property="printProof" column="print_proof"/>
+        <result property="qrCode" column="qr_code"/>
+        <result property="qrCodeUrl" column="qr_code_url"/>
+        <result property="status" column="status"/>
+        <result property="createBy" column="create_by"/>
+        <result property="createDate" column="create_date"/>
+        <result property="lastBy" column="last_by"/>
+        <result property="lastDate" column="last_date"/>
+        <result property="isDel" column="is_del"/>
+        <result property="enterpriseid" column="enterpriseid"/>
+        
+        <result property="latelyWater" column="latelyWater"/>
+        <result property="uplinkTime" column="uplinkTime"/>
+    </resultMap>
+
+    <select id="get" resultMap="MeterReadingDetailVo">
+        SELECT id,batch_id,area,user_code,user_name,phone,address,meter_code,meter_purpose,meter_reader,read_time,
+        read_value,deadline,print_proof,qr_code,status,create_by,create_date,last_by,last_date,is_del,enterpriseid
+        FROM meter_reading_detail WHERE id=#{id}
+    </select>
+
+	<select id="deviceDetail" resultMap="MeterReadingDetailVo">
+        SELECT id,batch_id,area,user_code,user_name,phone,address,meter_code,meter_purpose,meter_reader,read_time,
+        read_value,deadline,print_proof,qr_code,status,create_by,create_date,last_by,last_date,is_del,enterpriseid
+        FROM meter_reading_detail WHERE id=#{id}
+    </select>
+
+
+    <select id="list" resultMap="MeterReadingDetailVo">
+        SELECT 
+        	m.id,m.batch_id,a.name AS area,m.user_code,m.user_name,m.phone,m.address,m.meter_code,m.meter_purpose,m.meter_reader,
+        	m.read_time,m.read_value,m.deadline,m.print_proof,m.qr_code,m.status,m.create_by,m.create_date,m.last_by,
+        	m.last_date,m.is_del,m.enterpriseid,d.water AS latelyWater, d.uplinktime AS uplinkTime
+        FROM meter_reading_detail m 
+        LEFT JOIN device d ON m.meter_code = d.devno
+        LEFT JOIN area a ON m.area = a.id
+        where 1 = 1 
+        <if test="id != null and id != ''">
+            AND m.id=#{id}
+        </if>
+        <if test="batchId != null and batchId != ''">
+            AND m.batch_id=#{batchId}
+        </if>
+        <if test="area != null and area != ''">
+            AND m.area=#{area}
+        </if>
+        <if test="userCode != null and userCode != ''">
+            AND user_code LIKE CONCAT('%',#{userCode},'%')
+        </if>
+        <if test="userName != null and userName != ''">
+            AND user_name LIKE CONCAT('%',#{userName},'%')
+        </if>
+        <if test="keyWord != null and keyWord != ''">
+            AND (m.user_code =#{keyWord} OR m.phone=#{keyWord} OR m.meter_code=#{keyWord}) 
+        </if>
+        <if test="meterReader != null and meterReader != ''">
+            AND m.meter_reader LIKE CONCAT('%',#{meterReader},'%')
+        </if>
+        <if test="status != null and status != -1">
+            AND m.status=#{status} 
+        </if>
+        <if test="enterpriseid != null and enterpriseid != ''">
+            AND m.enterpriseid=#{enterpriseid}
+        </if>
+    </select>
+
+    <update id="editDetails">
+        UPDATE meter_reading_detail SET
+        <if test="status != null">
+            status=#{status},
+        </if>
+        last_by=#{lastBy},
+        last_date=#{lastDate}
+        WHERE batch_id=#{batchId}
+    </update>
+    
+    <update id="submitMeter">
+        UPDATE meter_reading_detail SET 
+        	meter_reader=#{meterReader} ,read_value=#{readValue},read_time=#{readTime},print_proof=#{printProof},qr_code=#{qrCode}
+        	,qr_code_url=#{qrCodeUrl} ,status=#{status},last_by=#{lastBy},last_date=#{lastDate} 
+        WHERE id=#{id}
+    </update>
+
+    <insert id="edit">
+        INSERT INTO meter_reading_detail
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null and id != ''">
+                id,
+            </if>
+            <if test="batchId != null and batchId != ''">
+                batch_id,
+            </if>
+            <if test="area != null and area != ''">
+                area,
+            </if>
+            <if test="userCode != null">
+                user_code,
+            </if>
+            <if test="userName != null">
+                user_name,
+            </if>
+            <if test="phone != null">
+                phone,
+            </if>
+            <if test="address != null">
+                address,
+            </if>
+            <if test="meterCode != null">
+                meter_code,
+            </if>
+            <if test="meterPurpose != null">
+                meter_purpose,
+            </if>
+            <if test="meterReader != null">
+                meter_reader,
+            </if>
+            <if test="readTime != null">
+                read_time,
+            </if>
+            <if test="readValue != null">
+                read_value,
+            </if>
+            <if test="deadline != null">
+                deadline,
+            </if>
+            <if test="qrCode != null">
+                qr_code,
+            </if>
+            <if test="status != null">
+                status,
+            </if>
+            <if test="createBy != null and createBy != ''">
+                create_by,
+            </if>
+            <if test="createDate != null">
+                create_date,
+            </if>
+            <if test="lastBy != null and lastBy != ''">
+                last_by,
+            </if>
+            <if test="lastDate != null">
+                last_date,
+            </if>
+            <if test="isDel != null">
+                is_del,
+            </if>
+            <if test="enterpriseid != null and enterpriseid != ''">
+                enterpriseid,
+            </if>
+        </trim>
+        VALUES
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null and id != ''">
+                #{id},
+            </if>
+            <if test="batchId != null and batchId != ''">
+                #{batchId},
+            </if>
+            <if test="area != null and area != ''">
+                #{area},
+            </if>
+            <if test="userCode != null">
+                #{userCode},
+            </if>
+            <if test="userName != null">
+                #{userName},
+            </if>
+            <if test="phone != null">
+                #{phone},
+            </if>
+            <if test="address != null">
+                #{address},
+            </if>
+            <if test="meterCode != null">
+                #{meterCode},
+            </if>
+            <if test="meterPurpose != null">
+                #{meterPurpose},
+            </if>
+            <if test="meterReader != null">
+                #{meterReader},
+            </if>
+            <if test="readTime != null">
+                #{readTime},
+            </if>
+            <if test="readValue != null">
+                #{readValue},
+            </if>
+            <if test="deadline != null">
+                #{deadline},
+            </if>
+            <if test="printProof != null">
+                #{printProof},
+            </if>
+            <if test="qrCode != null">
+                #{qrCode},
+            </if>
+            <if test="status != null">
+                #{status},
+            </if>
+            <if test="createBy != null and createBy != ''">
+                #{createBy},
+            </if>
+            <if test="createDate != null">
+                #{createDate},
+            </if>
+            <if test="lastBy != null and lastBy != ''">
+                #{lastBy},
+            </if>
+            <if test="lastDate != null">
+                #{lastDate},
+            </if>
+            <if test="isDel != null">
+                #{isDel},
+            </if>
+            <if test="enterpriseid != null and enterpriseid != ''">
+                #{enterpriseid},
+            </if>
+        </trim>
+        ON DUPLICATE KEY UPDATE
+        <trim suffixOverrides=",">
+            <if test="id != null and id != ''">
+                id=#{id},
+            </if>
+            <if test="batchId != null and batchId != ''">
+                batch_id=#{batchId},
+            </if>
+            <if test="area != null and area != ''">
+                area=#{area},
+            </if>
+            <if test="userCode != null">
+                user_code=#{userCode},
+            </if>
+            <if test="userName != null">
+                user_name=#{userName},
+            </if>
+            <if test="phone != null">
+                phone=#{phone},
+            </if>
+            <if test="address != null">
+                address=#{address},
+            </if>
+            <if test="meterCode != null">
+                meter_code=#{meterCode},
+            </if>
+            <if test="meterPurpose != null">
+                meter_purpose=#{meterPurpose},
+            </if>
+            <if test="meterReader != null">
+                meter_reader=#{meterReader},
+            </if>
+            <if test="readTime != null">
+                read_time=#{readTime},
+            </if>
+            <if test="readValue != null">
+                read_value=#{readValue},
+            </if>
+            <if test="deadline != null">
+                deadline=#{deadline},
+            </if>
+            <if test="printProof != null">
+                print_proof=#{printProof},
+            </if>
+            <if test="qrCode != null">
+                qr_code=#{qrCode},
+            </if>
+            <if test="status != null">
+                status=#{status},
+            </if>
+            <if test="createBy != null and createBy != ''">
+                create_by=#{createBy},
+            </if>
+            <if test="createDate != null">
+                create_date=#{createDate},
+            </if>
+            <if test="lastBy != null and lastBy != ''">
+                last_by=#{lastBy},
+            </if>
+            <if test="lastDate != null">
+                last_date=#{lastDate},
+            </if>
+            <if test="isDel != null">
+                is_del=#{isDel},
+            </if>
+            <if test="enterpriseid != null and enterpriseid != ''">
+                enterpriseid=#{enterpriseid},
+            </if>
+        </trim>
+    </insert>
+
+	
+	<insert id="batchAdd">
+        INSERT INTO `meter_reading_detail`(id,batch_id,area,user_code,user_name,phone,address
+           ,meter_code,meter_purpose,deadline,status,create_by,create_date,enterpriseid)
+           VALUES 
+            <foreach collection ="list" item="item1" index= "index" separator =",">
+			(
+			#{item1.id},#{item1.batchId},#{item1.area},#{item1.userCode},#{item1.userName},
+			#{item1.phone},#{item1.address},#{item1.meterCode},#{item1.meterPurpose},#{item1.deadline},
+			#{item1.status},#{item1.createBy},#{item1.createDate},#{item1.enterpriseid}
+			)
+            </foreach >
+	</insert>
+	
+
+    <select id="getTaskAreaIds" resultType="java.lang.String">
+        SELECT DISTINCT AREA FROM `meter_reading_detail` WHERE batch_id=#{batchId}
+    </select>
+
+    <select id="getMeterReaders" resultType="java.lang.String">
+        SELECT DISTINCT meter_reader FROM `meter_reading_detail` WHERE batch_id=#{batchId}
+    </select>
+</mapper>

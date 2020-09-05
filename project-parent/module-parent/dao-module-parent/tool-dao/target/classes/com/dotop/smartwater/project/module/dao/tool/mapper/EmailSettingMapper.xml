@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.dotop.smartwater.project.module.dao.tool.IEmailSettingDao">
+	
+	<select id="getPage" resultType="com.dotop.smartwater.project.module.core.water.vo.EmailSettingVo">
+		SELECT a.* ,b.`name` as enterprisename FROM email_setting a join enterprise b on a.enterpriseid = b.enterpriseid 
+		<where>
+			delflag=1
+			<if test="id != null">
+				AND id=#{id}
+			</if>
+			<if test="enterpriseid != null and enterpriseid != ''">
+				AND enterpriseid=#{enterpriseid}
+			</if>
+			<if test="account != null and account != ''">
+				AND account LIKE CONCAT('%',#{account},'%')
+			</if>
+			<if test="host != null and host != ''">
+				AND host LIKE CONCAT('%',#{host},'%')
+			</if>
+		</where>
+	</select>
+	
+	<select id="findByEnterpriseId" resultType="com.dotop.smartwater.project.module.core.water.vo.EmailSettingVo">
+		SELECT * FROM email_setting WHERE delflag=1 AND enterpriseid=#{enterpriseid}
+	</select>
+	
+	
+	<insert id="insertOrUpdate">
+		INSERT INTO email_setting(id,enterpriseid,account,passwd,type,host,port,status,remarks,delflag,createuser,updateuser)
+		values(#{id},#{enterpriseid},#{account},#{passwd},#{type},#{host},#{port},#{status},#{remarks},#{delflag},#{createuser},#{updateuser})
+		ON DUPLICATE KEY UPDATE
+		<trim suffixOverrides=",">
+			<if test="id != null and id != ''">
+				id=#{id},
+			</if>
+			<if test="enterpriseid != null and enterpriseid != ''">
+				enterpriseid=#{enterpriseid},
+			</if>
+			<if test="account != null and account != ''">
+				account=#{account},
+			</if>
+			<if test="passwd != null and passwd != ''">
+				passwd=#{passwd},
+			</if>			
+			<if test="type != null and type != ''">
+				type=#{type},
+			</if>			
+			<if test="host != null and host != ''">
+				host=#{host},
+			</if>
+			<if test="port != null">
+				port=#{port},
+			</if>
+			<if test="status != null">
+				status=#{status},
+			</if>			
+			<if test="remarks != null and remarks != ''">
+				remarks=#{remarks},
+			</if>
+			<if test="delflag != null">
+				delflag=#{delflag},
+			</if>
+			<if test="createuser != null and createuser != ''">
+				createuser=#{createuser},
+			</if>
+			<if test="updateuser != null and updateuser != ''">
+				updateuser=#{updateuser}
+			</if>
+		</trim>
+	</insert>
+	
+	<insert id="add">
+		INSERT INTO email_setting(id,enterpriseid,account,passwd,type,host,port,status,remarks,delflag,createuser,updateuser)
+		values(#{id},#{enterpriseid},#{account},#{passwd},#{type},#{host},#{port},#{status},#{remarks},#{delflag},#{createuser},#{updateuser})
+	</insert>
+	
+	<update id="edit">
+	   update email_setting set
+		<trim suffixOverrides=",">
+			<if test="id != null and id != ''">
+				id=#{id},
+			</if>
+			<if test="enterpriseid != null and enterpriseid != ''">
+				enterpriseid=#{enterpriseid},
+			</if>
+			<if test="account != null and account != ''">
+				account=#{account},
+			</if>
+			<if test="passwd != null and passwd != ''">
+				passwd=#{passwd},
+			</if>			
+			<if test="type != null and type != ''">
+				type=#{type},
+			</if>			
+			<if test="host != null and host != ''">
+				host=#{host},
+			</if>
+			<if test="port != null">
+				port=#{port},
+			</if>
+			<if test="status != null">
+				status=#{status},
+			</if>			
+			<if test="remarks != null and remarks != ''">
+				remarks=#{remarks},
+			</if>
+			<if test="delflag != null">
+				delflag=#{delflag},
+			</if>
+			<if test="createuser != null and createuser != ''">
+				createuser=#{createuser},
+			</if>
+			<if test="updateuser != null and updateuser != ''">
+				updateuser=#{updateuser}
+			</if>
+		</trim>
+	    where id = #{id}
+	</update>
+	
+</mapper>

@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dotop.smartwater.project.module.dao.revenue.ILadderDao">
+    <resultMap id="BaseResultMap" type="com.dotop.smartwater.project.module.core.water.vo.LadderVo">
+        <id column="id" jdbcType="VARCHAR" property="id"/>
+        <result column="typeid" jdbcType="VARCHAR" property="typeid"/>
+        <result column="ladderno" jdbcType="INTEGER" property="ladderno"/>
+        <result column="minval" jdbcType="DOUBLE" property="minval"/>
+        <result column="maxval" jdbcType="DOUBLE" property="maxval"/>
+        <result column="price" jdbcType="DOUBLE" property="price"/>
+        <result column="createtime" jdbcType="TIMESTAMP" property="createtime"/>
+    </resultMap>
+
+    <select id="findById" parameterType="java.lang.String" resultMap="BaseResultMap">
+        select
+        id, typeid, ladderno, minval, maxval, price, createtime
+        from pay_type_ladder
+        where id = #{id,jdbcType=VARCHAR}
+    </select>
+
+    <select id="getLadders" parameterType="java.lang.String" resultMap="BaseResultMap">
+        select
+        id, typeid, ladderno, minval, maxval, price, createtime
+        from pay_type_ladder
+        where typeid = #{typeid,jdbcType=VARCHAR} order by ladderno asc
+    </select>
+
+    <delete id="delete" parameterType="java.lang.String">
+        delete from pay_type_ladder
+        where id = #{id,jdbcType=VARCHAR}
+    </delete>
+
+    <delete id="deleteLadders" parameterType="java.lang.String">
+        delete from pay_type_ladder
+        where typeid = #{typeid,jdbcType=VARCHAR}
+    </delete>
+
+    <insert id="insert">
+        insert into pay_type_ladder (id, typeid, ladderno,
+          minval, maxval, price,
+          createtime)
+        values (#{id,jdbcType=VARCHAR}, #{typeid,jdbcType=VARCHAR}, #{ladderno,jdbcType=INTEGER},
+          #{minval,jdbcType=DOUBLE}, #{maxval,jdbcType=DOUBLE}, #{price,jdbcType=DOUBLE},
+          #{createtime,jdbcType=TIMESTAMP})
+    </insert>
+
+    <update id="update">
+        update pay_type_ladder
+        <set>
+            <if test="typeid != null">
+                typeid = #{typeid,jdbcType=VARCHAR},
+            </if>
+            <if test="ladderno != null">
+                ladderno = #{ladderno,jdbcType=INTEGER},
+            </if>
+            <if test="minval != null">
+                minval = #{minval,jdbcType=DOUBLE},
+            </if>
+            <if test="maxval != null">
+                maxval = #{maxval,jdbcType=DOUBLE},
+            </if>
+            <if test="price != null">
+                price = #{price,jdbcType=DOUBLE},
+            </if>
+            <if test="createtime != null">
+                createtime = #{createtime,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where id = #{id,jdbcType=VARCHAR}
+    </update>
+
+    <select id="getMaxLadder" resultMap="BaseResultMap">
+        select
+        id, typeid, ladderno, minval, maxval, price, createtime
+        from pay_type_ladder
+        where typeid = #{typeid} ORDER BY ladderno DESC LIMIT 1
+    </select>
+</mapper>

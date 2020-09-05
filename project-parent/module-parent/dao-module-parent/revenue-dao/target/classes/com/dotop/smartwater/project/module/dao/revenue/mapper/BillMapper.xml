@@ -1,0 +1,260 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper
+	namespace="com.dotop.smartwater.project.module.dao.revenue.IBillDao">
+	<resultMap id="BaseResultMap"
+		type="com.dotop.smartwater.project.module.core.water.vo.BillVo">
+		<id column="id" jdbcType="VARCHAR" property="id" />
+		<result column="tempid" jdbcType="VARCHAR" property="tempid" />
+		<result column="tempname" jdbcType="VARCHAR"
+			property="tempname" />
+		<result column="type" jdbcType="VARCHAR" property="type" />
+		<result column="businessid" jdbcType="VARCHAR"
+			property="businessid" />
+		<result column="frequency" jdbcType="INTEGER"
+			property="frequency" />
+		<result column="status" jdbcType="INTEGER" property="status" />
+		<result column="ownerid" jdbcType="VARCHAR" property="ownerid" />
+		<result column="userno" jdbcType="VARCHAR" property="userno" />
+		<result column="username" jdbcType="VARCHAR"
+			property="username" />
+		<result column="print_time" jdbcType="TIMESTAMP"
+			property="printTime" />
+		<result column="operauserid" jdbcType="VARCHAR"
+			property="operauserid" />
+		<result column="operaname" jdbcType="VARCHAR"
+			property="operaname" />
+		<result column="enterpriseid" jdbcType="VARCHAR"
+			property="enterpriseid" />
+		<result column="tempcontent" jdbcType="VARCHAR"
+			property="tempcontent" />
+		<result column="datacontent" jdbcType="VARCHAR"
+			property="datacontent" />
+	</resultMap>
+
+
+	<select id="findById" parameterType="java.lang.String"
+		resultMap="BaseResultMap">
+		select id, tempid, tempname, businessid, frequency, status,
+		ownerid, userno,
+		username, print_time,
+		operauserid, operaname,
+		enterpriseid, tempcontent, datacontent
+		from bill
+		where id =
+		#{id,jdbcType=VARCHAR}
+	</select>
+
+	<delete id="delete" parameterType="java.lang.String">
+		delete from bill
+		where id =
+		#{id,jdbcType=VARCHAR}
+	</delete>
+
+	<insert id="add">
+		insert into bill (id, tempid, tempname,type,
+		businessid, frequency, status,
+		ownerid, userno, username,
+		print_time,
+		operauserid, operaname,
+		enterpriseid, tempcontent, datacontent
+		)
+		values
+		(#{id,jdbcType=VARCHAR},
+		#{tempid,jdbcType=VARCHAR},#{tempname,jdbcType=VARCHAR},
+		#{type,jdbcType=VARCHAR},
+		#{businessid,jdbcType=VARCHAR},
+		#{frequency,jdbcType=INTEGER}, #{status,jdbcType=INTEGER},
+		#{ownerid,jdbcType=VARCHAR}, #{userno,jdbcType=VARCHAR},
+		#{username,jdbcType=VARCHAR},
+		#{printTime,jdbcType=TIMESTAMP},
+		#{operauserid,jdbcType=VARCHAR}, #{operaname,jdbcType=VARCHAR},
+		#{enterpriseid,jdbcType=VARCHAR}, #{tempcontent,jdbcType=VARCHAR},
+		#{datacontent,jdbcType=VARCHAR}
+		)
+	</insert>
+
+	<select id="isExist" resultType="java.lang.Boolean">
+		SELECT EXISTS
+		(
+		SELECT id FROM bill
+		<where>
+			<if test="businessid !=null ">
+				AND businessid=#{businessid}
+			</if>
+			<if test="tempid !=null ">
+				AND tempid=#{tempid}
+			</if>
+			<if test="ownerid !=null ">
+				AND ownerid=#{ownerid}
+			</if>
+			<if test="enterpriseid !=null ">
+				AND enterpriseid=#{enterpriseid}
+			</if>
+		</where>
+		)
+	</select>
+
+
+	<update id="update">
+		update bill
+		<set>
+			frequency = frequency +1 ,
+			<if test="tempid != null">
+				tempid = #{tempid,jdbcType=VARCHAR},
+			</if>
+			<if test="tempname != null">
+				tempname = #{tempname,jdbcType=VARCHAR},
+			</if>
+			<if test="businessid != null">
+				businessid = #{businessid,jdbcType=VARCHAR},
+			</if>
+			<!-- <if test="frequency != null"> frequency = #{frequency,jdbcType=INTEGER}, 
+				</if> -->
+			<if test="status != null">
+				status = #{status,jdbcType=INTEGER},
+			</if>
+			<if test="ownerid != null">
+				ownerid = #{ownerid,jdbcType=VARCHAR},
+			</if>
+			<if test="userno != null">
+				userno = #{userno,jdbcType=VARCHAR},
+			</if>
+			<if test="username != null">
+				username = #{username,jdbcType=VARCHAR},
+			</if>
+			<if test="printTime != null">
+				print_time = #{printTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="operauserid != null">
+				operauserid = #{operauserid,jdbcType=VARCHAR},
+			</if>
+			<if test="operaname != null">
+				operaname = #{operaname,jdbcType=VARCHAR},
+			</if>
+			<if test="enterpriseid != null">
+				enterpriseid = #{enterpriseid,jdbcType=VARCHAR},
+			</if>
+			<if test="tempcontent != null">
+				tempcontent = #{tempcontent,jdbcType=VARCHAR},
+			</if>
+			<if test="datacontent != null">
+				datacontent = #{datacontent,jdbcType=VARCHAR},
+			</if>
+		</set>
+		<where>
+			<if test="businessid !=null ">
+				AND businessid=#{businessid}
+			</if>
+			<if test="tempid !=null ">
+				AND tempid=#{tempid}
+			</if>
+			<if test="ownerid !=null ">
+				AND ownerid=#{ownerid}
+			</if>
+			<if test="enterpriseid !=null ">
+				AND enterpriseid=#{enterpriseid}
+			</if>
+		</where>
+	</update>
+
+
+	<update id="edit">
+		update bill
+		<set>
+			frequency = frequency +1 ,
+			<if test="tempid != null">
+				tempid = #{tempid,jdbcType=VARCHAR},
+			</if>
+			<if test="tempname != null">
+				tempname = #{tempname,jdbcType=VARCHAR},
+			</if>
+			<if test="businessid != null">
+				businessid = #{businessid,jdbcType=VARCHAR},
+			</if>
+			<!-- <if test="frequency != null"> frequency = #{frequency,jdbcType=INTEGER}, 
+				</if> -->
+			<if test="status != null">
+				status = #{status,jdbcType=INTEGER},
+			</if>
+			<if test="ownerid != null">
+				ownerid = #{ownerid,jdbcType=VARCHAR},
+			</if>
+			<if test="userno != null">
+				userno = #{userno,jdbcType=VARCHAR},
+			</if>
+			<if test="username != null">
+				username = #{username,jdbcType=VARCHAR},
+			</if>
+			<if test="printTime != null">
+				print_time = #{printTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="operauserid != null">
+				operauserid = #{operauserid,jdbcType=VARCHAR},
+			</if>
+			<if test="operaname != null">
+				operaname = #{operaname,jdbcType=VARCHAR},
+			</if>
+			<if test="enterpriseid != null">
+				enterpriseid = #{enterpriseid,jdbcType=VARCHAR},
+			</if>
+			<if test="tempcontent != null">
+				tempcontent = #{tempcontent,jdbcType=VARCHAR},
+			</if>
+			<if test="datacontent != null">
+				datacontent = #{datacontent,jdbcType=VARCHAR},
+			</if>
+		</set>
+		where id = #{id,jdbcType=VARCHAR}
+	</update>
+
+
+	<select id="getList" resultMap="BaseResultMap">
+		select id, tempid, tempname, businessid, count(frequency) as frequency, status, ownerid,type,
+		userno, username, print_time,
+		operauserid, operaname, enterpriseid,
+		tempcontent, datacontent
+		from bill
+		where 1=1
+		<if test="businessid != null">
+			AND businessid like CONCAT('%',#{businessid},'%')
+		</if>
+		<if test="userno != null">
+			AND userno = #{userno,jdbcType=VARCHAR}
+		</if>
+		<if test="username != null">
+			AND username = #{username,jdbcType=VARCHAR}
+		</if>
+		<if test="enterpriseid != null">
+			AND enterpriseid = #{enterpriseid,jdbcType=VARCHAR}
+		</if>
+
+		<if test="type != null">
+			AND type like CONCAT('%',#{type},'%')
+		</if>
+		
+		GROUP BY  businessid
+		
+		order by print_time desc
+	</select>
+	
+	 <select id="getById" resultMap="BaseResultMap" >
+	    select * from bill where id = #{id}
+	 </select>
+
+	<select id="balanceFind" resultType="com.dotop.smartwater.project.module.core.water.vo.customize.PayDetailRecord" >
+	    SELECT *, createtime as ctime FROM `pay_detail` WHERE ownerid=#{ownerid}  ORDER BY createtime DESC
+	 </select>
+
+	<select id="findDetailRecord" resultType="com.dotop.smartwater.project.module.core.water.vo.customize.PayDetailRecord" >
+	    SELECT *, createtime as ctime FROM `pay_detail`
+		where 1=1
+		<if test="ownerid != null">
+			AND ownerid  = #{ownerid}
+		</if>
+		<if test="tradeNo != null">
+			AND tradeno = #{tradeNo,jdbcType=VARCHAR}
+		</if>
+	    ORDER BY createtime DESC
+	 </select>
+</mapper>

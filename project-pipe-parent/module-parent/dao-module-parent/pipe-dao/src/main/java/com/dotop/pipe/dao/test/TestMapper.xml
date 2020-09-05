@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.dotop.pipe.api.dao.test.ITestDao">
+
+	<resultMap id="TestVoMap"
+		type="com.dotop.pipe.core.vo.test.TestVo">
+		<result column="id" jdbcType="VARCHAR" property="id" />
+		<result column="name" jdbcType="VARCHAR" property="name" />
+	</resultMap>
+
+	<select id="get" resultMap="TestVoMap">
+		SELECT id,name FROM test
+		<where>
+			<if test="id != null and id != ''">
+				AND id=#{id}
+			</if>
+		</where>
+	</select>
+
+	<update id="exchangeEnterpriseId" parameterType="Map">
+		update ${tableName} set enterprise_id = #{afterEnterpriseId} where enterprise_id = #{beforeEnterpriseId}
+	</update>
+
+	<select id="getEnterpriseId" parameterType="Map" resultType="String">
+        select enterprise_id from ${tableName} limit 1
+	</select>
+
+	<select id="getEidAndEnterpriseId" resultType="java.util.HashMap">
+        select enterprise_id, eid from ${tableName}
+	</select>
+</mapper>

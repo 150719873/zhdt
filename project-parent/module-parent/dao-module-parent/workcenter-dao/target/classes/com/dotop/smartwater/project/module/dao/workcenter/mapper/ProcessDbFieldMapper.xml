@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dotop.smartwater.project.module.dao.workcenter.IProcessDbFieldDao">
+	
+	<insert id="add">
+		INSERT INTO wc_process_db_field
+		(id,process_id,process_db_id,attribute,name,field_type,type_dict_child_id,content_dict_id,relation_dict_child_id,db_field_id
+		,is_del,create_by,create_date,last_by,last_date,enterpriseid)
+		VALUES
+		(#{id},#{processId},#{processDbId},#{attribute},#{name},#{fieldType},#{typeDictChild.childId},#{contentDict.dictionaryId},#{relationDictChild.childId},#{dbFieldId}
+		,#{isDel},#{userBy},#{curr},#{userBy},#{curr},#{enterpriseid})
+	</insert>
+    
+</mapper>

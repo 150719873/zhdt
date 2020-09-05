@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.dotop.smartwater.project.third.module.api.dao.IWaterOwnerDao">
+
+
+    <resultMap id="WaterOwnerVo" type="com.dotop.smartwater.project.third.module.core.water.vo.OwnerVo">
+        <result column="ownerid" jdbcType="VARCHAR" property="ownerid"/>
+        <result column="userno" jdbcType="VARCHAR" property="userno"/>
+        <result column="username" jdbcType="VARCHAR" property="username"/>
+        <result column="useraddr" jdbcType="VARCHAR" property="useraddr"/>
+        <result column="remark" jdbcType="VARCHAR" property="remark"/>
+        <result column="devid" jdbcType="VARCHAR" property="devid"/>
+        <result column="enterpriseid" jdbcType="INTEGER" property="enterpriseid"/>
+        <association property="device"
+                     javaType="com.dotop.smartwater.project.third.module.core.water.vo.DeviceVo"
+                     columnPrefix="d_">
+            <result column="devno" property="devno"/>
+            <result column="devaddr" property="devaddr"/>
+            <result column="uplinktime" property="uplinktime"/>
+            <result column="water" property="water"/>
+        </association>
+    </resultMap>
+
+    <resultMap id="OwnerInfo" type="com.dotop.smartwater.project.third.module.core.third.standard.vo.StandardOwnerVo">
+        <result column="userno" jdbcType="VARCHAR" property="userno"/>
+        <result column="username" jdbcType="VARCHAR" property="username"/>
+        <result column="devno" jdbcType="VARCHAR" property="devno"/>
+        <result column="tapstatus" jdbcType="VARCHAR" property="tapstatus"/>
+        <result column="taptype" jdbcType="VARCHAR" property="taptype"/>
+        <result column="watertemp" jdbcType="VARCHAR" property="water"/>
+        <result column="timetemp" jdbcType="TIMESTAMP" property="uplinkTime"/>
+    </resultMap>
+
+
+    <select id="list" resultMap="WaterOwnerVo">
+        select o.ownerid, o.userno, o.username, o.useraddr, o.remark, o.devid, o.`status`, o.enterpriseid, d.devno
+        d_devno, d.devaddr d_devaddr, d.water d_water, d.uplinktime d_uplinktime
+        from owner o LEFT JOIN device d on o.devid = d.devid
+        <where>
+            d.devno IS NOT NULL
+            <if test="enterpriseid != null and enterpriseid != ''">
+                and o.enterpriseid = #{enterpriseid}
+            </if>
+        </where>
+    </select>
+
+    <select id="findWaterOwnerByNoList"
+            resultMap="WaterOwnerVo">
+        select ownerid, userno, username, useraddr, remark, devid, enterpriseid
+        from owner where userno in
+        <foreach collection="ccidList" open="(" item="ele" separator="," close=")">
+            #{ele}
+        </foreach>
+        and enterpriseid=#{enterpriseid}
+    </select>
+
+    <select id="get" resultMap="WaterOwnerVo">
+        select ownerid, userno, username, useraddr, remark, devid, enterpriseid
+        from owner
+        <where>
+            enterpriseid = #{enterpriseid}
+            <if test="ownerid != null and ownerid != ''">
+                and ownerid = #{ownerid}
+            </if>
+            <if test="userno != null and userno != ''">
+                and userno = #{userno}
+            </if>
+            <if test="devid != null and devid != ''">
+                and devid = #{devid}
+            </if>
+        </where>
+    </select>
+
+    <select id="listInfo" resultMap="OwnerInfo">
+        SELECT
+        o.userno,
+        o.username,
+        d.devno,
+        d.tapstatus,
+		d.taptype,
+        MAX(du.water + 0) watertemp,
+        MAX(du.rxtime) timetemp
+        FROM
+        `owner` o
+        LEFT JOIN device d ON o.devid = d.devid
+        LEFT JOIN device_uplink${yearMonth} du ON du.devid = d.devid
+         WHERE d.devno IS NOT NULL and o.enterpriseid = #{enterpriseid}
+        GROUP BY o.userno
+    </select>
+
+
+</mapper>

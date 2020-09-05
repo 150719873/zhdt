@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dotop.smartwater.project.module.dao.revenue.ILadderPriceDao">
+    <resultMap id="BaseResultMap" type="com.dotop.smartwater.project.module.core.water.vo.LadderPriceVo">
+        <id column="id" jdbcType="VARCHAR" property="id"/>
+        <result column="typeid" jdbcType="VARCHAR" property="typeid"/>
+        <result column="ladderid" jdbcType="VARCHAR" property="ladderid"/>
+        <result column="compriseid" jdbcType="VARCHAR" property="compriseid"/>
+        <result column="price" jdbcType="DOUBLE" property="price"/>
+        <result column="createtime" jdbcType="TIMESTAMP" property="createtime"/>
+        <result column="name" jdbcType="VARCHAR" property="name"/>
+    </resultMap>
+
+    <select id="findById" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select id, typeid, ladderid, compriseid, price, createtime
+    from pay_type_ladder_price
+    where id = #{id,jdbcType=VARCHAR}
+  </select>
+
+    <select id="findPrices" parameterType="java.lang.String" resultMap="BaseResultMap">
+        select * FROM pay_type_ladder_price  WHERE ladderid = #{ladderid,jdbcType=VARCHAR}
+    </select>
+
+    <delete id="delete" parameterType="java.lang.String">
+        delete from pay_type_ladder_price
+        where id = #{id,jdbcType=VARCHAR}
+    </delete>
+
+    <delete id="deleteCompriseLadder">
+      delete from pay_type_ladder_price where ladderid = #{id} and typeid = #{typeid}
+    </delete>
+
+    <delete id="deleteLadderPrice">
+      delete from pay_type_ladder_price where typeid = #{typeid}
+    </delete>
+
+    <delete id="deletePrices">
+      delete from pay_type_ladder_price where ladderid = #{ladderid}
+    </delete>
+
+    <insert id="insert">
+    insert into pay_type_ladder_price (id, typeid, ladderid, 
+      compriseid, price, createtime
+      )
+    values (#{id,jdbcType=VARCHAR}, #{typeid,jdbcType=VARCHAR}, #{ladderid,jdbcType=VARCHAR}, 
+      #{compriseid,jdbcType=VARCHAR}, #{price,jdbcType=DOUBLE}, #{createtime,jdbcType=TIMESTAMP}
+      )
+  </insert>
+    <update id="update">
+        update pay_type_ladder_price
+        <set>
+            <if test="typeid != null">
+                typeid = #{typeid,jdbcType=VARCHAR},
+            </if>
+            <if test="ladderid != null">
+                ladderid = #{ladderid,jdbcType=VARCHAR},
+            </if>
+            <if test="compriseid != null">
+                compriseid = #{compriseid,jdbcType=VARCHAR},
+            </if>
+            <if test="price != null">
+                price = #{price,jdbcType=DOUBLE},
+            </if>
+            <if test="createtime != null">
+                createtime = #{createtime,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where id = #{id,jdbcType=VARCHAR}
+    </update>
+</mapper>

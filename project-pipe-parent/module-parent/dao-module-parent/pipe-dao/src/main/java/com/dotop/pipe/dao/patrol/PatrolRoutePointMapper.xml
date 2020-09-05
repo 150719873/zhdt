@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.dotop.pipe.api.dao.patrol.IPatrolRoutePointDao">
+
+
+    <resultMap id="BaseResultMap"
+               type="com.dotop.pipe.core.vo.patrol.PatrolRoutePointVo">
+        <result column="patrol_route_point_id" jdbcType="VARCHAR" property="patrolRoutePointId"/>
+        <result column="longitude" jdbcType="VARCHAR" property="longitude"/>
+        <result column="latitude" jdbcType="VARCHAR" property="latitude"/>
+        <result column="enterprise_id" jdbcType="VARCHAR" property="enterpriseId"/>
+        <result column="create_by" jdbcType="VARCHAR" property="createBy"/>
+        <result column="create_date" jdbcType="TIMESTAMP" property="createDate"/>
+        <result column="is_del" jdbcType="VARCHAR" property="isDel"/>
+        <result column="last_by" jdbcType="VARCHAR" property="lastBy"/>
+        <result column="last_date" jdbcType="TIMESTAMP" property="lastDate"/>
+    </resultMap>
+
+    <sql id="selectColumns">
+        pr.patrol_route_point_id,
+        pr.enterprise_id,
+        pr.longitude,
+        pr.latitude,
+        pr.create_by,
+        pr.create_date,
+        pr.is_del,
+        pr.last_by,
+        pr.last_date
+	</sql>
+
+    <select id="list" resultMap="BaseResultMap">
+        SELECT
+        <include refid="selectColumns"/>
+        FROM
+        pls_patrol_route_point pr
+        <where>
+            <if test="patrolRoutePointId != null and patrolRoutePointId != ''">
+                and pr.patrol_route_point_id = #{patrolRoutePointId}
+            </if>
+            <if test="enterpriseId != null and enterpriseId != ''">
+                and pr.enterprise_id = #{enterpriseId}
+            </if>
+            <if test="patrolRoutePointIds.size() > 0">
+                and pr.patrol_route_point_id in
+                <foreach collection="patrolRoutePointIds" open="(" close=")" item="item" separator=",">
+                    #{item}
+                </foreach>
+            </if>
+            and pr.is_del = 0
+        </where>
+        ORDER BY pr.last_date desc
+    </select>
+
+
+    <select id="get" resultMap="BaseResultMap">
+        SELECT
+        <include refid="selectColumns"/>
+        FROM
+        pls_patrol_route_point pr
+        <where>
+            <if test="patrolRoutePointId != null and patrolRoutePointId != ''">
+                pr.patrol_route_point_id = #{patrolRoutePointId}
+            </if>
+            <!-- <if test="code != null and code != ''">
+                 and  pr.`code` = #{code}
+             </if>
+             <if test="name != null and name != ''">
+                 and pr.`name` like CONCAT('%',#{name},'%')
+             </if> -->
+            <if test="enterpriseId != null and enterpriseId != ''">
+                and pr.enterprise_id = #{enterpriseId}
+            </if>
+        </where>
+    </select>
+
+    <insert id="add">
+        insert into pls_patrol_route_point(patrol_route_point_id,longitude,latitude,
+            enterprise_id, create_by, create_date, is_del, last_by, last_date)
+        values
+            (#{patrolRoutePointId},#{longitude},#{latitude},
+            #{enterpriseId}, #{userBy}, #{curr}, #{isDel}, #{userBy}, #{curr})
+    </insert>
+
+    <update id="edit">
+        update pls_patrol_route_point
+        <set>
+            <if test="longitude != null and longitude != ''">
+                `longitude`=#{longitude},
+            </if>
+            <if test="latitude != null and latitude != ''">
+                `latitude`=#{latitude},
+            </if>
+            <if test="userBy != null and userBy != '' ">
+                last_by=#{userBy},
+            </if>
+            <if test="curr != null">
+                last_date=#{curr},
+            </if>
+        </set>
+        where patrol_route_point_id=#{patrolRoutePointId} and enterprise_id=#{enterpriseId}
+    </update>
+
+    <delete id="del">
+         update pls_patrol_route_point set is_del=#{isDel}
+        where patrol_route_point_id=#{patrolRoutePointId} and enterprise_id=#{enterpriseId}
+    </delete>
+
+    <insert id="batchAdd">
+        insert into pls_patrol_route_point (patrol_route_point_id, longitude, latitude,
+        enterprise_id, create_by, create_date, is_del, last_by, last_date) values
+        <foreach collection="list" item="item" index="index" separator=",">
+            (#{item.patrolRoutePointId},
+            #{item.longitude},
+            #{item.latitude},
+            #{item.enterpriseId},
+            #{item.userBy},
+            #{item.curr},
+            #{item.isDel},
+            #{item.userBy},
+            #{item.curr})
+        </foreach>
+    </insert>
+
+    <update id="batchUpdate">
+        <foreach collection="list" item="item" open="" close="" separator=";">
+            update pls_patrol_route_point
+            set
+            longitude=#{item.longitude},
+            latitude=#{item.latitude}
+            where patrol_route_point_id = #{item.patrolRoutePointId} and enterprise_id=#{item.enterpriseId}
+        </foreach>
+    </update>
+
+    <update id="batchDel">
+        <foreach collection="list" item="item" open="" close="" separator=";">
+            delete from pls_patrol_route_point
+            where patrol_route_point_id = #{item.patrolRoutePointId} and enterprise_id=#{item.enterpriseId}
+        </foreach>
+    </update>
+
+</mapper>

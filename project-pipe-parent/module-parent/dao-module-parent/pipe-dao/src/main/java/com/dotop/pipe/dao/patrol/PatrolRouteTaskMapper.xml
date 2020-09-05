@@ -1,0 +1,197 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.dotop.pipe.api.dao.patrol.IPatrolRouteTaskDao">
+
+
+    <resultMap id="BaseResultMap"
+               type="com.dotop.pipe.core.vo.patrol.PatrolRouteTaskVo">
+        <result column="patrol_route_task_id" jdbcType="VARCHAR" property="patrolRouteTaskId"/>
+        <result column="task_title" jdbcType="VARCHAR" property="taskTitle"/>
+        <result column="task_content" jdbcType="VARCHAR" property="taskContent"/>
+        <result column="sort" jdbcType="VARCHAR" property="sort"/>
+        <result column="status" jdbcType="VARCHAR" property="status"/>
+        <result column="desc" jdbcType="VARCHAR" property="desc"/>
+        <result column="longitude" jdbcType="VARCHAR" property="longitude"/>
+        <result column="latitude" jdbcType="VARCHAR" property="latitude"/>
+        <result column="last_handler_user_id" jdbcType="VARCHAR" property="lastHandlerUserId"/>
+        <result column="last_handle_time" jdbcType="TIMESTAMP" property="lastHandleTime"/>
+        <result column="work_content" jdbcType="VARCHAR" property="workContent"/>
+        <result column="enterprise_id" jdbcType="VARCHAR" property="enterpriseId"/>
+        <result column="create_by" jdbcType="VARCHAR" property="createBy"/>
+        <result column="create_date" jdbcType="TIMESTAMP" property="createDate"/>
+        <result column="is_del" jdbcType="VARCHAR" property="isDel"/>
+        <result column="last_by" jdbcType="VARCHAR" property="lastBy"/>
+        <result column="last_date" jdbcType="TIMESTAMP" property="lastDate"/>
+    </resultMap>
+
+    <sql id="selectColumns">
+        prt.patrol_route_task_id,
+        prt.task_title,
+        prt.task_content,
+        prt.sort,
+        prt.`status`,
+        prt.desc,
+        prt.longitude,
+        prt.latitude,
+        prt.last_handler_user_id,
+        prt.last_handle_time,
+        prt.work_content,
+        prt.enterprise_id,
+        prt.create_by,
+        prt.create_date,
+        prt.is_del,
+        prt.last_by,
+        prt.last_date
+	</sql>
+
+    <update id="editStatus">
+         update pls_patrol_route_task set status=#{status}
+      where patrol_route_task_id=#{patrolRouteTaskId} and enterprise_id=#{enterpriseId}
+    </update>
+
+    <select id="list" resultMap="BaseResultMap">
+        SELECT
+        <include refid="selectColumns"/>
+        FROM
+        pls_patrol_route_task prt
+        <where>
+            <if test="patrolRouteTaskIds != null and patrolRouteTaskIds.size() > 0">
+                AND prt.patrol_route_task_id in
+                <foreach collection="patrolRouteTaskIds" open="(" item="ele" separator="," close=")">
+                    #{ele}
+                </foreach>
+            </if>
+            <if test="status != null and status != ''">
+                and prt.status = #{status}
+            </if>
+            <if test="patrolRouteTaskId != null and patrolRouteTaskId != ''">
+                and prt.patrol_route_task_id = #{patrolRouteTaskId}
+            </if>
+            <if test="taskTitle != null and taskTitle != ''">
+                and prt.task_title = #{taskTitle}
+            </if>
+            <if test="startDateTemp != null">
+                and prt.last_handle_time <![CDATA[>=]]> #{startDateTemp}
+            </if>
+            <if test="endDateTemp != null">
+                and prt.last_handle_time <![CDATA[<=]]> #{endDateTemp}
+            </if>
+            <if test="enterpriseId != null and enterpriseId != ''">
+                and prt.enterprise_id = #{enterpriseId}
+            </if>
+                and prt.is_del = 0
+        </where>
+        ORDER BY prt.last_date DESC
+
+    </select>
+
+
+    <select id="get" resultMap="BaseResultMap">
+        SELECT
+        <include refid="selectColumns"/>
+        FROM
+        pls_patrol_route_task prt
+        <where>
+            <if test="patrolRouteTaskId != null and patrolRouteTaskId != ''">
+                prt.patrol_route_task_id = #{patrolRouteTaskId}
+            </if>
+            <if test="taskTitle != null and taskTitle != ''">
+                and prt.task_title = #{taskTitle}
+            </if>
+            <if test="enterpriseId != null and enterpriseId != ''">
+                and prt.enterprise_id = #{enterpriseId}
+            </if>
+        </where>
+    </select>
+
+    <insert id="add">
+        insert into pls_patrol_route_task(patrol_route_task_id, task_title, task_content, sort, status, `desc`, longitude, latitude,last_handler_user_id,
+            last_handle_time, work_content, enterprise_id, create_by, create_date, is_del, last_by, last_date)
+        values
+            (#{patrolRouteTaskId}, #{taskTitle}, #{taskContent},#{sort},#{status},#{desc},#{longitude}, #{latitude}, #{lastHandlerUserId},
+            #{lastHandleTime}, #{workContent}, #{enterpriseId}, #{userBy}, #{curr}, #{isDel}, #{userBy}, #{curr})
+    </insert>
+
+    <update id="edit">
+        update pls_patrol_route_task
+        <set>
+            <if test="taskTitle != null and taskTitle != ''">
+                task_title=#{taskTitle},
+            </if>
+            <if test="taskContent != null and taskContent != ''">
+                task_content=#{taskContent},
+            </if>
+            <if test="sort != null and sort != ''">
+                sort=#{sort},
+            </if>
+            <if test="desc != null and desc != ''">
+                `desc`=#{desc},
+            </if>
+            <if test="userBy != null and userBy != '' ">
+                last_by=#{userBy},
+            </if>
+            <if test="curr != null">
+                last_date=#{curr},
+            </if>
+            <if test="status != null and status != '' ">
+                `status`=#{status},
+            </if>
+            <if test="workContent != null and workContent != '' ">
+                work_content=#{workContent},
+            </if>
+            <if test="lastHandlerUserId != null and lastHandlerUserId != '' ">
+                last_handler_user_id=#{lastHandlerUserId},
+            </if>
+            <if test="lastHandleTime != null">
+                last_handle_time=#{lastHandleTime}
+            </if>
+        </set>
+        where patrol_route_task_id=#{patrolRouteTaskId} and enterprise_id=#{enterpriseId}
+    </update>
+
+    <delete id="del">
+         update pls_patrol_route_task set is_del=#{isDel}
+        where patrol_route_task_id=#{patrolRouteTaskId} and enterprise_id=#{enterpriseId}
+    </delete>
+
+    <insert id="batchAdd">
+        insert into pls_patrol_route_task (patrol_route_task_id, task_title, task_content, sort, status, `desc`, longitude, latitude,last_handler_user_id,
+        last_handle_time, work_content, enterprise_id, create_by, create_date, is_del, last_by, last_date) values
+        <foreach collection="list" item="item" index="index" separator=",">
+            (#{item.patrolRouteTaskId},
+            #{item.taskTitle},
+            #{item.taskContent},
+            #{item.sort},
+            #{item.status},
+            #{item.desc},
+            #{item.longitude},
+            #{item.latitude},
+            #{item.lastHandlerUserId},
+            #{item.lastHandleTime},
+            #{item.workContent},
+            #{item.enterpriseId},
+            #{item.userBy},
+            #{item.curr},
+            #{item.isDel},
+            #{item.userBy},
+            #{item.curr})
+        </foreach>
+    </insert>
+
+    <update id="batchUpdate">
+        <foreach collection="list" item="item" open="" close="" separator=";">
+            update pls_patrol_route_task
+            set
+            task_title=#{item.taskTitle},
+            task_content=#{item.taskContent},
+            sort=#{item.sort},
+            is_del=#{item.isDel},
+            `desc`=#{item.desc},
+            longitude=#{item.longitude},
+            latitude=#{item.latitude}
+            where patrol_route_task_id = #{item.patrolRouteTaskId}  and enterprise_id=#{item.enterpriseId}
+        </foreach>
+    </update>
+
+
+</mapper>

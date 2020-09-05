@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper
+	namespace="com.dotop.pipe.api.dao.model.IModelMapDao">
+
+	<resultMap id="ModelMapVoMap"
+		type="com.dotop.pipe.core.vo.model.ModelMapVo">
+		<result column="device_id" jdbcType="VARCHAR"
+			property="deviceId" />
+		<result column="product_id" jdbcType="VARCHAR"
+			property="productId" />
+		<result column="content" jdbcType="VARCHAR" property="content" />
+	</resultMap>
+
+	<select id="get" resultMap="ModelMapVoMap">
+		SELECT a.product_id,c.device_id ,a.content
+		FROM pls_model AS a 
+		JOIN pls_product AS b ON a.product_id=b.product_id AND a.is_del=#{isDel} AND b.is_del=#{isDel}
+		JOIN pls_device AS c ON b.product_id=c.product_id AND b.is_del=#{isDel} AND c.is_del=#{isDel}
+		<where>
+			c.enterprise_id=#{enterpriseId}
+			<if test="deviceId != null and deviceId != ''">
+				AND c.device_id=#{deviceId}
+			</if>
+			<if test="isDel != null">
+				AND a.is_del=#{isDel}
+			</if>
+		</where>
+	</select>
+
+</mapper>

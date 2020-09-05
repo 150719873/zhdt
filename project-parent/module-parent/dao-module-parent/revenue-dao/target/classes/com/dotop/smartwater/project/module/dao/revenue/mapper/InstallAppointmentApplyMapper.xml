@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper
+	namespace="com.dotop.smartwater.project.module.dao.revenue.IInstallAppointmentApplyDao">
+
+	<resultMap id="InstallApplyVo"
+		type="com.dotop.smartwater.project.module.core.water.vo.InstallApplyVo">
+		<!-- 主键 -->
+		<result column="id" jdbcType="VARCHAR" property="id" />
+		<result column="number" jdbcType="VARCHAR" property="number" />
+		<result column="no" jdbcType="VARCHAR" property="no" />
+		<result column="name" jdbcType="VARCHAR" property="name" />
+		<result column="contacts" jdbcType="VARCHAR" property="contacts" />
+		<result column="name" jdbcType="VARCHAR" property="name" />
+		<result column="phone" jdbcType="VARCHAR" property="phone" />
+		<result column="card_type" jdbcType="VARCHAR" property="cardType"/>
+		<result column="card_id" jdbcType="VARCHAR" property="cardId"/>
+		<result column="households" jdbcType="VARCHAR" property="households"/>
+		<result column="device_numbers" jdbcType="VARCHAR" property="deviceNumbers"/>
+		<result column="community_id" jdbcType="VARCHAR" property="communityId"/>
+		<result column="community_name" jdbcType="VARCHAR" property="communityName"/>
+		<result column="apply_type_id" jdbcType="VARCHAR" property="applyTypeId"/>
+		<result column="apply_type_name" jdbcType="VARCHAR" property="applyTypeName"/>
+		<result column="purpose_id" jdbcType="VARCHAR" property="purposeId"/>
+		<result column="purpose_name" jdbcType="VARCHAR" property="purposeName"/>
+		<result column="addr" jdbcType="VARCHAR" property="addr"/>
+		<result column="card_complete" jdbcType="VARCHAR" property="cardComplete"/>
+		<result column="report_complete" jdbcType="VARCHAR" property="reportComplete"/>
+		<result column="upload_file" jdbcType="VARCHAR" property="uploadFile"/>
+		<result column="enterprise_id" jdbcType="VARCHAR" property="enterpriseid" />
+		<result column="create_by" jdbcType="VARCHAR" property="createBy" />
+		<result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
+		<result column="last_by" jdbcType="VARCHAR" property="lastBy" />
+		<result column="last_date" jdbcType="TIMESTAMP" property="lastDate" />
+	</resultMap>
+
+	<select id="get" resultMap="InstallApplyVo">
+		SELECT * FROM install_apply where number = #{number} and enterprise_id = #{enterpriseid} 
+	</select>
+	
+	<insert id="generateApply">
+		 INSERT INTO `install_apply` (id,number,no,name,contacts,phone,card_type,card_id,households,device_numbers,
+		 apply_type_id,apply_type_name,purpose_id,purpose_name,addr,enterprise_id,create_by,create_date)
+		VALUES (#{id}, #{number}, #{no}, #{name}, #{contacts}, #{phone}, #{cardType}, #{cardId}, #{households}, #{deviceNumbers}
+		, #{applyTypeId}, #{applyTypeName}, #{purposeId}, #{purposeName}, #{addr}, #{enterpriseid}, #{userBy}, #{curr})
+	</insert>
+	
+	<update id="submitApply">
+		UPDATE `install_apply` SET community_id=#{communityId} , community_name=#{communityName} , card_complete=#{cardComplete} ,
+		report_complete = #{reportComplete} , upload_file=#{uploadFile} ,last_date=#{curr},last_by=#{userBy} 
+		WHERE enterprise_id = #{enterpriseid} and number=#{number} 
+	</update>
+	
+</mapper>

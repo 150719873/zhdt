@@ -1,0 +1,29 @@
+druid:
+  datasource-pipe:
+    name: datasource-pipe
+    url: jdbc:mysql://rm-wz91y5du7xqr0aot9.mysql.rds.aliyuncs.com:3306/pipe?useUnicode=true&characterEncoding=UTF8&useSSL=false&serverTimezone=Asia/Shanghai&allowMultiQueries=true
+    username: pipe
+    password: ABda35f0d2F6c1
+  datasource-water:
+    name: datasource-water
+    url: jdbc:mysql://rm-wz91y5du7xqr0aot9.mysql.rds.aliyuncs.com:3306/water?useSSL=false&useUnicode=true&characterEncoding=utf-8&useLegacyDatetimeCode=false&useTimezone=true&serverTimezone=GMT%2B8&allowMultiQueries=true
+    username: water
+    password: 02f471eFBb6
+
+redis:
+  cache:
+    database: 11
+    host: r-wz9ewh0547c5u7eugl.redis.rds.aliyuncs.com
+    password: 6DCC6abA6CcE7
+    port: 6379
+    
+cas.auth.path: http://localhost:39999/water-cas
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://localhost:8761/eureka/
+      
+param:
+  config:
+    enterpriseids: 27

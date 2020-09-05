@@ -1,0 +1,349 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.dotop.pipe.api.dao.log.ILogDeviceDao">
+    <sql id="selectColumns">
+		id,
+		log_main_id,
+		device_id,
+		code,
+		`name`,
+		des,
+		address,
+		`length`,
+		depth,
+		pipe_elevation,
+		ground_elevation,
+		acreage,
+		`scale`,
+		angle,
+		device_count,
+		install_date,
+		remark,
+		version,
+		create_by,
+		create_date,
+		last_by,
+		last_date,
+		enterprise_id,
+		product_id,
+		is_del,
+		area_id,
+		laying,
+		product_category,
+		product_type
+	</sql>
+
+    <resultMap id="resultMap" type="com.dotop.pipe.core.vo.log.LogDeviceVo">
+        <result column="id" jdbcType="VARCHAR" property="id"/>
+        <result column="log_main_id" jdbcType="VARCHAR" property="logMainId"/>
+        <result column="device_id" jdbcType="VARCHAR" property="deviceId"/>
+        <result column="code" jdbcType="VARCHAR" property="code"/>
+        <result column="name" jdbcType="VARCHAR" property="name"/>
+        <result column="des" jdbcType="VARCHAR" property="des"/>
+        <result column="address" jdbcType="VARCHAR" property="address"/>
+        <result column="length" jdbcType="VARCHAR" property="length"/>
+        <result column="depth" jdbcType="VARCHAR" property="depth"/>
+        <result column="pipe_elevation" jdbcType="VARCHAR" property="pipeElevation"/>
+        <result column="ground_elevation" jdbcType="VARCHAR" property="groundElevation"/>
+        <result column="acreage" jdbcType="VARCHAR" property="acreage"/>
+        <result column="scale" jdbcType="VARCHAR" property="scale"/>
+        <result column="angle" jdbcType="VARCHAR" property="angle"/>
+        <result column="device_count" jdbcType="VARCHAR" property="deviceCount"/>
+        <result column="install_date" jdbcType="TIMESTAMP" property="installDate"/>
+        <result column="remark" jdbcType="VARCHAR" property="remark"/>
+        <result column="version" jdbcType="VARCHAR" property="version"/>
+        <result column="create_by" jdbcType="VARCHAR" property="createBy"/>
+        <result column="create_date" jdbcType="TIMESTAMP" property="createDate"/>
+        <result column="last_by" jdbcType="VARCHAR" property="lastBy"/>
+        <result column="last_date" jdbcType="TIMESTAMP" property="lastDate"/>
+        <result column="enterprise_id" jdbcType="VARCHAR" property="enterpriseId"/>
+        <result column="is_del" jdbcType="INTEGER" property="isDel"/>
+        <result column="product_category" jdbcType="VARCHAR" property="productCategory"/>
+        <result column="product_type" jdbcType="VARCHAR" property="productType"/>
+        <association property="laying" javaType="com.dotop.pipe.core.vo.common.DictionaryVo">
+            <result column="laying" jdbcType="VARCHAR" property="id"/>
+        </association>
+        <association property="product" javaType="com.dotop.pipe.core.vo.product.ProductVo">
+            <result column="product_id" jdbcType="VARCHAR" property="productId"/>
+        </association>
+        <association property="area" javaType="com.dotop.pipe.core.vo.area.AreaModelVo">
+            <result column="area_id" jdbcType="VARCHAR" property="areaId"/>
+        </association>
+    </resultMap>
+
+    <resultMap id="DeviceVoMap" type="com.dotop.pipe.core.vo.log.LogDeviceVo">
+        <result column="id" jdbcType="VARCHAR" property="id"/>
+        <result column="log_main_id" jdbcType="VARCHAR" property="logMainId"/>
+        <result column="device_id" jdbcType="VARCHAR" property="deviceId" />
+        <result column="code" jdbcType="VARCHAR" property="code" />
+        <result column="name" jdbcType="VARCHAR" property="name" />
+        <result column="des" jdbcType="VARCHAR" property="des" />
+        <result column="address" jdbcType="VARCHAR" property="address" />
+        <result column="length" jdbcType="VARCHAR" property="length" />
+        <result column="depth" jdbcType="VARCHAR" property="depth" />
+        <result column="pipe_elevation" jdbcType="VARCHAR"
+                property="pipeElevation" />
+        <result column="ground_elevation" jdbcType="VARCHAR"
+                property="groundElevation" />
+        <result column="acreage" jdbcType="VARCHAR" property="acreage" />
+        <result column="scale" jdbcType="VARCHAR" property="scale" />
+        <result column="angle" jdbcType="VARCHAR" property="angle" />
+        <result column="device_count" jdbcType="VARCHAR"
+                property="deviceCount" />
+        <result column="install_date" jdbcType="TIMESTAMP"
+                property="installDate" />
+        <result column="remark" jdbcType="VARCHAR" property="remark" />
+        <result column="version" jdbcType="VARCHAR" property="version" />
+        <result column="last_by" jdbcType="VARCHAR" property="lastBy" />
+        <result column="last_date" jdbcType="TIMESTAMP"
+                property="lastDate" />
+        <result column="enterprise_id" jdbcType="VARCHAR"
+                property="enterpriseId" />
+        <result column="deviceCount" jdbcType="VARCHAR"
+                property="deviceCount" />
+        <result column="device_map_id" jdbcType="VARCHAR"
+                property="deviceMapId" />
+        <result column="collectionId" jdbcType="VARCHAR"
+                property="collectionId" />
+        <result column="product_category" jdbcType="VARCHAR" property="productCategory"/>
+        <result column="product_type" jdbcType="VARCHAR" property="productType"/>
+        <association property="laying"
+                     javaType="com.dotop.pipe.core.vo.common.DictionaryVo">
+            <result column="laying_id" jdbcType="VARCHAR" property="id" />
+            <result column="laying_name" jdbcType="VARCHAR"
+                    property="name" />
+        </association>
+
+        <association property="area"
+                     javaType="com.dotop.pipe.core.vo.area.AreaModelVo">
+            <result column="area_id" jdbcType="VARCHAR" property="areaId" />
+            <result column="area_code" jdbcType="VARCHAR"
+                    property="areaCode" />
+            <result column="area_name" jdbcType="VARCHAR" property="name" />
+            <result column="area_des" jdbcType="VARCHAR" property="des" />
+            <result column="area_color_num" jdbcType="VARCHAR" property="areaColorNum" />
+            <result column="area_scale" jdbcType="VARCHAR" property="scale" />
+        </association>
+
+        <association property="product"
+                     javaType="com.dotop.pipe.core.vo.product.ProductVo">
+            <result column="product_id" jdbcType="VARCHAR"
+                    property="productId" />
+            <result column="product_code" jdbcType="VARCHAR"
+                    property="code" />
+            <result column="product_name" jdbcType="VARCHAR"
+                    property="name" />
+            <result column="product_des" jdbcType="VARCHAR" property="des" />
+            <association property="category"
+                         javaType="com.dotop.pipe.core.vo.common.DictionaryVo">
+                <result column="product_category_name" jdbcType="VARCHAR"
+                        property="name" />
+                <result column="product_category_val" jdbcType="VARCHAR"
+                        property="val" />
+            </association>
+            <association property="type"
+                         javaType="com.dotop.pipe.core.vo.common.DictionaryVo">
+                <result column="product_type_name" jdbcType="VARCHAR"
+                        property="name" />
+                <result column="product_type_val" jdbcType="VARCHAR"
+                        property="val" />
+            </association>
+            <association property="factory"
+                         javaType="com.dotop.pipe.core.vo.factory.FactoryVo">
+                <result column="factory_id" jdbcType="VARCHAR"
+                        property="factoryId" />
+                <result column="factory_code" jdbcType="VARCHAR"
+                        property="code" />
+                <result column="factory_name" jdbcType="VARCHAR"
+                        property="name" />
+            </association>
+            <association property="caliber"
+                         javaType="com.dotop.pipe.core.vo.common.DictionaryVo">
+                <result column="caliber_id" jdbcType="VARCHAR" property="id" />
+                <result column="caliber_name" jdbcType="VARCHAR"
+                        property="name" />
+                <result column="caliber_val" jdbcType="VARCHAR"
+                        property="val" />
+            </association>
+            <association property="material"
+                         javaType="com.dotop.pipe.core.vo.common.DictionaryVo">
+                <result column="material_id" jdbcType="VARCHAR" property="id" />
+                <result column="material_name" jdbcType="VARCHAR"
+                        property="name" />
+                <result column="material_val" jdbcType="VARCHAR"
+                        property="val" />
+            </association>
+        </association>
+
+        <collection property="points"
+                    ofType="com.dotop.pipe.core.vo.log.LogPointVo"
+                    javaType="java.util.List" column="{deviceId=device_id, logMainId=log_main_id}" select="queryPointsById">
+            <result column="point_id" jdbcType="VARCHAR"
+                    property="pointId" />
+            <result column="point_code" jdbcType="VARCHAR" property="code" />
+            <result column="point_name" jdbcType="VARCHAR" property="name" />
+            <result column="point_des" jdbcType="VARCHAR" property="des" />
+            <result column="point_longitude" jdbcType="VARCHAR"
+                    property="longitude" />
+            <result column="point_latitude" jdbcType="VARCHAR"
+                    property="latitude" />
+            <result column="point_remark" jdbcType="VARCHAR"
+                    property="remark" />
+        </collection>
+    </resultMap>
+
+    <resultMap id="pointsVoMap"
+               type="com.dotop.pipe.core.vo.log.LogPointVo">
+        <result column="point_log_main_id" jdbcType="VARCHAR" property="logMainId" />
+        <result column="point_log_id" jdbcType="VARCHAR" property="id" />
+        <result column="point_id" jdbcType="VARCHAR" property="pointId" />
+        <result column="point_code" jdbcType="VARCHAR" property="code" />
+        <result column="point_name" jdbcType="VARCHAR" property="name" />
+        <result column="point_des" jdbcType="VARCHAR" property="des" />
+        <result column="point_longitude" jdbcType="VARCHAR"
+                property="longitude" />
+        <result column="point_latitude" jdbcType="VARCHAR"
+                property="latitude" />
+        <result column="point_remark" jdbcType="VARCHAR"
+                property="remark" />
+    </resultMap>
+
+<!--    <select id="list" resultMap="resultMap">-->
+<!--        select-->
+<!--        <include refid="selectColumns"/>-->
+<!--        from pls_log_device-->
+<!--        <where>-->
+<!--            enterprise_id = #{enterpriseId}-->
+<!--            and is_del = #{isDel}-->
+<!--            <if test="logMainId != null and logMainId != ''">-->
+<!--                and log_main_id = #{logMainId}-->
+<!--            </if>-->
+<!--        </where>-->
+<!--    </select>-->
+
+    <select id="queryPointsById"
+            resultMap="pointsVoMap">
+		SELECT e.id AS point_log_id,e.log_main_id AS point_log_main_id, e.point_id, e.code AS point_code, e.name AS point_name, e.longitude
+		AS point_longitude, e.latitude AS point_latitude
+		from pls_log_point_map AS d
+		JOIN pls_log_point AS e ON d.point_id = e.point_id AND d.is_del=0 AND
+		e.is_del=0 AND e.log_main_id = d.log_main_id
+		where d.device_id = #{deviceId} AND d.is_del=0 AND d.log_main_id = #{logMainId}
+	</select>
+
+    <select id="list" resultMap="DeviceVoMap"
+            parameterType="java.util.Map">
+        SELECT a.id,a.log_main_id,a.device_id,a.code, a.name, a.des,
+        a.address,a.length,a.depth,a.pipe_elevation,a.ground_elevation,
+        a.product_id,a.product_category,a.product_type,
+        a.laying AS laying_id, a.install_date, a.remark,a.version,a.last_by,a.last_date,a.is_del, a.enterprise_id,a.angle,a.scale,
+        c.area_id AS area_id, c.area_code AS area_code,c.name AS area_name,c.area_color_num,c.scale as area_scale
+        <!-- ,e.point_id, e.code AS point_code, e.name AS point_name, e.longitude AS point_longitude, e.latitude AS point_latitude, -->
+        <!-- f.product_id,f.category AS product_category,f.type AS
+        product_type,f.code AS product_code,f.name as product_name,
+        g.id AS caliber_id, g.name AS caliber_name, g.val AS caliber_val,
+        h.id AS material_id, h.name AS material_name, h.val AS material_val,
+        i.factory_id,i.code AS factory_code,i.name AS factory_name,
+        j.name AS product_category_name,j.val AS product_category_val,
+        k.name AS product_type_name,k.val AS product_type_val,
+        l.id AS laying_id,l.name AS laying_name -->
+        FROM pls_log_device AS a
+        <!-- JOIN area_map AS b ON a.device_id=b.device_id AND a.is_del=#{isDel}
+            AND b.is_del=#{isDel} -->
+        JOIN pls_area AS c ON a.area_id=c.area_id AND a.is_del=#{isDel} AND c.is_del=#{isDel}
+        <where>
+            <if test="deviceIds != null">
+                AND a.device_id in
+                <foreach collection="deviceIds" open="(" item="ele" separator="," close=")">
+                    #{ele}
+                </foreach>
+            </if>
+            <if test="enterpriseId != null and enterpriseId != ''">
+                AND a.enterprise_id=#{enterpriseId}
+            </if>
+            <if test="isDel != null">
+                AND a.is_del=#{isDel}
+            </if>
+            <if test="name != null and name != ''">
+                AND a.name LIKE concat('%',#{name},'%')
+            </if>
+            <if test="code != null and code != ''">
+                AND a.code LIKE concat('%',#{code},'%')
+            </if>
+            <if test="areaId != null and areaId != ''">
+                AND c.area_id=#{areaId}
+            </if>
+            <if test="areaIds != null and areaId != ''">
+                AND c.area_id in
+                <foreach collection="areaIds" index="index"
+                         item="id" open="(" separator="," close=")">
+                    #{id}
+                </foreach>
+            </if>
+            <if test="productCategory != null and productCategory != ''">
+                AND a.product_category=#{productCategory}
+            </if>
+            <if test="productCategorys != null">
+                AND a.product_category in (<foreach collection="productCategorys" item="item" separator=",">#{item}</foreach>)
+            </if>
+            <if test="productType != null and productType != ''">
+                AND a.product_type=#{productType}
+            </if>
+            <if test="logMainId != null and logMainId != ''">
+                AND a.log_main_id=#{logMainId}
+            </if>
+        </where>
+        <if test="limit!=null and offset!=null">
+            ORDER BY a.last_date DESC
+            LIMIT #{limit} OFFSET #{offset}
+        </if>
+    </select>
+
+    <insert id="adds">
+        insert into pls_log_device
+        ( <include refid="selectColumns"/>)
+        values
+        <foreach collection="logDeviceDtos" item="item" separator=",">
+            (#{item.id},
+            #{item.logMainId},
+            #{item.deviceId},
+            #{item.code},
+            #{item.name},
+            #{item.des},
+            #{item.address},
+            #{item.length},
+            #{item.depth},
+            #{item.pipeElevation},
+            #{item.groundElevation},
+            #{item.acreage},
+            #{item.scale},
+            #{item.angle},
+            #{item.deviceCount},
+            #{item.installDate},
+            #{item.remark},
+            #{item.version},
+            #{item.userBy},
+            #{item.curr},
+            #{item.userBy},
+            #{item.curr},
+            #{item.enterpriseId},
+            #{item.productId},
+            #{item.isDel},
+            #{item.areaId},
+            #{item.laying},
+            #{item.productCategory},
+            #{item.productType})
+        </foreach>
+    </insert>
+
+    <update id="edit">
+        update pls_log_device
+        set
+        is_del = #{isDel}
+        where enterprise_id = #{enterpriseId} and log_main_id = #{logMainId}
+    </update>
+
+    <delete id="del">
+        delete from pls_log_device where enterprise_id = #{enterpriseId} and log_main_id = #{logMainId}
+    </delete>
+</mapper>

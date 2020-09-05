@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper
+	namespace="com.dotop.pipe.auth.api.dao.enterprise.IEnterpriseDao">
+
+	<resultMap id="EnterpriseVoMap"
+		type="com.dotop.pipe.auth.core.vo.enterprise.EnterpriseVo">
+		<result column="enterprise_id" jdbcType="VARCHAR"
+			property="enterpriseId" />
+		<result column="eid" jdbcType="VARCHAR" property="eid" />
+		<result column="map_type" jdbcType="VARCHAR" property="mapType" />
+		<result column="protocols" property="protocols" />
+	</resultMap>
+
+	<insert id="add">
+		INSERT INTO pls_enterprise
+		(enterprise_id,
+		eid,enterprise_name,map_type,
+		protocols,
+		create_by,create_date,
+		last_by, last_date, is_del)
+		VALUES
+		(#{enterpriseId}, #{eid}, #{enterpriseName},"TianDiTu",
+		#{protocols,javaType=java.util.List,jdbcType=VARCHAR},
+		#{userBy},
+		#{curr},
+		#{userBy}, #{curr}, #{isDel})
+	</insert>
+
+	<select id="get" resultMap="EnterpriseVoMap">
+		SELECT enterprise_id, eid, map_type, protocols FROM pls_enterprise
+		<where>
+			<if test="enterpriseId != null and enterpriseId != ''">
+				AND enterprise_id=#{enterpriseId}
+			</if>
+			<if test="isDel != null">
+				AND is_del=#{isDel}
+			</if>
+			<if test="eid != null and eid != ''">
+				AND eid=#{eid}
+			</if>
+		</where>
+	</select>
+
+	<update id="editMap" parameterType="java.util.Map">
+		update pls_enterprise set
+		<if test="mapType != null and mapType != ''">
+			map_type = #{mapType},
+		</if>
+		<if test="protocols != null">
+		<!--  and protocols.size()>0 -->
+			protocols = #{protocols,javaType=java.util.List,jdbcType=VARCHAR},
+		</if>
+		last_by= #{userBy} , last_date= #{curr}
+		<where>
+			<if test="enterpriseId != null and enterpriseId != ''">
+				 enterprise_id= #{enterpriseId}
+			</if>
+		</where>
+	</update>
+</mapper>

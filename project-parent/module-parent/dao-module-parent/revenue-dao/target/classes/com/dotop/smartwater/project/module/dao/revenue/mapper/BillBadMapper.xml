@@ -1,0 +1,267 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper
+	namespace="com.dotop.smartwater.project.module.dao.revenue.IBillBadDao">
+	<resultMap id="BillCheckVoMap"
+		type="com.dotop.smartwater.project.module.core.water.vo.BillBadVo">
+		<result column="bill_bad_id" jdbcType="VARCHAR"
+			property="billBadId" />
+		<result column="bill_check_id" jdbcType="VARCHAR"
+			property="billCheckId" />
+		<result column="month_bill_id" jdbcType="VARCHAR"
+			property="monthBillId" />
+		<result column="is_bad" jdbcType="VARCHAR" property="isBad" />
+		<result column="month_bill_count" jdbcType="VARCHAR"
+			property="monthBillCount" />
+		<result column="last_by" jdbcType="VARCHAR" property="lastBy" />
+		<result column="last_date" jdbcType="TIMESTAMP"
+			property="lastDate" />
+		<result column="communityname" jdbcType="VARCHAR"
+			property="communityname" />
+		<result column="userno" jdbcType="VARCHAR" property="userno" />
+		<result column="username" jdbcType="VARCHAR"
+			property="username" />
+		<result column="phone" jdbcType="VARCHAR" property="phone" />
+		<result column="water" jdbcType="DECIMAL" property="water" />
+		<result column="generatetime" jdbcType="TIMESTAMP"
+			property="generatetime" />
+		<result column="amount" jdbcType="DECIMAL" property="amount" />
+		<result column="addr" jdbcType="VARCHAR" property="addr" />
+		<result column="month" jdbcType="VARCHAR" property="month" />
+
+		<result column="serial_number" jdbcType="VARCHAR"
+			property="serialNumber" />
+		<result column="bill_title" jdbcType="VARCHAR"
+			property="billTitle" />
+		<result column="start_date" jdbcType="VARCHAR"
+			property="startDate" />
+		<result column="end_date" jdbcType="VARCHAR" property="endDate" />
+		<result column="bad_count" jdbcType="VARCHAR"
+			property="badCount" />
+		<result column="sum_count" jdbcType="VARCHAR"
+			property="sumCount" />
+		<result column="paystatus" jdbcType="VARCHAR"
+			property="paystatus" />
+		<result column="ownerid" jdbcType="VARCHAR" property="ownerid" />
+		<result column="pricetypeid" jdbcType="VARCHAR"
+			property="pricetypeid" />
+
+	</resultMap>
+	<insert id="add">
+		insert into
+		bill_check(bill_check_id,serial_number,bill_title,bill_status,start_date,
+		end_date,process_status,process_id,create_by,create_date,last_by,last_date,is_del,enterprise_id)
+
+		VALUES(#{billCheckId},#{serialNumber},#{billTitle},#{billStatus},#{startDate},#{endDate},
+		#{processStatus},#{processId},#{userBy},#{curr},#{userBy},#{curr},#{isDel},#{enterpriseid})
+	</insert>
+
+	<select id="list" resultMap="BillCheckVoMap"
+		parameterType="java.util.Map">
+		select a.*,b.communityname,b.userno,b.username
+		,b.phone,b.water,b.amount,b.generatetime,b.addr,b.month
+		,
+		b.paystatus,b.ownerid,b.pricetypeid
+		from bill_bad a
+		LEFT JOIN `order` b
+		on a.month_bill_id = b.id
+		<where>
+			<if test="isDel != null">
+				AND a.is_del=#{isDel}
+			</if>
+			<if test="billCheckId != null and billCheckId != ''">
+				AND a.bill_check_id = #{billCheckId}
+			</if>
+			<if test="isBad != null and isBad != ''">
+				AND a.is_bad = #{isBad}
+			</if>
+			<if test="enterpriseid != null and enterpriseid != ''">
+				AND a.enterprise_id = #{enterpriseid}
+			</if>
+		</where>
+		ORDER BY b.generatetime DESC
+		<if test="limit!=null and offset!=null">
+			LIMIT #{limit} OFFSET
+			#{offset}
+		</if>
+	</select>
+
+	<select id="getBillBadList" resultMap="BillCheckVoMap"
+		parameterType="java.util.Map">
+		select c.* ,(c.month_bill_count+c.month_bill_penalty) AS sum_count
+		from (
+		select b.bill_check_id , b.serial_number,b.bill_title
+		,b.start_date,b.end_date,count(a.bill_bad_id) as bad_count,
+		sum(a.month_bill_count ) as month_bill_count,sum(a.month_bill_penalty)
+		as month_bill_penalty ,
+		b.create_date from bill_bad as a  join
+		bill_check b
+		on a.bill_check_id = b.bill_check_id
+		<where>
+			<if test="isBad != null">
+				AND a.is_bad=#{isBad}
+			</if>
+			<if test="isDel != null">
+				AND a.is_del=#{isDel}
+			</if>
+			<if test="enterpriseid != null and enterpriseid != ''">
+				AND a.enterprise_id = #{enterpriseid}
+			</if>
+			<if test="billTitle != null and billTitle != ''">
+				AND b.bill_title like CONCAT('%',#{billTitle},'%')
+			</if>
+			<if test="processStatus != null and processStatus != ''">
+			   and	a.process_status=#{processStatus} 
+			</if>
+		</where>
+		group by a.bill_check_id
+		) as c
+		ORDER BY c.create_date DESC
+		<if test="limit!=null and offset!=null">
+			LIMIT #{limit} OFFSET #{offset}
+		</if>
+	</select>
+
+
+	<update id="edit" parameterType="java.util.Map">
+		UPDATE bill_bad
+		<trim prefix="set" suffixOverrides=",">
+			<if test="processId != null and processId != ''">
+				process_id=#{processId},
+			</if>
+			<if test="userBy != null and userBy != ''">
+				last_by=#{userBy},
+			</if>
+			<if test="curr != null">
+				last_date=#{curr},
+			</if>
+		</trim>
+		WHERE
+		is_del=#{isDel} And bill_check_id = #{billCheckId}
+		<if test="billBadId != null and billBadId != ''">
+			and bill_bad_id=#{billBadId}
+		</if>
+
+		<if test="isBad != null and isBad != ''">
+			and is_bad=#{isBad}
+		</if>
+	</update>
+
+
+	<update id="editProcessOver" parameterType="java.util.Map">
+		UPDATE bill_bad
+		<trim prefix="set" suffixOverrides=",">
+
+			<if test="userBy != null and userBy != ''">
+				last_by=#{userBy},
+			</if>
+			<if test="curr != null">
+				last_date=#{curr},
+			</if>
+
+			<if test="isBad != null and isBad != ''">
+				is_bad=#{isBad} ,
+			</if>
+			
+			<if test="processStatus != null and processStatus != ''">
+				process_status=#{processStatus} ,
+			</if>
+		</trim>
+		WHERE
+		is_del=#{isDel} And bill_check_id = #{billCheckId}
+		<if test="billBadId != null and billBadId != ''">
+			and bill_bad_id=#{billBadId}
+		</if>
+		<if test="processId != null and processId != ''">
+			and process_id=#{processId}
+		</if>
+	</update>
+
+
+	<select id="get" resultMap="BillCheckVoMap"
+		parameterType="java.util.Map">
+		SELECT
+		a.id,a.name,a.code,a.sign,a.mkey,a.mkeysecret,a.status,a.remarks,
+		a.last_by,a.last_date from sms_config as a
+		<where>
+			<if test="isDel != null">
+				AND a.is_del=#{isDel}
+			</if>
+			<if test="id != null and id != ''">
+				AND a.id = #{id}
+			</if>
+		</where>
+	</select>
+
+	<update id="del" parameterType="java.util.Map">
+		UPDATE bill_check
+		<trim prefix="set" suffixOverrides=",">
+			<if test="newIsDel != null and newIsDel != ''  ">
+				is_del=#{newIsDel},
+			</if>
+			<if test="userBy != null and userBy != ''">
+				last_by=#{userBy},
+			</if>
+			<if test="curr != null">
+				last_date=#{curr}
+			</if>
+		</trim>
+		WHERE bill_check_id=#{billCheckId} AND is_del=#{isDel} and
+		enterprise_id = #{enterpriseid}
+	</update>
+
+	<update id="markBadBill" parameterType="java.util.Map">
+		UPDATE bill_bad
+		<trim prefix="set" suffixOverrides=",">
+			<if test="isBad != null and isBad != ''  ">
+				is_bad=#{isBad},
+			</if>
+			<if test="userBy != null and userBy != ''">
+				last_by=#{userBy},
+			</if>
+			<if test="curr != null">
+				last_date=#{curr}
+			</if>
+		</trim>
+		WHERE bill_bad_id=#{billBadId} AND is_del=#{isDel} and enterprise_id =
+		#{enterpriseid}
+	</update>
+
+	<select id="isExist" resultType="java.lang.Boolean">
+		SELECT EXISTS
+		(
+		SELECT bill_bad_id FROM bill_bad
+		<where>
+			AND is_del=#{isDel}
+			<if test="billCheckId != null and billCheckId != ''">
+				AND bill_check_id=#{billCheckId}
+			</if>
+			<if test="isBad != null and isBad != ''  ">
+				AND is_bad=#{isBad}
+			</if>
+			<if test="enterpriseid != null and enterpriseid != ''">
+				AND enterprise_id=#{enterpriseid}
+			</if>
+		</where>
+		)
+	</select>
+
+
+	<insert id="addList" parameterType="java.util.List">
+		insert into bill_bad (bill_bad_id,
+		bill_check_id,month_bill_id,month_bill_tradeno,is_bad,month_bill_count,month_bill_penalty,
+		create_by,create_date,last_by,last_date,is_del,enterprise_id)
+		values
+		<foreach collection="list" item="item" index="index"
+			separator=",">
+			(#{item.billBadId,jdbcType=VARCHAR},
+			#{item.billCheckId,jdbcType=VARCHAR},
+			#{item.monthBillId,jdbcType=VARCHAR},
+			#{item.monthBillTradeno,jdbcType=VARCHAR},#{item.isBad,jdbcType=VARCHAR},
+			#{item.monthBillCount},#{item.monthBillPenalty},#{item.userBy},
+			#{item.curr},#{item.userBy},#{item.curr},#{item.isDel},#{item.enterpriseid})
+		</foreach>
+	</insert>
+
+
+</mapper>

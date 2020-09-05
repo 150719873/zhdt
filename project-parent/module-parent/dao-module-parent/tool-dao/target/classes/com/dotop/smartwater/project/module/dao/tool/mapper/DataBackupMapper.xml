@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper
+	namespace="com.dotop.smartwater.project.module.dao.tool.IDataBackupDao">
+	<resultMap id="DataBackupVoMap"
+		type="com.dotop.smartwater.project.module.core.water.vo.DataBackupVo">
+		<result column="backup_id" jdbcType="VARCHAR" property="backupId" />
+		<result column="file_name" jdbcType="VARCHAR" property="fileName" />
+		<result column="file_src" jdbcType="VARCHAR" property="fileSrc" />
+		<result column="backup_type" jdbcType="VARCHAR" property="backupType" />
+		<result column="backup_date" jdbcType="TIMESTAMP" property="backupDate" />
+		<result column="last_by" jdbcType="VARCHAR" property="lastBy" />
+		<result column="last_date" jdbcType="TIMESTAMP" property="lastDate" />
+		<!-- <association property="storage" javaType="com.dotop.smartwater.project.module.core.water.vo.StorageVo">
+			<result column="price" jdbcType="VARCHAR" property="price" /> </association> -->
+	</resultMap>
+	<insert id="add">
+		INSERT INTO data_backup
+		(backup_id, file_name, file_src, backup_type, backup_date, backup_owner,
+		is_del,create_by ,create_date, last_by, last_date, enterprise_id)
+		VALUES
+		(#{backupId},#{fileName}, #{fileSrc}, #{backupType}, #{backupDate},#{backupOwner},
+		#{isDel},#{userBy},#{curr},#{userBy}, #{curr}, #{enterpriseid})
+	</insert>
+
+	<select id="list" resultMap="DataBackupVoMap"
+		parameterType="java.util.Map">
+        select a.backup_id , a.file_name ,a.file_src ,a.backup_date ,a.backup_type ,a.backup_owner
+         <!-- , a.last_by,a.last_date  --> 
+         from data_backup as a 
+		<where>
+			<if test="enterpriseid != null and enterpriseid != ''">
+				AND a.enterprise_id=#{enterpriseid}
+			</if>
+			<if test="isDel != null">
+				AND a.is_del=#{isDel}
+			</if>
+			<if test="startDate != null ">
+				AND a.backup_date &gt;=
+				STR_TO_DATE(DATE_FORMAT(#{startDate},'%Y-%m-%d %H:%i:%s'),'%Y-%m-%d
+				%H:%i:%s')
+			</if>
+			<if test="endDate != null ">
+				AND a.backup_date
+				&lt;=STR_TO_DATE(DATE_FORMAT(#{endDate},'%Y-%m-%d
+				%H:%i:%s'),'%Y-%m-%d %H:%i:%s')
+			</if>
+		</where>
+		   ORDER BY a.backup_date DESC
+		<!-- <if test="limit!=null and offset!=null">
+			LIMIT #{limit} OFFSET #{offset}
+		</if> -->
+	</select>
+	
+	<update id="del" parameterType="java.util.Map">
+		UPDATE data_backup
+		<trim prefix="set" suffixOverrides=",">
+			<if test="newIsDel != null and newIsDel != ''  ">
+				is_del=#{newIsDel},
+			</if>
+			<if test="userBy != null and userBy != ''">
+				last_by=#{userBy},
+			</if>
+			<if test="curr != null">
+				last_date=#{curr},
+			</if>
+		</trim>
+		<where>
+			<if test="enterpriseid != null and enterpriseid != ''">
+				AND enterprise_id=#{enterpriseid}
+			</if>
+			<if test="backupId != null and backupId != ''">
+				 AND backup_id=#{backupId}
+			</if>
+			<if test="isDel != null">
+			    AND is_del=#{isDel}
+			</if>
+		</where>
+
+	</update>
+	
+	<select id="get" resultMap="DataBackupVoMap"
+		parameterType="java.util.Map">
+        select a.backup_id , a.file_name ,a.file_src ,a.backup_date ,a.backup_type ,a.backup_owner
+         <!-- , a.last_by,a.last_date  --> 
+         from data_backup as a   
+		<where>
+			<if test="enterpriseid != null and enterpriseid != ''">
+				AND a.enterprise_id=#{enterpriseid}
+			</if>
+			<if test="isDel != null">
+				AND a.is_del=#{isDel}
+			</if>
+			<if test="backupId != null and backupId != ''">
+				AND a.backup_id = #{backupId}
+			</if>
+		</where>
+	</select>
+
+</mapper>

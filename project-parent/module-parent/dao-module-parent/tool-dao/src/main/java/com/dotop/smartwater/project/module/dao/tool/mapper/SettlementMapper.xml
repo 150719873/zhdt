@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.dotop.smartwater.project.module.dao.tool.ISettlementDao">
+		
+	<resultMap id="SettlementVoMap" type="com.dotop.smartwater.project.module.core.auth.vo.SettlementVo">
+		<result column="enterpriseid" jdbcType="VARCHAR" property="enterpriseid" />
+		<result column="alias"   jdbcType="VARCHAR" property="alias" />
+		<result column="status" jdbcType="VARCHAR" property="status" />
+		<result column="offday" jdbcType="VARCHAR" property="offday" />
+		<result column="alarmday" jdbcType="VARCHAR" property="alarmday" />
+		<result column="appointmentDay" jdbcType="VARCHAR" property="appointmentDay" />
+		<result column="appointmentNumber" jdbcType="VARCHAR" property="appointmentNumber" />
+		<result column="iotAccount" jdbcType="VARCHAR" property="iotAccount" />
+		<result column="iotPassword" jdbcType="VARCHAR" property="iotPassword" />
+		<result column="appEui" jdbcType="VARCHAR" property="appEui" />
+		<result column="is_help" jdbcType="VARCHAR" property="isHelp" />
+		<result column="is_notice" jdbcType="VARCHAR" property="isNotice" />
+		<result column="balance" property="balance" />
+		<result column="sms_template" jdbcType="VARCHAR" property="smsTemplate" />
+		<result column="default_day" jdbcType="VARCHAR" property="defaultDay" />
+		<result column="arrears_valve" jdbcType="VARCHAR" property="arrearsValve" />
+		<result column="arrears_balance" property="arrearsBalance" />
+		<result column="arrears_valve_sms" jdbcType="VARCHAR" property="arrearsValveSms" />
+		<result column="valve_sms_template" jdbcType="VARCHAR" property="valveSmsTemplate" />
+	</resultMap>
+	
+
+	<select id="getSettlement" resultMap="SettlementVoMap">
+     	SELECT * FROM settlement where enterpriseid = #{enterpriseid}
+	</select>
+	
+	<select id="getSettlements" resultMap="SettlementVoMap">
+     	SELECT * FROM settlement
+	</select>
+	
+	<update id="saveTestIot">
+		update settlement
+        <set>
+            <if test="iotAccount != null">
+                iotAccount = #{iotAccount},
+            </if>
+            <if test="iotPassword != null">
+                iotPassword = #{iotPassword},
+            </if>
+            <if test="appEui != null">
+                appEui = #{appEui},
+            </if>
+        </set>
+        where enterpriseid = #{enterpriseid}
+	</update>
+	
+	
+	<update id="editSettlement">
+		update settlement
+        <set>
+            <if test="alias != null">
+                alias = #{alias},
+            </if>
+            <if test="status != null">
+                status = #{status},
+            </if>
+            <if test="offday != null">
+                offday = #{offday},
+            </if>
+            <if test="alarmday != null">
+                alarmday = #{alarmday},
+            </if>
+            <if test="appointmentDay != null">
+                appointmentDay = #{appointmentDay},
+            </if>
+            <if test="appointmentNumber != null">
+                appointmentNumber = #{appointmentNumber},
+            </if>
+            <if test="isNotice != null">
+                is_notice = #{isNotice},
+            </if>
+            <if test="balance != null">
+                balance = #{balance},
+            </if>
+            <if test="smsTemplate != null and smsTemplate != ''">
+                sms_template = #{smsTemplate},
+            </if>
+            <if test="defaultDay != null">
+                default_day = #{defaultDay},
+            </if>
+            <if test="arrearsValve != null">
+                arrears_valve = #{arrearsValve},
+            </if>
+            <if test="arrearsBalance != null">
+                arrears_balance = #{arrearsBalance},
+            </if>
+            <if test="arrearsValveSms != null">
+                arrears_valve_sms = #{arrearsValveSms},
+            </if>
+            <if test="valveSmsTemplate != null and valveSmsTemplate != ''">
+                valve_sms_template = #{valveSmsTemplate}
+            </if>
+        </set>
+        where enterpriseid = #{enterpriseid}
+	</update>
+	
+	<insert id="addSettlement">
+		REPLACE INTO settlement(enterpriseid,alias,status,offday,alarmday,appointmentDay,appointmentNumber,is_notice,
+		balance,sms_template,arrears_valve,arrears_balance,arrears_valve_sms,valve_sms_template)
+		VALUES (#{enterpriseid},#{alias},#{status},#{offday},#{alarmday},#{appointmentDay},#{appointmentNumber},#{isNotice},
+		#{balance},#{smsTemplate},#{arrearsValve},#{arrearsBalance},#{arrearsValveSms},#{valveSmsTemplate})
+	</insert>
+
+</mapper>

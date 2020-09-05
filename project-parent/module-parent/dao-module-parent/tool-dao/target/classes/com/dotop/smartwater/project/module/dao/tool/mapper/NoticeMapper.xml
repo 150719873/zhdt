@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.dotop.smartwater.project.module.dao.tool.INoticeDao">
+		
+	<insert id="addNotice">
+		INSERT INTO notice
+		(noticeId,title,body,sendWay,receiveWay,receiveObj,status,access,time,type,enterpriseId,createBy,createDate,isDel)
+		VALUES
+		(#{noticeId},#{title},#{body},#{sendWay},#{receiveWay},#{receiveObj},#{status},#{access},
+		#{time},#{type},#{enterpriseid},#{userBy},#{curr},#{isDel})
+	</insert>
+
+	<select id="list" resultType="com.dotop.smartwater.project.module.core.water.vo.NoticeVo">
+        select n.*, n.createBy as sendUserId, u.name as sendUserName from `notice` n left join `user` u on n.createBy = u.userid
+        where n.type = #{type} and n.enterpriseId = #{enterpriseid}
+        <if test=" status != null and status != '' ">
+           and n.status = #{status}
+        </if>
+        <if test=" type == 'SEND'">
+        	and n.createBy = #{userBy}
+        </if>
+        <if test=" type == 'RECEIVE'">
+        	AND (
+        	n.receiveObj like concat('%','\"id\":\"${receiveObj}\"','%')
+        	or n.receiveObj like concat('%','\"id\":\"${userBy}\"','%')
+        	)
+        </if>
+        order by n.time desc
+	</select>
+	
+	<delete id="del">
+		delete from notice where noticeId = #{noticeId} and enterpriseId = #{enterpriseid}
+	</delete>
+	
+	<select id="get" resultType="com.dotop.smartwater.project.module.core.water.vo.NoticeVo">
+       select * from notice where noticeId = #{noticeId} and enterpriseId = #{enterpriseid}
+	</select>
+	
+	<update id="revise">
+		update notice set status = #{status} where noticeId = #{noticeId} and enterpriseId = #{enterpriseid}
+	</update>
+	
+	<select id="getOwners" resultType="com.dotop.smartwater.project.module.core.water.vo.OwnerVo">
+		select ownerid,username,userphone from owner where enterpriseid = #{enterpriseid}
+		<foreach collection="list" item="item" index="index" separator="">
+			<choose>
+			    <when test="index == 0">
+			        AND (ownerid = #{item.id}
+			    </when>
+			    <otherwise>
+			        or ownerid = #{item.id}
+			    </otherwise>
+			</choose>
+			<if test="list.size()-index == 1">
+				)
+			</if>
+        </foreach>
+	</select>
+	
+	<select id="getUsers" resultType="com.dotop.smartwater.project.module.core.auth.vo.UserVo">
+		select userid,name,phone,email from user where enterpriseid = #{enterpriseid}
+		<choose>
+			<when test="type == 'ROLE'">
+				<foreach collection="list" item="item" index="index" separator="">
+					<choose>
+					    <when test="index == 0">
+					        AND (roleid = #{item.id}
+					    </when>
+					    <otherwise>
+					        or roleid = #{item.id}
+					    </otherwise>
+					</choose>
+					<if test="list.size()-index == 1">
+						)
+					</if>
+		        </foreach>
+			</when>
+			<otherwise>
+		        <foreach collection="list" item="item" index="index" separator="">
+					<choose>
+					    <when test="index == 0">
+					        AND (userid = #{item.id}
+					    </when>
+					    <otherwise>
+					        or userid = #{item.id}
+					    </otherwise>
+					</choose>
+					<if test="list.size()-index == 1">
+						)
+					</if>
+		        </foreach>
+		    </otherwise>
+	   </choose>
+	</select>
+
+</mapper>

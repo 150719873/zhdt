@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper
+        namespace="com.dotop.smartwater.project.auth.dao.IDataPermissionDao">
+
+
+    <delete id="deletePermissionByRoleId">
+        DELETE FROM data_permission WHERE role_id=#{roleId}
+    </delete>
+
+    <select id="loadPermissionByRoleId"
+            resultType="com.dotop.smartwater.project.module.core.auth.vo.CheckboxOptionVo">
+        SELECT b.id AS `value`,b.`name` AS label,IFNULL(a.isTrue,FALSE) AS `checked` FROM data_type b LEFT JOIN
+        (SELECT id,NAME,FALSE AS isTrue FROM `data_type` WHERE id NOT IN (SELECT data_permission_id FROM data_permission WHERE role_id=#{roleId})
+        UNION ALL
+        SELECT id,NAME,TRUE AS isTrue FROM `data_type` WHERE id IN (SELECT data_permission_id FROM data_permission WHERE role_id=#{roleId})) a
+        ON b.id=a.id
+        ORDER BY b.id ASC
+    </select>
+
+    <insert id="addPermission">
+        INSERT INTO data_permission (id, role_id, data_permission_id) VALUES
+        <foreach collection="list" item="item1" index="index" separator=",">
+            (UUID(), #{roleId}, #{item1})
+        </foreach>
+    </insert>
+
+
+</mapper>

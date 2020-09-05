@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dotop.smartwater.project.module.dao.revenue.ICompriseDao">
+    <resultMap id="BaseResultMap" type="com.dotop.smartwater.project.module.core.water.vo.CompriseVo">
+        <id column="id" jdbcType="VARCHAR" property="id"/>
+        <result column="typeid" jdbcType="VARCHAR" property="typeid"/>
+        <result column="name" jdbcType="VARCHAR" property="name"/>
+        <result column="ratio" jdbcType="DOUBLE" property="ratio"/>
+        <result column="price" jdbcType="DOUBLE" property="price"/>
+        <result column="starttime" jdbcType="TIMESTAMP" property="starttime"/>
+        <result column="enable" jdbcType="INTEGER" property="enable"/>
+        <result column="print" jdbcType="INTEGER" property="print"/>
+        <result column="remark" jdbcType="VARCHAR" property="remark"/>
+        <result column="createtime" jdbcType="TIMESTAMP" property="createtime"/>
+    </resultMap>
+
+    <select id="findById" parameterType="java.lang.String" resultMap="BaseResultMap">
+        select id, typeid, name, ratio, price, starttime, enable, print, remark, createtime
+        from pay_type_comprise
+        where id = #{id,jdbcType=VARCHAR}
+    </select>
+    <delete id="delete" parameterType="java.lang.String">
+    delete from pay_type_comprise
+    where id = #{id,jdbcType=VARCHAR}
+  </delete>
+
+    <delete id="deleteComprises" parameterType="java.lang.String">
+    delete from pay_type_comprise
+    where typeid = #{typeid,jdbcType=VARCHAR}
+  </delete>
+
+    <insert id="insert">
+    insert into pay_type_comprise (id, typeid, name, 
+      ratio, price, starttime, 
+      enable, print, remark, 
+      createtime)
+    values (#{id,jdbcType=VARCHAR}, #{typeid,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR}, 
+      #{ratio,jdbcType=DOUBLE}, #{price,jdbcType=DOUBLE}, #{starttime,jdbcType=TIMESTAMP}, 
+      #{enable,jdbcType=INTEGER}, #{print,jdbcType=INTEGER}, #{remark,jdbcType=VARCHAR}, 
+      #{createtime,jdbcType=TIMESTAMP})
+  </insert>
+
+    <update id="update">
+        update pay_type_comprise
+        <set>
+            <if test="typeid != null">
+                typeid = #{typeid,jdbcType=VARCHAR},
+            </if>
+            <if test="name != null">
+                name = #{name,jdbcType=VARCHAR},
+            </if>
+            <if test="ratio != null">
+                ratio = #{ratio,jdbcType=DOUBLE},
+            </if>
+            <if test="price != null">
+                price = #{price,jdbcType=DOUBLE},
+            </if>
+            <if test="starttime != null">
+                starttime = #{starttime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="enable != null">
+                enable = #{enable,jdbcType=INTEGER},
+            </if>
+            <if test="print != null">
+                print = #{print,jdbcType=INTEGER},
+            </if>
+            <if test="remark != null">
+                remark = #{remark,jdbcType=VARCHAR},
+            </if>
+            <if test="createtime != null">
+                createtime = #{createtime,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where id = #{id,jdbcType=VARCHAR}
+    </update>
+
+    <select id="findComprise" resultMap="BaseResultMap">
+        SELECT p.* FROM pay_type_comprise p where 1=1
+        <if test="typeid != null">
+            and p.typeid = #{typeid,jdbcType=VARCHAR}
+        </if>
+        <if test="enable != null">
+            and p.enable = #{enable,jdbcType=INTEGER}
+        </if>
+    </select>
+</mapper>

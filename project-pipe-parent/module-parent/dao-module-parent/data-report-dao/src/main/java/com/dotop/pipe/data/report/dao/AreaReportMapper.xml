@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper
+	namespace="com.dotop.pipe.data.report.api.dao.IAreaReportDao">
+
+	<resultMap id="AreaReportVoMap"
+		type="com.dotop.pipe.data.report.core.vo.AreaReportVo">
+		
+		<result column="field" jdbcType="VARCHAR" property="field" />
+		<result column="totalVal" jdbcType="VARCHAR" property="totalVal" />
+		<result column="count_time" jdbcType="VARCHAR" property="countTime" />
+		<result column="area_name" jdbcType="VARCHAR" property="areaName" />
+		<result column="area_des" jdbcType="VARCHAR" property="areaDes" />
+		<result column="area_id" jdbcType="VARCHAR" property="areaId" />
+		<result column="area_code" jdbcType="VARCHAR" property="areaCode" />
+		<result column="area_sum_count" jdbcType="VARCHAR" property="areaSumCount" />
+		<result column="area_deal_count" jdbcType="VARCHAR" property="areaDealCount" />
+		<result column="create_by" jdbcType="VARCHAR" property="createBy" />
+	</resultMap>
+	
+	
+	<select id="listByRealTime" resultMap="AreaReportVoMap">
+		select a.field,max(a.val) as totalVal ,DATE_FORMAT( max(a.dev_send_date),'%Y-%m-%d %H:%i:%s') as count_time ,c.area_id,d.name as area_name ,d.des as area_des ,d.create_by 
+        from sensor_property_log as a join sensor as b on a.sensor_id = b.sensor_id 
+		left join pls_area_map as c on b.sensor_id = c.device_id 
+		left join pls_area as d on c.area_id = d.area_id 
+		<where>
+			AND a.field = 'flwTotalValue'
+			AND b.type =  'FM'
+			<if test="areaCode != null and areaCode != ''">
+				and exists (  select 1 from pls_area  as areatable where areatable.area_id=d.area_id and  (areatable.area_code =#{areaCode} or areatable.parent_code = #{areaCode} ) )
+			</if>
+			<if test="startDate != null ">
+			    <!-- AND a.ctime &gt;=  DATE_FORMAT(#{startDate},'%Y%m%d%H%i%S') -->
+				 and a.dev_send_date &gt;= STR_TO_DATE(DATE_FORMAT(#{startDate},'%Y-%m-%d %H:%i:%s'),'%Y-%m-%d %H:%i:%s') 
+			</if>
+			<if test="endDate != null ">
+				<!-- AND a.ctime &lt;= #{endDate} -->
+				  and a.dev_send_date &lt;= STR_TO_DATE(DATE_FORMAT(#{endDate},'%Y-%m-%d %H:%i:%s'),'%Y-%m-%d %H:%i:%s') 
+			</if>
+		</where>
+		group by d.area_id ,a.field  
+		<if test="limit!=null and offset!=null">
+			ORDER BY d.area_code 
+			LIMIT #{limit} OFFSET
+			#{offset}
+		</if>
+	</select>
+
+	<select id="listCountByRealTime" resultType="INTEGER"
+		parameterType="java.util.Map">
+		select count(w.field) from (
+		select a.field
+        from sensor_property_log as a join sensor as b on a.sensor_id = b.sensor_id 
+		left join pls_area_map as c on b.sensor_id = c.device_id 
+		left join pls_area as d on c.area_id = d.area_id 
+		<where>
+			AND a.field = 'flwTotalValue'
+			AND b.type =  'FM'
+			<if test="areaCode != null and areaCode != ''">
+				and exists (  select 1 from pls_area  as areatable where areatable.area_id=d.area_id and  (areatable.area_code =#{areaCode} or areatable.parent_code = #{areaCode} ) )
+			</if>
+			<if test="startDate != null ">
+			    <!-- AND a.ctime &gt;=  DATE_FORMAT(#{startDate},'%Y%m%d%H%i%S') -->
+				 and a.dev_send_date &gt;= STR_TO_DATE(DATE_FORMAT(#{startDate},'%Y-%m-%d %H:%i:%s'),'%Y-%m-%d %H:%i:%s') 
+			</if>
+			<if test="endDate != null ">
+				<!-- AND a.ctime &lt;= #{endDate} -->
+				  and a.dev_send_date &lt;= STR_TO_DATE(DATE_FORMAT(#{endDate},'%Y-%m-%d %H:%i:%s'),'%Y-%m-%d %H:%i:%s') 
+			</if>
+		</where>
+		group by d.area_id ,a.field  ) as w 
+	</select>
+	
+	<select id= "getAreaAlarmReport" resultMap="AreaReportVoMap">
+		select a.area_id  as area_id ,  a.area_code as area_code ,a.`name`  as area_name , SUM(c.alarm_count) as area_sum_count ,
+		  SUM( if(c.`status` = '1',c.alarm_count,0)) as area_deal_count  
+		from pls_area as a
+		LEFT JOIN pls_device as b on a.area_id = b.area_id and b.is_del = 0 and a.enterprise_id = #{operEid} 
+		JOIN pls_alarm as c on c.device_id = b.device_id and c.enterprise_id = #{operEid} and c.is_del = 0 
+		where a.enterprise_id = #{operEid} and a.is_del = 0 group by a.area_code, a.`name` 
+	</select>
+	
+	<select id = "getAreaReportByReading"  resultMap="AreaReportVoMap">
+	
+	
+	</select>
+	
+	
+</mapper>

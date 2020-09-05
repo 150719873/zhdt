@@ -1,0 +1,341 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>com.dotop.smartwater.project.server</groupId>
+		<artifactId>server-parent</artifactId>
+		<version>3.0.0-SNAPSHOT</version>
+	</parent>
+	<artifactId>water-wechat</artifactId>
+	<name>water-wechat</name>
+	<description>water-wechat</description>
+
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+		<java.version>1.8</java.version>
+	</properties>
+
+	<dependencies>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter</artifactId>
+			<exclusions>
+				<exclusion>
+					<groupId>org.springframework.boot</groupId>
+					<artifactId>spring-boot-starter-logging</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>org.springframework.boot</groupId>
+					<artifactId>spring-boot-devtools</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework.cloud</groupId>
+			<artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework.cloud</groupId>
+			<artifactId>spring-cloud-starter-openfeign</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>io.github.openfeign</groupId>
+			<artifactId>feign-okhttp</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework.cloud</groupId>
+			<artifactId>spring-cloud-starter-netflix-ribbon</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework.cloud</groupId>
+			<artifactId>spring-cloud-starter-netflix-hystrix</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-devtools</artifactId>
+			<optional>true</optional>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-log4j2</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>com.lmax</groupId>
+			<artifactId>disruptor</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-test</artifactId>
+			<scope>test</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-web</artifactId>
+			<!-- <exclusions>
+				<exclusion>
+					<groupId>org.springframework.boot</groupId>
+					<artifactId>spring-boot-starter-tomcat</artifactId>
+				</exclusion>
+			</exclusions> -->
+		</dependency>
+
+	<!-- 	<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-undertow</artifactId>
+		</dependency> -->
+
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-data-redis</artifactId>
+			<exclusions>
+				<exclusion>
+					<groupId>io.lettuce</groupId>
+					<artifactId>lettuce-core</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+		<dependency>
+			<groupId>redis.clients</groupId>
+			<artifactId>jedis</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-pool2</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-jdbc</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>mysql</groupId>
+			<artifactId>mysql-connector-java</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.github.pagehelper</groupId>
+			<artifactId>pagehelper-spring-boot-starter</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>com.alibaba</groupId>
+			<artifactId>druid</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.mybatis.spring.boot</groupId>
+			<artifactId>mybatis-spring-boot-starter</artifactId>
+			<version>${mybatis-spring-boot-starter.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>io.shardingsphere</groupId>
+			<artifactId>sharding-jdbc-core</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>com.alibaba</groupId>
+			<artifactId>fastjson</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>joda-time</groupId>
+			<artifactId>joda-time</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-lang3</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.projectlombok</groupId>
+			<artifactId>lombok</artifactId>
+		</dependency>
+
+		<!-- 业务 -->
+		<dependency>
+			<groupId>com.dotop.smartwater.dependence</groupId>
+			<artifactId>dependence-core</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.dotop.smartwater.dependence</groupId>
+			<artifactId>dependence-lock</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.dotop.smartwater.dependence</groupId>
+			<artifactId>dependence-cache</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>com.dotop.smartwater.project.module.core</groupId>
+			<artifactId>water-core</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>com.dotop.smartwater.project.module.core</groupId>
+			<artifactId>auth-core</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.dotop.smartwater.project.module.core</groupId>
+			<artifactId>third-core</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.dotop.smartwater.project.module.core</groupId>
+			<artifactId>pay-core</artifactId>
+		</dependency>
+		<!-- <dependency> -->
+		<!-- <groupId>com.dotop.smartwater.project.module.api</groupId> -->
+		<!-- <artifactId>water-api</artifactId> -->
+		<!-- </dependency> -->
+		<dependency>
+			<groupId>com.dotop.smartwater.project.module.api</groupId>
+			<artifactId>device-api</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.dotop.smartwater.project.module.api</groupId>
+			<artifactId>operation-api</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.dotop.smartwater.project.module.api</groupId>
+			<artifactId>revenue-api</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.dotop.smartwater.project.module.api</groupId>
+			<artifactId>store-api</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.dotop.smartwater.project.module.api</groupId>
+			<artifactId>tool-api</artifactId>
+		</dependency>
+	<!-- 	<dependency>
+			<groupId>com.dotop.smartwater.project.module.api</groupId>
+			<artifactId>workcenter-api</artifactId>
+		</dependency> -->
+
+		<dependency>
+			<groupId>com.dotop.smartwater.project.module.api</groupId>
+			<artifactId>receiver-api</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>com.dotop.smartwater.project.module.api</groupId>
+			<artifactId>wechat-api</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>com.dotop.smartwater.project.module.client</groupId>
+			<artifactId>third-client-fegin</artifactId>
+		</dependency>
+		<!-- <dependency> <groupId>com.dotop.smartwater.project.module.client</groupId>
+			<artifactId>auth-client</artifactId> </dependency> -->
+
+		<dependency>
+			<groupId>com.dotop.smartwater.project.module.service</groupId>
+			<artifactId>device-service</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.dotop.smartwater.project.module.service</groupId>
+			<artifactId>operation-service</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.dotop.smartwater.project.module.service</groupId>
+			<artifactId>revenue-service</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.dotop.smartwater.project.module.service</groupId>
+			<artifactId>store-service</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.dotop.smartwater.project.module.service</groupId>
+			<artifactId>tool-service</artifactId>
+		</dependency>
+	<!-- 	<dependency>
+			<groupId>com.dotop.smartwater.project.module.service</groupId>
+			<artifactId>workcenter-service</artifactId>
+		</dependency> -->
+		<dependency>
+			<groupId>com.dotop.smartwater.project.module.service</groupId>
+			<artifactId>water-service</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.dotop.smartwater.project.module.service</groupId>
+			<artifactId>wechat-service</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>com.dotop.smartwater.project.module.dao</groupId>
+			<artifactId>water-dao</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.dotop.smartwater.project.module.dao</groupId>
+			<artifactId>device-dao</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.dotop.smartwater.project.module.dao</groupId>
+			<artifactId>operation-dao</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.dotop.smartwater.project.module.dao</groupId>
+			<artifactId>revenue-dao</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.dotop.smartwater.project.module.dao</groupId>
+			<artifactId>store-dao</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.dotop.smartwater.project.module.dao</groupId>
+			<artifactId>tool-dao</artifactId>
+		</dependency>
+		<!-- <dependency>
+			<groupId>com.dotop.smartwater.project.module.dao</groupId>
+			<artifactId>workcenter-dao</artifactId>
+		</dependency> -->
+		<dependency>
+			<groupId>com.dotop.smartwater.project.module.dao</groupId>
+			<artifactId>wechat-dao</artifactId>
+		</dependency>
+		
+		
+		<dependency>
+			<groupId>com.aliyun.oss</groupId>
+			<artifactId>aliyun-sdk-oss</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.aliyun</groupId>
+			<artifactId>aliyun-java-sdk-dysmsapi</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.aliyun</groupId>
+			<artifactId>aliyun-java-sdk-core</artifactId>
+		</dependency>
+		
+
+		<dependency>
+			<groupId>com.dotop.smartwater.project.auth</groupId>
+			<artifactId>auth-tool</artifactId>
+		</dependency>
+	</dependencies>
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-maven-plugin</artifactId>
+			</plugin>
+		</plugins>
+	</build>
+
+</project>

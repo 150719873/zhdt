@@ -1,0 +1,255 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dotop.smartwater.project.module.dao.workcenter.ITmplNodePointDao">
+
+    <resultMap id="WorkCenterTmplNodePointVoMap"
+               type="com.dotop.smartwater.project.module.core.water.vo.WorkCenterTmplNodePointVo">
+        <result column="id" jdbcType="VARCHAR" property="id"/>
+        <result column="color" jdbcType="VARCHAR" property="color"/>
+        <result column="index" jdbcType="VARCHAR" property="index"/>
+        <result column="label" jdbcType="VARCHAR" property="label"/>
+        <result column="shape" jdbcType="VARCHAR" property="shape"/>
+        <result column="size" jdbcType="VARCHAR" property="size"/>
+        <result column="type" jdbcType="VARCHAR" property="type"/>
+        <result column="x" jdbcType="VARCHAR" property="x"/>
+        <result column="y" jdbcType="VARCHAR" property="y"/>
+        <result column="node_id" jdbcType="VARCHAR" property="nodeId"/>
+        <result column="tmpl_id" jdbcType="VARCHAR" property="tmplId"/>
+        <result column="enterpriseid" jdbcType="VARCHAR" property="enterpriseid"/>
+    </resultMap>
+
+    <resultMap id="WorkCenterTmplNodePointVoListMap"
+               type="com.dotop.smartwater.project.module.core.water.vo.WorkCenterTmplNodePointVo">
+        <result column="a_id" jdbcType="VARCHAR" property="id"/>
+        <result column="a_color" jdbcType="VARCHAR" property="color"/>
+        <result column="a_index" jdbcType="VARCHAR" property="index"/>
+        <result column="a_label" jdbcType="VARCHAR" property="label"/>
+        <result column="a_shape" jdbcType="VARCHAR" property="shape"/>
+        <result column="a_size" jdbcType="VARCHAR" property="size"/>
+        <result column="a_type" jdbcType="VARCHAR" property="type"/>
+        <result column="a_x" jdbcType="VARCHAR" property="x"/>
+        <result column="a_y" jdbcType="VARCHAR" property="y"/>
+        <result column="a_node_id" jdbcType="VARCHAR" property="nodeId"/>
+        <result column="a_tmpl_id" jdbcType="VARCHAR" property="tmplId"/>
+        <result column="a_enterpriseid" jdbcType="VARCHAR" property="enterpriseid"/>
+        <association property="params" javaType="com.dotop.smartwater.project.module.core.water.vo.WorkCenterTmplNodeVo">
+            <result column="b_id" jdbcType="VARCHAR" property="id"/>
+            <result column="b_name" jdbcType="VARCHAR" property="name"/>
+            <result column="b_desc" jdbcType="VARCHAR" property="desc"/>
+            <result column="b_type" jdbcType="VARCHAR" property="type"/>
+            <result column="b_sort" jdbcType="VARCHAR" property="sort"/>
+            <result column="b_tmpl_id" jdbcType="VARCHAR" property="tmplId"/>
+            <result column="b_parent_id" jdbcType="VARCHAR" property="parentId"/>
+            <result column="b_handlers" jdbcType="VARCHAR" property="handlers"/>
+            <result column="b_carbon_copyers" jdbcType="VARCHAR" property="carbonCopyers"/>
+            <result column="b_handler_roles" jdbcType="VARCHAR" property="handlerRoles"/>
+            <result column="b_carbon_copyer_roles" jdbcType="VARCHAR" property="carbonCopyerRoles"/>
+            <result column="b_if_verify" jdbcType="VARCHAR" property="ifVerify"/>
+            <result column="b_verify_tmpl_node_id" jdbcType="VARCHAR" property="verifyTmplNodeId"/>
+            <result column="b_no_verify_tmpl_node_id" jdbcType="VARCHAR" property="noVerifyTmplNodeId"/>
+            <result column="b_if_notice" jdbcType="VARCHAR" property="ifNotice"/>
+            <result column="b_noticers" jdbcType="VARCHAR" property="noticers"/>
+            <result column="b_noticer_roles" jdbcType="VARCHAR" property="noticerRoles"/>
+            <result column="b_if_update" jdbcType="VARCHAR" property="ifUpdate"/>
+            <result column="b_if_photo" jdbcType="VARCHAR" property="ifPhoto"/>
+            <result column="b_photo_num" jdbcType="VARCHAR" property="photoNum"/>
+            <result column="b_if_upload" jdbcType="VARCHAR" property="ifUpload"/>
+            <result column="b_upload_num" jdbcType="VARCHAR" property="uploadNum"/>
+            <result column="b_if_opinion" jdbcType="VARCHAR" property="ifOpinion"/>
+            <result column="b_opinion_num" jdbcType="VARCHAR" property="opinionNum"/>
+            <result column="b_last_by" jdbcType="VARCHAR" property="lastBy"/>
+            <result column="b_last_date" jdbcType="VARCHAR" property="lastDate"/>
+            <result column="b_create_by" jdbcType="VARCHAR" property="createBy"/>
+            <result column="b_create_date" jdbcType="VARCHAR" property="createDate"/>
+            <result column="b_enterpriseid" jdbcType="VARCHAR" property="enterpriseid"/>
+            <association property="handleDict"
+                         javaType="com.dotop.smartwater.project.module.core.water.vo.DictionaryVo">
+                <result column="b_handle_dict_id" jdbcType="VARCHAR" property="dictionaryId"/>
+            </association>
+            <association property="updateDictChild"
+                         javaType="com.dotop.smartwater.project.module.core.water.vo.DictionaryChildVo">
+                <result column="b_update_dict_child_id" jdbcType="VARCHAR" property="childId"/>
+            </association>
+        </association>
+    </resultMap>
+
+    <select id="list" resultMap="WorkCenterTmplNodePointVoListMap">
+        SELECT a.id as a_id,a.color as a_color,a.index as a_index,a.label as a_label,a.shape as a_shape,a.size as a_size,a.type as a_type,a.x as a_x,a.y as a_y,a.tmpl_id as a_tmpl_id,a.node_id as a_node_id,a.enterpriseid as a_enterpriseid,
+        b.id as b_id,b.name as b_name,b.`desc` as b_desc,b.type as b_type,b.sort as b_sort,b.tmpl_id as b_tmpl_id,b.parent_id as b_parent_id,b.handlers as b_handlers,b.carbon_copyers as b_carbon_copyers,b.handler_roles as b_handler_roles,b.carbon_copyer_roles as b_carbon_copyer_roles,
+        b.handle_dict_id as b_handle_dict_id,b.if_verify as b_if_verify,b.verify_tmpl_node_id as b_verify_tmpl_node_id,b.no_verify_tmpl_node_id as b_no_verify_tmpl_node_id,
+        b.if_notice as b_if_notice,b.noticers as b_noticers,b.noticer_roles as b_noticer_roles,b.if_update as b_if_update,b.update_dict_child_id as b_update_dict_child_id,b.if_photo as b_if_photo,b.photo_num as b_photo_num,b.if_upload as b_if_upload,b.upload_num as b_upload_num,b.if_opinion as b_if_opinion,b.opinion_num as b_opinion_num
+        ,b.is_del as b_is_del,b.create_by as b_create_by,b.create_date as b_create_date,b.last_by as b_last_by,b.last_date as b_last_date,b.enterpriseid as b_enterpriseid
+        FROM `wc_tmpl_node` b LEFT JOIN `wc_tmpl_node_point` a ON b.`id`=a.node_id
+        <where>
+            <if test="enterpriseid != null and enterpriseid != ''">
+                AND a.enterpriseid=#{enterpriseid} AND b.enterpriseid=#{enterpriseid}
+            </if>
+            <if test="isDel != null">
+                AND a.is_del=#{isDel} AND b.is_del=#{isDel}
+            </if>
+            <if test="tmplId != null and tmplId != ''">
+                AND a.tmpl_id=#{tmplId} AND b.tmpl_id=#{tmplId}
+            </if>
+        </where>
+    </select>
+
+    <insert id="add">
+        INSERT INTO wc_tmpl_node_point
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="color != null">
+                color,
+            </if>
+            <if test="index != null">
+                `index`,
+            </if>
+            <if test="label != null">
+                label,
+            </if>
+            <if test="shape != null">
+                shape,
+            </if>
+            <if test="size != null">
+                `size`,
+            </if>
+            <if test="type != null">
+                `type`,
+            </if>
+            <if test="x != null">
+                `x`,
+            </if>
+            <if test="y != null">
+                `y`,
+            </if>
+            <if test="nodeId != null">
+                node_id,
+            </if>
+            <if test="tmplId != null">
+                tmpl_id,
+            </if>
+            <if test="enterpriseid != null">
+                enterpriseid,
+            </if>
+        </trim>
+        VALUES
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id},
+            </if>
+            <if test="color != null">
+                #{color},
+            </if>
+            <if test="index != null">
+                #{index},
+            </if>
+            <if test="label != null">
+                #{label},
+            </if>
+            <if test="shape != null">
+                #{shape},
+            </if>
+            <if test="size != null">
+                #{size},
+            </if>
+            <if test="type != null">
+                #{type},
+            </if>
+            <if test="x != null">
+                #{x},
+            </if>
+            <if test="y != null">
+                #{y},
+            </if>
+            <if test="nodeId != null">
+                #{nodeId},
+            </if>
+            <if test="tmplId != null">
+                #{tmplId},
+            </if>
+            <if test="enterpriseid != null">
+                #{enterpriseid},
+            </if>
+        </trim>
+    </insert>
+
+    <update id="del">
+        UPDATE wc_tmpl_node_point
+        <trim prefix="set" suffixOverrides=",">
+            <if test="newIsDel != null and newIsDel != ''">
+                is_del=#{newIsDel},
+            </if>
+        </trim>
+        <where>
+            enterpriseid=#{enterpriseid} AND is_del=#{isDel}
+            <if test="id != null and id != ''">
+                AND id=#{id}
+            </if>
+            <if test="tmplId != null and tmplId != ''">
+                AND tmpl_id=#{tmplId}
+            </if>
+        </where>
+    </update>
+
+
+    <insert id="adds" parameterType="java.util.List">
+        INSERT INTO wc_tmpl_node_point
+        (id,color,`index`,label,shape,`size`,`type`,`x`,`y`,node_id,tmpl_id,is_del,enterpriseid)
+        VALUES
+        <foreach collection="list" item="item" index="index" open="" close="" separator=",">
+            (#{item.id},#{item.color},#{item.index},#{item.label},#{item.shape},#{item.size},#{item.type},#{item.x},#{item.y},#{item.nodeId},#{item.tmplId},#{item.isDel},#{item.enterpriseid})
+        </foreach>
+    </insert>
+
+    <update id="edits" parameterType="java.util.List">
+        <foreach collection="list" item="item" index="index" open="" close="" separator=";">
+            UPDATE wc_tmpl_node_point
+            <trim prefix="set" suffixOverrides=",">
+                <if test="item.color != null and item.color != ''">
+                    color=#{item.color},
+                </if>
+                <if test="item.index != null and item.index != ''">
+                    `index`=#{item.index},
+                </if>
+                <if test="item.label != null and item.label != ''">
+                    label=#{item.label},
+                </if>
+                <if test="item.shape != null and item.shape != ''">
+                    shape=#{item.shape},
+                </if>
+                <if test="item.size != null and item.size != ''">
+                    `size`=#{item.size},
+                </if>
+                <if test="item.type != null and item.type != ''">
+                    `type`=#{item.type},
+                </if>
+                <if test="item.x != null and item.x != ''">
+                    `x`=#{item.x},
+                </if>
+                <if test="item.y != null and item.y != ''">
+                    `y`=#{item.y},
+                </if>
+                <if test="item.nodeId != null and item.nodeId != ''">
+                    `node_id`=#{item.nodeId},
+                </if>
+                <if test="item.tmplId != null and item.tmplId != ''">
+                    tmpl_id=#{item.tmplId},
+                </if>
+            </trim>
+            WHERE enterpriseid=#{item.enterpriseid} AND id=#{item.id} AND is_del=#{item.isDel}
+        </foreach>
+    </update>
+
+    <update id="dels" parameterType="java.util.List">
+        <foreach collection="list" item="item" index="index" open="" close="" separator=";">
+            UPDATE wc_tmpl_node_point
+            <trim prefix="set" suffixOverrides=",">
+                <if test="item.newIsDel != null and item.newIsDel != ''">
+                    is_del=#{item.newIsDel},
+                </if>
+            </trim>
+            WHERE enterpriseid=#{item.enterpriseid} AND id=#{item.id} AND is_del=#{item.isDel}
+        </foreach>
+    </update>
+</mapper>

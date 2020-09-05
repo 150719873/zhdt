@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper
+	namespace="com.dotop.smartwater.project.module.dao.revenue.IInstallAppointmentUserDao">
+
+	<resultMap id="InstallUserVo"
+		type="com.dotop.smartwater.project.module.core.water.vo.InstallUserVo">
+		
+		<!-- 主键 -->
+		<result column="id" jdbcType="VARCHAR" property="id" />
+		<result column="number" jdbcType="VARCHAR" property="number" />
+		<result column="user_no" jdbcType="VARCHAR" property="userNo" />
+		<result column="user_name" jdbcType="VARCHAR" property="userName" />
+		<result column="user_phone" jdbcType="VARCHAR" property="userPhone" />
+		<result column="community_id" jdbcType="VARCHAR" property="communityId" />
+		<result column="community_name" jdbcType="VARCHAR" property="communityName" />
+		<result column="model_id" jdbcType="VARCHAR" property="modelId" />
+		<result column="model_name" jdbcType="VARCHAR" property="modelName"/>
+		<result column="paytype_id" jdbcType="VARCHAR" property="paytypeId"/>
+		<result column="paytype_name" jdbcType="VARCHAR" property="paytypeName"/>
+		<result column="purpose_id" jdbcType="VARCHAR" property="purposeId"/>
+		<result column="purpose_name" jdbcType="VARCHAR" property="purposeName"/>
+		<result column="kind_id" jdbcType="VARCHAR" property="kindId"/>
+		<result column="kind_name" jdbcType="VARCHAR" property="kindName"/>
+		<result column="devno" jdbcType="VARCHAR" property="devno"/>
+		<result column="addr" jdbcType="VARCHAR" property="addr"/>
+		<result column="enterprise_id" jdbcType="VARCHAR" property="enterpriseid" />
+		<result column="create_by" jdbcType="VARCHAR" property="createBy" />
+		<result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
+		<result column="last_by" jdbcType="VARCHAR" property="lastBy" />
+		<result column="last_date" jdbcType="TIMESTAMP" property="lastDate" />
+		
+	</resultMap>
+
+	<select id="get" resultMap="InstallUserVo">
+		SELECT * FROM install_user where number = #{number} and enterprise_id = #{enterpriseid} 
+	</select>
+	
+	<select id="getUsers" resultMap="InstallUserVo" parameterType="java.util.Map">
+		SELECT * FROM install_user 
+		<where>
+		 number =#{number} and enterprise_id = #{enterpriseid} 
+			<if test="userNo != null and userNo != ''">
+				and user_no = #{userNo}
+			</if>
+			<if test="userName != null and userName != ''">
+				and user_name = #{userName}
+			</if>
+			<if test="devno != null and devno != ''">
+				and devno = #{devno}
+			</if>
+		</where>
+		order by create_date desc
+		<if test="limit!=null and offset!=null">
+			LIMIT #{limit} OFFSET #{offset}
+		</if>
+	</select>
+	
+	
+	<select id="getList" resultMap="InstallUserVo" parameterType="java.util.Map">
+		SELECT * FROM install_user 
+		<where>
+		 number =#{number} and enterprise_id = #{enterpriseid} 
+			<if test="userNo != null and userNo != ''">
+				and user_no = #{userNo}
+			</if>
+			<if test="userName != null and userName != ''">
+				and user_name = #{userName}
+			</if>
+			<if test="devno != null and devno != ''">
+				and devno = #{devno}
+			</if>
+		</where>
+	</select>
+	
+	
+	<insert id="addUser">
+		INSERT INTO `install_user` (id,number,user_no,user_name,user_phone,community_id,community_name,model_id,model_name,
+		paytype_id,paytype_name,purpose_id,purpose_name,kind_id,kind_name,devno,addr,`status`,`explan`,enterprise_id,create_by,create_date)
+		VALUES (#{id}, #{number}, #{userNo}, #{userName}, #{userPhone}, #{communityId}, #{communityName}, #{modelId}, #{modelName}, #{paytypeId}
+		, #{paytypeName}, #{purposeId}, #{purposeName}, #{kindId}, #{kindName}, #{devno}, #{addr}, #{status}, #{explan}, #{enterpriseid}, #{userBy}, #{curr})
+	</insert>
+	
+	<update id="editUser">
+		UPDATE `install_user` SET `user_name`=#{userName} ,`user_phone`=#{userPhone} , community_id=#{communityId} , community_name=#{communityName} , model_id=#{modelId}
+		, model_name=#{modelName} , paytype_id=#{paytypeId} , paytype_name=#{paytypeName} , purpose_id=#{purposeId} , purpose_name=#{purposeName}
+		 , kind_id=#{kindId} , kind_name=#{kindName} , devno=#{devno} , addr=#{addr} , last_date=#{curr},last_by=#{userBy} 
+		 WHERE id = #{id}
+	</update>
+	
+	<update id="updateStatus">
+		UPDATE `install_user` SET `status`=#{status} , `explan`=#{explan} , last_date=#{curr} ,last_by=#{userBy} WHERE id = #{id}
+	</update>
+	
+	<delete id="delUser">
+		delete from `install_user` where id = #{id}
+	</delete>
+	
+</mapper>

@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.dotop.smartwater.project.module.dao.tool.IFileRecordDao">
+	
+	<select id="list" resultType="com.dotop.smartwater.project.module.core.water.vo.FileRecordVo">
+	</select>
+	
+	<select id="get"  resultType="com.dotop.smartwater.project.module.core.water.vo.FileRecordVo">
+		select * from version_control where id = #{id}
+	</select>
+	
+	<insert id="insertRecord">
+		insert into file_record(fileRecordId, fileName, fileSize, fileType, fileSource, fileAddress, uploadTime, uploadUserId) 
+		values(#{fileRecordId}, #{fileName},#{fileSize},#{fileType}, #{fileSource}, #{fileAddress}, #{uploadTime}, #{uploadUserId})
+	</insert>
+	
+	<update id="updateRecord">
+		update version_control 
+		<trim prefix="set" suffixOverrides=",">
+			<if test="versionNo != null and versionNo != ''">
+				versionNo = #{versionNo},
+			</if>
+			<if test="upgrade != null and upgrade != ''">
+				upgrade = #{upgrade},
+			</if>
+			<if test="access != null and access != ''">
+				access = #{access},
+			</if>
+			<if test="status != null and status != ''">
+				status = #{status},
+			</if>
+			<if test="publishUserId != null and publishUserId != ''">
+				publishUserId = #{publishUserId},
+			</if>
+			<if test="publishTime != null">
+				publishTime = #{publishTime}
+			</if>
+		</trim>
+		where id = #{id}
+	</update>
+	
+	<delete id="del">
+		delete from version_control where id = #{id}
+	</delete>
+	
+</mapper>

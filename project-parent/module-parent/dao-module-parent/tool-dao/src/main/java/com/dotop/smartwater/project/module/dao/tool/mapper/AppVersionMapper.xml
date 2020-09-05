@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.dotop.smartwater.project.module.dao.tool.IAppVersionDao">
+	
+	<select id="list" resultType="com.dotop.smartwater.project.module.core.water.vo.AppVersionVo">
+		select a.*, cu.name as createUserName, pu.name as publishUserName,
+		(select versionNo from version_control where code = a.code order by versionCode asc limit 1) as initialVersion
+	    from (select * from version_control order by code,versionCode desc LIMIT 1000) a
+	    left join `user` cu on a.createUserId = cu.userid
+	    left join `user` pu on a.publishUserId = pu.userid
+	    where 1=1 
+		<if test="code != null and code != ''">
+			and	code = #{code}
+		</if>
+		group by code
+	</select>
+	
+	<select id="historyList" resultType="com.dotop.smartwater.project.module.core.water.vo.AppVersionVo">
+		select a.*, cu.name as createUserName, pu.name as publishUserName,
+		(select versionNo from version_control where code = a.code order by versionCode asc limit 1) as initialVersion
+	      from version_control a 
+	      left join `user` cu on a.createUserId = cu.userid
+	      left join `user` pu on a.publishUserId = pu.userid
+	      where 1=1 
+		<if test="code != null and code != ''">
+			and	code = #{code}
+		</if>
+		order by code, versionCode desc
+	</select>
+	
+	<select id="getAppName" resultType="com.dotop.smartwater.project.module.core.water.vo.AppVersionVo">
+		select code,name from version_control group by code
+	</select>
+	
+	<select id="get"  resultType="com.dotop.smartwater.project.module.core.water.vo.AppVersionVo">
+		select v.*, cu.name as createUserName, pu.name as publishUserName, 
+		(select versionNo from version_control where code = v.code order by versionCode asc limit 1) as initialVersion
+		from version_control v
+		left join `user` cu on v.createUserId = cu.userid
+		left join `user` pu on v.publishUserId = pu.userid
+		where id = #{id}
+	</select>
+	
+	<insert id="add">
+		insert into version_control(id, name, code, versionNo, versionCode, md5Key, access, upgrade, qrCode, 
+		createUserId, createTime, status, publishUserId, publishTime, imgUrl, introduction) 
+		values(#{id}, #{name},#{code},#{versionNo}, #{versionCode}, #{md5Key}, #{access}, #{upgrade}, #{qrCode}, 
+		#{createUserId}, #{createTime}, #{status}, #{publishUserId}, #{publishTime}, #{imgUrl}, #{introduction})
+	</insert>
+	
+	<update id="update">
+		update version_control 
+		<trim prefix="set" suffixOverrides=",">
+			<if test="versionNo != null and versionNo != ''">
+				versionNo = #{versionNo},
+			</if>
+			<if test="name != null and name != ''">
+				name = #{name},
+			</if>
+			<if test="imgUrl != null and imgUrl != ''">
+				imgUrl = #{imgUrl},
+			</if>
+			<if test="qrCode != null and qrCode != ''">
+				qrCode = #{qrCode},
+			</if>
+			<if test="upgrade != null and upgrade != ''">
+				upgrade = #{upgrade},
+			</if>
+			<if test="access != null and access != ''">
+				access = #{access},
+			</if>
+			<if test="status != null and status != ''">
+				status = #{status},
+			</if>
+			<if test="publishUserId != null and publishUserId != ''">
+				publishUserId = #{publishUserId},
+			</if>
+			<if test="publishTime != null">
+				publishTime = #{publishTime}
+			</if>
+			<if test="introduction != null and introduction != ''">
+				introduction = #{introduction},
+			</if>
+		</trim>
+		where id = #{id}
+	</update>
+	
+	<delete id="del">
+		delete from version_control where id = #{id}
+	</delete>
+	
+	<select id="judgeCode" resultType="Integer">
+		select count(*) from version_control where code = #{code}
+	</select>
+	
+	<select id="getMaxCode" resultType="Integer">
+		select versionCode from version_control where code = #{code} order by versionCode desc limit 1
+	</select>
+	
+</mapper>

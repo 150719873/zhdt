@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.dotop.smartwater.project.module.dao.tool.IEmailTemplateDao">
+	
+	<select id="getPage" resultType="com.dotop.smartwater.project.module.core.water.vo.EmailTemplateVo">
+		SELECT a.* ,b.`name` as enterprisename FROM email_template a join enterprise b on a.enterpriseid = b.enterpriseid
+		<where>
+			a.delflag = 1
+		   <if test="id != null and id != ''">
+			   AND a.id=#{id}
+		   </if>
+		   <if test="enterpriseid != null and enterpriseid != ''">
+			   AND a.enterpriseid=#{enterpriseid}
+		   </if>
+              <if test="name != null and name != ''">
+			   AND a.name LIKE CONCAT('%',#{name},'%')
+		   </if>
+		   <if test="emailptid != null and emailptid != ''">
+			   AND a.emailptid LIKE CONCAT('%',#{emailptid},'%')
+		   </if>
+		   <if test="code != null and code != ''">
+			   AND a.code LIKE CONCAT('%',#{code},'%')
+		   </if>
+		   <if test="content != null and content != ''">
+		       AND a.content LIKE CONCAT('%',#{content},'%')
+		   </if>
+		</where>
+		ORDER BY a.updatetime DESC
+	</select>
+	
+	<insert id="insertOrUpdate">
+		INSERT INTO email_template(id,enterpriseid,name,emailptid,code,content,status,remarks,delflag,emailtype,emailtypename,createuser,updateuser)
+		values(#{id},#{enterpriseid},#{name},#{emailptid},#{code},#{content},#{status},#{remarks},#{delflag},#{emailtype},#{emailtypename},#{createuser},#{updateuser})
+		ON DUPLICATE KEY UPDATE
+		<trim suffixOverrides=",">
+			<if test="id != null and id != ''">
+				id=#{id},
+			</if>
+			<if test="enterpriseid != null and enterpriseid != ''">
+				enterpriseid=#{enterpriseid},
+			</if>
+			<if test="name != null and name != ''">
+				name=#{name},
+			</if>
+			<if test="emailptid != null and emailptid != ''">
+				emailptid=#{emailptid},
+			</if>
+			<if test="code != null and code != ''">
+				code=#{code},
+			</if>
+			<if test="content != null and content != ''">
+				content=#{content},
+			</if>
+			<if test="status != null">
+				status=#{status},
+			</if>
+			<if test="remarks != null and remarks != ''">
+				remarks=#{remarks},
+			</if>
+			<if test="delflag != null">
+				delflag=#{delflag},
+			</if>
+			<if test="emailtype != null">
+				emailtype=#{emailtype},
+			</if>
+			<if test="emailtypename != null">
+				emailtypename=#{emailtypename},
+			</if>
+			<if test="createuser != null and createuser != ''">
+				createuser=#{createuser},
+			</if>
+			<if test="updateuser != null and updateuser != ''">
+				updateuser=#{updateuser}
+			</if>
+		</trim>
+	</insert>
+	
+	<select id="getByEnterpriseAndType"  resultType="com.dotop.smartwater.project.module.core.water.vo.EmailTemplateVo">
+		SELECT * FROM email_template WHERE delflag=1 AND status=1 AND enterpriseid=#{enterpriseid} AND emailtype=#{modeltype}
+	</select>
+	
+	
+	<insert id="add">
+		INSERT INTO email_template(id,enterpriseid,name,emailptid,code,content,status,remarks,delflag,emailtype,emailtypename,createuser,updateuser)
+		values(#{id},#{enterpriseid},#{name},#{emailptid},#{code},#{content},#{status},#{remarks},#{delflag},#{emailtype},#{emailtypename},#{createuser},#{updateuser})
+	</insert>
+	
+	<update id="edit">
+	update email_template set
+	<trim suffixOverrides=",">
+			<if test="id != null and id != ''">
+				id=#{id},
+			</if>
+			<if test="enterpriseid != null and enterpriseid != ''">
+				enterpriseid=#{enterpriseid},
+			</if>
+			<if test="name != null and name != ''">
+				name=#{name},
+			</if>
+			<if test="emailptid != null and emailptid != ''">
+				emailptid=#{emailptid},
+			</if>
+			<if test="code != null and code != ''">
+				code=#{code},
+			</if>
+			<if test="content != null and content != ''">
+				content=#{content},
+			</if>
+			<if test="status != null">
+				status=#{status},
+			</if>
+			<if test="remarks != null and remarks != ''">
+				remarks=#{remarks},
+			</if>
+			<if test="delflag != null">
+				delflag=#{delflag},
+			</if>
+			<if test="emailtype != null">
+				emailtype=#{emailtype},
+			</if>
+			<if test="emailtypename != null">
+				emailtypename=#{emailtypename},
+			</if>
+			<if test="createuser != null and createuser != ''">
+				createuser=#{createuser},
+			</if>
+			<if test="updateuser != null and updateuser != ''">
+				updateuser=#{updateuser}
+			</if>
+		</trim>
+		  where id = #{id}
+	</update>
+	
+</mapper>

@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper
+        namespace="com.dotop.smartwater.project.module.dao.revenue.IReduceDao">
+    <resultMap id="ReduceVo"
+               type="com.dotop.smartwater.project.module.core.water.vo.ReduceVo">
+
+        <id property="reduceid" column="reduceid"/>
+        <result property="name" column="name"/>
+        <result property="unit" column="unit"/>
+        <result property="rvalue" column="rvalue"/>
+        <result property="enterpriseid" column="enterpriseid"/>
+        <result property="ctime" column="ctime"/>
+    </resultMap>
+
+    <select id="getReduces" resultMap="ReduceVo">
+        select * from `reduce` where enterpriseid=#{enterpriseid}
+    </select>
+
+    <insert id="addReduce">
+        INSERT INTO reduce (reduceid, name, unit, rvalue, enterpriseid, ctime, cuser)
+		VALUES (#{reduceid}, #{name}, #{unit}, #{rvalue}, #{enterpriseid}, #{ctime}, #{cuser})
+    </insert>
+
+    <update id="editReduce">
+        UPDATE `reduce` SET name=#{name},unit=#{unit},rvalue=#{rvalue}
+		WHERE reduceid=#{reduceid}
+    </update>
+
+    <delete id="delReduce">
+        delete from `reduce` where reduceid=#{reduceid}
+    </delete>
+
+    <select id="findById" resultMap="ReduceVo">
+        select * from `reduce` where reduceid=#{reduceid}
+    </select>
+
+    <select id="checkReduceIsUse" resultType="java.lang.Integer">
+        select count(ownerid) as count from owner where `status` = 1 AND reduceid = #{reduceid}
+    </select>
+
+</mapper>

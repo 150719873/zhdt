@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper
+	namespace="com.dotop.smartwater.project.module.dao.revenue.IInstallAppointmentRelationDao">
+
+	<resultMap id="InstallAppointmentRelationVo"
+		type="com.dotop.smartwater.project.module.core.water.vo.InstallAppointmentRelationVo">
+		
+		<!-- 主键 -->
+		<result column="id" jdbcType="VARCHAR" property="id" />
+		<result column="number" jdbcType="VARCHAR" property="number" />
+		<result column="template_id" jdbcType="VARCHAR" property="templateId" />
+		<result column="function_id" jdbcType="VARCHAR" property="functionId" />
+		<result column="no" jdbcType="VARCHAR" property="no" />
+		<result column="explain" jdbcType="VARCHAR" property="explain" />
+		<result column="upload_file" jdbcType="VARCHAR" property="uploadFile" />
+		<result column="enterprise_id" jdbcType="VARCHAR" property="enterpriseid" />
+		<result column="create_by" jdbcType="VARCHAR" property="createBy" />
+		<result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
+		<result column="last_by" jdbcType="VARCHAR" property="lastBy" />
+		<result column="last_date" jdbcType="TIMESTAMP" property="lastDate" />
+		
+		<result column="name" jdbcType="VARCHAR" property="name" />
+		<result column="is_head" jdbcType="VARCHAR" property="isHead" />
+		<result column="page_url" jdbcType="VARCHAR" property="pageUrl" />
+		<result column="table_name" jdbcType="VARCHAR" property="tableName" />
+		
+		
+	</resultMap>
+
+	<insert id="generateRelations">
+		INSERT INTO install_appointment_relation 
+			(`id` ,`number` , template_id , function_id , `no` , `explain` , upload_file , enterprise_id , create_by , create_date)
+		SELECT UUID(),#{number}, template_id , function_id , `no` , `explain` , upload_file , enterprise_id , create_by , create_date 
+		FROM install_template_relation WHERE template_id = #{templateId}
+	</insert>
+	
+	<select id="getRelations" resultMap="InstallAppointmentRelationVo">
+		SELECT r.* , f.`name` , f.is_head , f.page_url ,f.table_name FROM install_appointment_relation r 
+		LEFT JOIN install_appointment_function f 
+		ON r.number = f.number AND r.function_id = f.function_id
+		WHERE r.`number` = #{number} ORDER BY r.`no` ASC
+	</select>
+	
+</mapper>

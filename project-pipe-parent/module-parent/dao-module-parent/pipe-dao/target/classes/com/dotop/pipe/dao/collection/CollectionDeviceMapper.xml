@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.dotop.pipe.api.dao.collection.ICollectionDeviceDao">
+
+	<resultMap id="CollectionVoMap" type="com.dotop.pipe.core.vo.collection.CollectionDeviceVo">
+		<result column="device_id" jdbcType="VARCHAR" property="deviceId" />
+		<result column="id" jdbcType="VARCHAR" property="id" />
+		<result column="code" jdbcType="VARCHAR" property="code" />
+		<result column="name" jdbcType="VARCHAR" property="name" />
+		<result column="des" jdbcType="VARCHAR" property="des" />
+		<result column="enterprise_id" jdbcType="VARCHAR" property="enterpriseId" />
+	</resultMap>
+	
+
+	<!-- 报警处理 -->
+	<delete id="del">
+    	DELETE from pls_collection  
+    	WHERE enterprise_id = #{enterpriseId}  
+    	and user_id = #{userId} and device_id = #{deviceId}
+	</delete>
+
+	<insert id="add">
+		INSERT INTO	pls_collection
+		(id,device_id,user_id,create_by,create_date,is_del,enterprise_id)
+		VALUE
+		(#{id},#{deviceId},#{userId},#{userBy},#{curr},#{isDel},#{enterpriseId})
+	</insert>
+	
+	<select id="page" resultMap="CollectionVoMap" parameterType="java.util.Map">
+	    SELECT a.device_id,a.code, a.name, a.des
+		FROM pls_device AS a join
+		pls_collection as b on a.device_id = b.device_id and a.is_del=#{isDel} AND b.is_del=#{isDel}
+	  <where>
+			<if test="enterpriseId != null and enterpriseId != ''">
+				AND a.enterprise_id=#{enterpriseId}
+			</if> 
+			<if test="isDel != null">
+				AND a.is_del=#{isDel}
+			</if>
+			<if test="userId != null">
+				AND b.user_id =  #{userId}
+			</if>
+		</where>
+		order by b.create_date desc 
+	</select>
+</mapper>

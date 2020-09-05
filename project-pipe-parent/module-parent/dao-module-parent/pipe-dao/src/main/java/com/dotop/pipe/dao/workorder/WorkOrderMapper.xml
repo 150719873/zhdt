@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.dotop.pipe.api.dao.workorder.IWorkOrderDao">
+
+
+    <resultMap id="BaseResultMap"
+               type="com.dotop.pipe.core.vo.workorder.WorkOrderVo">
+        <result column="work_order_id" jdbcType="VARCHAR" property="workOrderId"/>
+        <result column="code" jdbcType="VARCHAR" property="code"/>
+        <result column="work_order_name" jdbcType="VARCHAR" property="workOrderName"/>
+        <result column="type" jdbcType="VARCHAR" property="type"/>
+        <result column="initiation_time" jdbcType="TIMESTAMP" property="initiationTime"/>
+        <result column="status" jdbcType="VARCHAR" property="status"/>
+        <result column="result" jdbcType="VARCHAR" property="result"/>
+        <result column="record_data" jdbcType="VARCHAR" property="recordData"/>
+        <result column="process_id" jdbcType="VARCHAR" property="processId"/>
+    </resultMap>
+
+    <sql id="selectColumns">
+        w.work_order_id,
+        w.`code`,
+        w.work_order_name,
+        w.type,
+        w.initiation_time,
+        w.status,
+        w.result,
+        w.record_data,
+        w.enterprise_id,
+        w.create_by,
+        w.create_date,
+        w.is_del,
+        w.last_by,
+        w.last_date,
+        w.process_id
+	</sql>
+
+    <update id="editStatus">
+         update pls_work_order set status=#{status}
+      where work_order_id=#{workOrderId} and enterprise_id=#{enterpriseId}
+    </update>
+
+    <select id="list" resultMap="BaseResultMap">
+        SELECT
+        <include refid="selectColumns"/>
+        FROM
+        pls_work_order w
+        <where>
+            <if test="status != null and status != ''">
+                and w.status = #{status}
+            </if>
+            <if test="workOrderId != null and workOrderId != ''">
+                and w.work_order_id = #{workOrderId}
+            </if>
+            <if test="code != null and code != ''">
+                and w.`code` like CONCAT('%',#{code},'%')
+            </if>
+            <if test="workOrderName != null and workOrderName != ''">
+                and w.work_order_name like CONCAT('%',#{workOrderName},'%')
+            </if>
+            <if test="startDate != null">
+                and w.initiation_time <![CDATA[>=]]> #{startDate}
+            </if>
+            <if test="endDate != null">
+                and w.initiation_time <![CDATA[<=]]> #{endDate}
+            </if>
+
+            <if test="enterpriseId != null and enterpriseId != ''">
+                and w.enterprise_id = #{enterpriseId}
+            </if>
+            and w.is_del = 0
+        </where>
+        ORDER BY w.create_date desc
+    </select>
+
+
+    <select id="get" resultMap="BaseResultMap">
+        SELECT
+        <include refid="selectColumns"/>
+        FROM
+        pls_work_order w
+        <where>
+            <if test="workOrderId != null and workOrderId != ''">
+                w.work_order_id = #{workOrderId}
+            </if>
+            <if test="code != null and code != ''">
+                and w.`code` = #{code}
+            </if>
+            <if test="enterpriseId != null and enterpriseId != ''">
+                and w.enterprise_id = #{enterpriseId}
+            </if>
+            <if test="recordData != null and recordData != ''">
+                and w.record_data = #{recordData}
+            </if>
+        </where>
+    </select>
+
+    <select id="getByRecordData" resultMap="BaseResultMap">
+        SELECT
+        <include refid="selectColumns"/>
+        FROM
+        pls_work_order w
+        <where>
+            <if test="enterpriseId != null and enterpriseId != ''">
+                and w.enterprise_id = #{enterpriseId}
+            </if>
+            <if test="recordData != null and recordData != ''">
+                and w.record_data = #{recordData}
+            </if>
+            and w.is_del=0
+        </where>
+    </select>
+
+
+    <insert id="add">
+        insert into pls_work_order(work_order_id, `code`, work_order_name, type, initiation_time, status, result, record_data,
+            enterprise_id, create_by, create_date, is_del, last_by, last_date)
+        values
+            (#{workOrderId}, #{code}, #{workOrderName},#{type},#{initiationTime},#{status},#{result}, #{recordData},
+            #{enterpriseId}, #{userBy}, #{curr}, #{isDel}, #{userBy}, #{curr})
+    </insert>
+
+    <update id="edit">
+        update pls_work_order
+        <set>
+            <if test="code != null and code != ''">
+                `code`=#{code},
+            </if>
+            <if test="status != null and status != ''">
+                status=#{status},
+            </if>
+            <if test="workOrderName != null and workOrderName != ''">
+                work_order_name=#{workOrderName},
+            </if>
+            <if test="type != null and type != ''">
+                type=#{type},
+            </if>
+            <if test="initiationTime != null">
+                initiation_time=#{initiationTime},
+            </if>
+            <if test="result != null and result != '' ">
+                result=#{result},
+            </if>
+            <if test="userBy != null and userBy != '' ">
+                last_by=#{userBy},
+            </if>
+            <if test="curr != null">
+                last_date=#{curr},
+            </if>
+            <if test="processId != null and processId != '' ">
+                process_id=#{processId}
+            </if>
+        </set>
+        where work_order_id=#{workOrderId} and enterprise_id=#{enterpriseId}
+    </update>
+
+    <delete id="del">
+         update pls_work_order set is_del=#{isDel}
+        where work_order_id=#{workOrderId} and enterprise_id=#{enterpriseId}
+    </delete>
+
+</mapper>

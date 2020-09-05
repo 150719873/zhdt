@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.dotop.pipe.api.dao.product.IEnterpriseProductMapDao">
+
+    <resultMap id="EnterpriseProductMapVoMap"
+               type="com.dotop.pipe.core.vo.product.EnterpriseProductMapVo">
+        <id column="map_id" jdbcType="VARCHAR" property="mapId"/>
+        <result column="last_by" jdbcType="VARCHAR" property="lastBy"/>
+        <result column="last_date" jdbcType="TIMESTAMP" property="lastDate"/>
+        <association property="enterprise" javaType="com.dotop.pipe.auth.core.vo.enterprise.EnterpriseVo">
+            <id column="enterprise_id" jdbcType="VARCHAR" property="enterpriseId" />
+            <result column="enterprise_name" jdbcType="VARCHAR" property="enterpriseName" />
+            <result column="eid" jdbcType="VARCHAR" property="eid" />
+        </association>
+        <association property="product" javaType="com.dotop.pipe.core.vo.product.ProductVo">
+            <id column="product_id" jdbcType="VARCHAR" property="productId"/>
+            <result column="code" jdbcType="VARCHAR" property="code"/>
+            <result column="name" jdbcType="VARCHAR" property="name"/>
+            <result column="des" jdbcType="VARCHAR" property="des"/>
+            <association property="category" javaType="com.dotop.pipe.core.vo.common.DictionaryVo">
+                <id column="ca_id" jdbcType="VARCHAR" property="id" />
+                <result column="ca_name" jdbcType="VARCHAR" property="name" />
+                <result column="ca_val" jdbcType="VARCHAR" property="val" />
+                <result column="ca_des" jdbcType="VARCHAR" property="des" />
+                <result column="ca_type" jdbcType="VARCHAR" property="type" />
+                <result column="ca_unit" jdbcType="VARCHAR" property="unit" />
+                <result column="ca_is_del" jdbcType="INTEGER" property="isDel" />
+            </association>
+            <association property="type" javaType="com.dotop.pipe.core.vo.common.DictionaryVo">
+                <id column="t_id" jdbcType="VARCHAR" property="id" />
+                <result column="t_name" jdbcType="VARCHAR" property="name" />
+                <result column="t_val" jdbcType="VARCHAR" property="val" />
+                <result column="t_des" jdbcType="VARCHAR" property="des" />
+                <result column="t_type" jdbcType="VARCHAR" property="type" />
+                <result column="t_unit" jdbcType="VARCHAR" property="unit" />
+                <result column="t_is_del" jdbcType="INTEGER" property="isDel" />
+            </association>
+        </association>
+    </resultMap>
+
+    <insert id="add">
+        INSERT INTO pls_enterprise_product_map
+        (map_id,enterprise_id,product_id,
+        create_by, create_date,last_by,
+        last_date, is_del)
+        VALUES
+        (#{mapId},#{enterpriseId},#{productId},
+        #{userBy}, #{curr}, #{userBy}, #{curr}, #{isDel});
+    </insert>
+
+    <sql id="Join_Column_List">
+        a.map_id,a.enterprise_id,a.last_by,a.last_date,b.enterprise_name,b.eid,a.product_id,c.category,c.type,c.code,c.name,c.des,
+        ca.id as ca_id,ca.name as ca_name,ca.val as ca_val,ca.des as ca_des,ca.type as ca_type,ca.unit as ca_unit,ca.is_del as ca_is_del,
+        t.id as t_id,t.name as t_name,t.val as t_val,t.des as t_des,t.type as t_type,t.unit as t_unit,t.is_del as t_is_del
+    </sql>
+
+    <select id="get" resultMap="EnterpriseProductMapVoMap">
+        SELECT
+        <include refid="Join_Column_List" />
+        FROM pls_enterprise_product_map a
+        LEFT JOIN pls_enterprise b ON a.enterprise_id=b.enterprise_id
+        LEFT JOIN pls_product c ON a.product_id=c.product_id
+        LEFT JOIN pls_dictionary ca ON c.category=ca.id
+        LEFT JOIN pls_dictionary t ON c.type=t.id
+        <where>
+            <if test="productId != null and productId != ''">
+                AND a.product_id=#{productId}
+            </if>
+            <if test="enterpriseId != null and enterpriseId != ''">
+                AND a.enterprise_id=#{enterpriseId}
+            </if>
+            <if test="isDel != null">
+                AND a.is_del=#{isDel}
+            </if>
+        </where>
+    </select>
+
+    <select id="list" resultMap="EnterpriseProductMapVoMap"
+            parameterType="java.util.Map">
+        SELECT
+        <include refid="Join_Column_List" />
+        FROM pls_enterprise_product_map a
+        LEFT JOIN pls_enterprise b ON a.enterprise_id=b.enterprise_id
+        LEFT JOIN pls_product c ON a.product_id=c.product_id
+        LEFT JOIN pls_dictionary ca ON c.category=ca.id
+        LEFT JOIN pls_dictionary t ON c.type=t.id
+        <where>
+            <if test="productId != null and productId != ''">
+                AND a.product_id=#{productId}
+            </if>
+            <if test="enterpriseId != null and enterpriseId != ''">
+                AND a.enterprise_id=#{enterpriseId}
+            </if>
+            <if test="isDel != null">
+                AND a.is_del=#{isDel}
+            </if>
+        </where>
+        ORDER BY a.last_date DESC
+        <if test="limit!=null and offset!=null">
+            LIMIT #{limit} OFFSET
+            #{offset}
+        </if>
+    </select>
+
+    <update id="del" parameterType="java.util.Map">
+        UPDATE pls_enterprise_product_map SET is_del=#{newIsDel},last_by=#{userBy}, last_date=#{curr}
+         <where>
+         	is_del=#{isDel}
+         	 <if test="mapId != null and mapId != ''">
+                AND map_id=#{mapId}
+            </if>
+            <if test="productId != null and productId != ''">
+                AND product_id=#{productId}
+            </if>
+            <if test="enterpriseId != null and enterpriseId != ''">
+                AND enterprise_id=#{enterpriseId}
+            </if>
+        </where>
+    </update>
+
+</mapper>

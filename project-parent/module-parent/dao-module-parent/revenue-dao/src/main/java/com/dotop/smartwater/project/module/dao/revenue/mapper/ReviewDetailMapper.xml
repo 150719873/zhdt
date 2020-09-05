@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper
+	namespace="com.dotop.smartwater.project.module.dao.revenue.IReviewDetailDao">
+
+	<resultMap id="ReviewDetailVo"
+		type="com.dotop.smartwater.project.module.core.water.vo.ReviewDetailVo">
+		
+		<!-- 主键 -->
+		<result column="id" jdbcType="VARCHAR" property="id" />
+		<result column="batch_no" jdbcType="VARCHAR" property="batchNo" />
+		<result column="community_id" jdbcType="VARCHAR" property="communityId" />
+		<result column="community_name" jdbcType="VARCHAR" property="communityName" />
+		<result column="user_no" jdbcType="VARCHAR" property="userNo" />
+		<result column="user_name" jdbcType="VARCHAR" property="userName" />
+		<result column="user_phone" jdbcType="VARCHAR" property="userPhone" />
+		<result column="user_addr" jdbcType="VARCHAR" property="userAddr" />
+		<result column="devno" jdbcType="VARCHAR" property="devno" />
+		<result column="water" jdbcType="VARCHAR" property="water" />
+		<result column="uplink_time" jdbcType="VARCHAR" property="uplinkTime" />
+		<result column="review_water" jdbcType="VARCHAR" property="reviewWater" />
+		<result column="review_time" jdbcType="VARCHAR" property="reviewTime" />
+		<result column="review_status" jdbcType="VARCHAR" property="reviewStatus" />
+		<result column="submit_status" jdbcType="VARCHAR" property="submitStatus" />
+		<result column="review_explan" jdbcType="VARCHAR" property="reviewExplan" />
+		<result column="enterprise_id" jdbcType="VARCHAR" property="enterpriseid" />
+		<result column="create_by" jdbcType="VARCHAR" property="createBy" />
+		<result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
+		<result column="last_by" jdbcType="VARCHAR" property="lastBy" />
+		<result column="last_date" jdbcType="TIMESTAMP" property="lastDate" />
+	</resultMap>
+
+	<select id="getList" resultMap="ReviewDetailVo"
+		parameterType="java.util.Map">
+		SELECT * FROM review_detail 
+		<where>
+		enterprise_id = #{enterpriseid} and batch_no = #{batchNo}
+			<if test="userNo != null and userNo != ''">
+				and user_no = #{userNo}
+			</if>
+			<if test="userName != null and userName != ''">
+				and user_name = #{userName}
+			</if>
+			<if test="devno != null and devno != ''">
+				and devno = #{devno}
+			</if>
+			<if test="keyWord != null and keyWord != ''">
+				and (user_no = #{keyWord} or user_phone = #{keyWord} or devno = #{keyWord})
+			</if>
+			<if test="reviewStatus != null and reviewStatus != ''">
+				and review_status = #{reviewStatus}
+			</if>
+			<if test="submitStatus != null and submitStatus != ''">
+				and submit_status = #{submitStatus}
+			</if>
+		</where>
+		order by create_date desc
+		<if test="limit!=null and offset!=null">
+			LIMIT #{limit} OFFSET #{offset}
+		</if>
+	</select>
+	
+	<select id="getDevice" resultMap="ReviewDetailVo">
+		SELECT * FROM review_detail where 
+		enterprise_id = #{enterpriseid} and batch_no = #{batchNo} and id = #{id}
+	</select>
+	
+	<update id="submitReviewDevice">
+		update review_detail set review_water=#{reviewWater} , review_time=#{reviewTime},review_status=#{reviewStatus},
+		submit_status=#{submitStatus} ,review_explan=#{reviewExplan} ,last_by=#{userBy} , last_date=#{curr}
+		where enterprise_id = #{enterpriseid} and batch_no = #{batchNo} and id = #{id}
+	</update>
+	
+	
+	<insert id="batchAdd">
+        INSERT INTO `review_detail`(id,batch_no,community_id,community_name,user_no,user_name,user_phone
+        ,user_addr,devno,water,uplink_time,submit_status,enterprise_id,create_by,create_date)
+           VALUES 
+            <foreach collection ="list" item="item1" index= "index" separator =",">
+			(
+			#{item1.id},#{item1.batchNo},#{item1.communityId},#{item1.communityName},#{item1.userNo},#{item1.userName},#{item1.userPhone},
+			#{item1.userAddr},#{item1.devno},#{item1.water},#{item1.uplinkTime},0,
+			#{item1.enterpriseid},#{item1.userBy},#{item1.curr}
+			)
+            </foreach >
+    </insert>
+
+	<delete id="delByBatchNo">
+		delete from review_detail where batch_no = #{batchNo}
+	</delete>
+</mapper>

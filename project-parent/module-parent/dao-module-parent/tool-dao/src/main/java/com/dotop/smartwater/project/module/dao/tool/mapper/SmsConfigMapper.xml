@@ -1,0 +1,191 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper
+	namespace="com.dotop.smartwater.project.module.dao.tool.ISmsConfigDao">
+	<resultMap id="SmsConfigVoMap"
+		type="com.dotop.smartwater.project.module.core.water.vo.SmsConfigVo">
+
+		<result column="id" jdbcType="VARCHAR" property="id" />
+		<result column="name" jdbcType="VARCHAR" property="name" />
+		<result column="code" jdbcType="VARCHAR" property="code" />
+		<result column="sign" jdbcType="VARCHAR" property="sign" />
+		<result column="mkey" jdbcType="VARCHAR" property="mkey" />
+		<result column="mkeysecret" jdbcType="VARCHAR"
+			property="mkeysecret" />
+		<result column="status" jdbcType="VARCHAR" property="status" />
+		<result column="remarks" jdbcType="VARCHAR" property="remarks" />
+		<result column="last_by" jdbcType="VARCHAR" property="lastBy" />
+		<result column="enterprisename" jdbcType="VARCHAR" property="enterprisename" />
+		<result column="enterprise_id" jdbcType="VARCHAR" property="enterpriseid" />
+		<result column="last_date" jdbcType="TIMESTAMP"
+			property="lastDate" />
+		<!-- <association property="storage" javaType="com.dotop.smartwater.project.module.core.water.vo.StorageVo">
+			<result column="price" jdbcType="VARCHAR" property="price" /> </association> -->
+	</resultMap>
+	<insert id="add">
+		INSERT INTO sms_config
+		(id,name, code, sign, mkey,
+		mkeysecret, status,remarks,
+		is_del,create_by , create_date, last_by,
+		last_date,enterprise_id)
+		VALUES
+		(#{id},#{name}, #{code}, #{sign},
+		#{mkey},#{mkeysecret},#{status}, #{remarks},
+		#{isDel},#{userBy},#{curr},#{userBy}, #{curr},#{enterpriseid})
+	</insert>
+
+	<select id="list" resultMap="SmsConfigVoMap"
+		parameterType="java.util.Map">
+		SELECT
+		a.id,a.name,a.code,a.sign,a.mkey,a.mkeysecret,a.status,a.remarks,
+		a.last_by,a.last_date,a.enterprise_id,b.`name` as  enterprisename
+        from sms_config as a join enterprise as b on a.enterprise_id = b.enterpriseid
+		<where>
+			<if test="isDel != null">
+				AND a.is_del=#{isDel}
+			</if>
+			<if test="name != null and name != ''">
+				AND a.name like CONCAT('%',#{name},'%')
+			</if>
+			<if test="code != null and code != ''">
+				AND a.code like CONCAT('%',#{code},'%')
+			</if>
+			<if test="enterpriseid != null and enterpriseid != ''">
+				AND a.enterprise_id = #{enterpriseid}
+			</if>
+		</where>
+		ORDER BY a.last_date DESC
+		<!-- <if test="limit!=null and offset!=null">
+			LIMIT #{limit} OFFSET #{offset}
+		</if> -->
+	</select>
+
+	<update id="edit" parameterType="java.util.Map">
+		UPDATE sms_config
+		<trim prefix="set" suffixOverrides=",">
+			<if test="name != null and name != ''">
+				name=#{name},
+			</if>
+			<if test="code != null and code != ''">
+				code=#{code},
+			</if>
+			<if test="sign != null and sign != ''">
+				sign=#{sign},
+			</if>
+			<if test="mkey != null and mkey != ''">
+				mkey=#{mkey},
+			</if>
+			<if test="mkeysecret != null and mkeysecret != '' ">
+				mkeysecret=#{mkeysecret},
+			</if>
+			<if test="status != null ">
+				status=#{status},
+			</if>
+			<if test="remarks != null and remarks != '' ">
+				remarks=#{remarks},
+			</if>
+			<if test="newIsDel != null and newIsDel != ''  ">
+				is_del=#{newIsDel},
+			</if>
+			<if test="userBy != null and userBy != ''">
+				last_by=#{userBy},
+			</if>
+			<if test="curr != null">
+				last_date=#{curr},
+			</if>
+		</trim>
+		<where>
+		  <if test="id != null ">
+		  and id=#{id}
+		  </if>
+		   <if test="isDel != null ">
+		  and is_del=#{isDel}
+		  </if>
+		   <if test="enterpriseid != null ">
+		 and enterprise_id = #{enterpriseid}
+		  </if>
+		</where>
+	</update>
+
+	<select id="get" resultMap="SmsConfigVoMap"
+		parameterType="java.util.Map">
+		SELECT
+		a.id,a.name,a.code,a.sign,a.mkey,a.mkeysecret,a.status,a.remarks,
+		a.last_by,a.last_date,a.enterprise_id,b.`name` as  enterprisename
+        from sms_config as a join enterprise as b on a.enterprise_id = b.enterpriseid
+		<where>
+			<if test="isDel != null">
+				AND a.is_del=#{isDel}
+			</if>
+			<if test="id != null and id != ''">
+				AND a.id = #{id}
+			</if>
+			<if test="enterpriseid != null and enterpriseid != ''">
+				AND a.enterprise_id = #{enterpriseid}
+			</if>
+		</where>
+	</select>
+
+	<update id="del" parameterType="java.util.Map">
+		UPDATE sms_config
+		<trim prefix="set" suffixOverrides=",">
+			<if test="newIsDel != null and newIsDel != ''  ">
+				is_del=#{newIsDel},
+			</if>
+			<if test="userBy != null and userBy != ''">
+				last_by=#{userBy},
+			</if>
+			<if test="curr != null">
+				last_date=#{curr},
+			</if>
+		</trim>
+		<where>
+		  <if test="id != null ">
+		  and id=#{id}
+		  </if>
+		   <if test="isDel != null ">
+		  and is_del=#{isDel}
+		  </if>
+		   <if test="enterpriseid != null ">
+		 and enterprise_id = #{enterpriseid}
+		  </if>
+		</where>
+	</update>
+
+	<select id="isExist" resultType="java.lang.Boolean">
+		SELECT EXISTS
+		(
+		SELECT id FROM sms_config
+		<where>
+			AND is_del=#{isDel}
+			<if test="code != null and code != ''">
+				AND code=#{code}
+			</if>
+			<if test="id != null and id != ''">
+				AND id=#{id}
+			</if>
+			<if test="enterpriseid != null and enterpriseid != ''">
+				AND a.enterprise_id = #{enterpriseid}
+			</if>
+		</where>
+		)
+	</select>
+	
+	<select id="getByEnable" resultMap="SmsConfigVoMap">
+		select a.* from sms_config as a 
+		<where>
+		 <if test="isDel != null">
+		  and a.is_del=#{isDel}
+		 </if>
+		 
+		  <if test="status != null">
+		  and a.status = #{status}
+		 </if>
+		 <if test="enterpriseid != null and enterpriseid != ''">
+				AND a.enterprise_id = #{enterpriseid}
+		</if>
+		</where>
+		LIMIT 1
+	</select>
+
+</mapper>

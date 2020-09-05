@@ -1,0 +1,130 @@
+<?xml version="1.0"?>
+<project
+        xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
+        xmlns="http://maven.apache.org/POM/4.0.0"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>com.dotop.pipe</groupId>
+        <artifactId>api-module-parent</artifactId>
+        <version>3.0.0-SNAPSHOT</version>
+    </parent>
+    <artifactId>pipe-web</artifactId>
+    <name>pipe-web</name>
+    <url>http://maven.apache.org</url>
+
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    </properties>
+
+    <dependencies>
+        <!-- 		<dependency> -->
+        <!-- 			<groupId>com.dotop.pipe.dependence</groupId> -->
+        <!-- 			<artifactId>dependence-lock</artifactId> -->
+        <!-- 			<version>${project.version}</version> -->
+        <!-- 			<scope>provided</scope> -->
+        <!-- 		</dependency> -->
+        <dependency>
+            <groupId>com.dotop.pipe.auth</groupId>
+            <artifactId>auth-core</artifactId>
+            <version>${project.version}</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.dotop.smartwater.project.module.core</groupId>
+            <artifactId>auth-core</artifactId>
+            <!-- 			<version>${water.version}</version> -->
+            <version>${project.version}</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.dotop.smartwater.project.auth</groupId>
+            <artifactId>auth-tool</artifactId>
+            <!-- 			<version>${water.version}</version> -->
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.dotop.pipe.auth</groupId>
+            <artifactId>auth-cas</artifactId>
+            <version>${project.version}</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.dotop.pipe.auth</groupId>
+            <artifactId>auth-service</artifactId>
+            <version>${project.version}</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>com.dotop.pipe</groupId>
+            <artifactId>pipe-core</artifactId>
+            <version>${project.version}</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.dotop.pipe</groupId>
+            <artifactId>pipe-service</artifactId>
+            <version>${project.version}</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>com.dotop.pipe</groupId>
+            <artifactId>data-report-core</artifactId>
+            <version>${project.version}</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.dotop.pipe</groupId>
+            <artifactId>data-report-service</artifactId>
+            <version>${project.version}</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.dotop.pipe</groupId>
+            <artifactId>water-client</artifactId>
+            <version>${project.version}</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.dotop.pipe</groupId>
+            <artifactId>data-receiver-factory</artifactId>
+            <version>${project.version}</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <!--<dependency>-->
+            <!--<groupId>com.dotop.pipe</groupId>-->
+            <!--<artifactId>data-receiver-bridge-client</artifactId>-->
+            <!--<version>${project.version}</version>-->
+            <!--<scope>provided</scope>-->
+        <!--</dependency>-->
+
+        <!--<dependency>-->
+            <!--<groupId>com.dotop.pipe</groupId>-->
+            <!--<artifactId>water-client</artifactId>-->
+            <!--<version>${project.version}</version>-->
+            <!--<scope>provided</scope>-->
+        <!--</dependency>-->
+
+        <!-- 		<dependency> -->
+        <!-- 			<groupId>com.dotop.pipe</groupId> -->
+        <!-- 			<artifactId>dispatch-core</artifactId> -->
+        <!-- 			<version>${project.version}</version> -->
+        <!-- 			<scope>provided</scope> -->
+        <!-- 		</dependency> -->
+        <!-- 		<dependency> -->
+        <!-- 			<groupId>com.dotop.pipe</groupId> -->
+        <!-- 			<artifactId>dispatch-bridge-client</artifactId> -->
+        <!-- 			<version>${project.version}</version> -->
+        <!-- 			<scope>provided</scope> -->
+        <!-- 		</dependency> -->
+        <dependency>
+            <groupId>com.dotop.smartwater.project.module.core</groupId>
+            <artifactId>water-core</artifactId>
+            <version>${project.version}</version>
+            <scope>provided</scope>
+        </dependency>
+    </dependencies>
+</project>

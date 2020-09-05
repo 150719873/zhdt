@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper
+        namespace="com.dotop.smartwater.project.auth.dao.IAreaDao">
+
+    <resultMap id="AreaNodeVoMap"
+               type="com.dotop.smartwater.project.module.core.auth.vo.AreaNodeVo">
+        <result column="key" jdbcType="VARCHAR" property="key"/>
+        <result column="pId" jdbcType="VARCHAR" property="pId"/>
+        <result column="code" jdbcType="VARCHAR" property="code"/>
+        <result column="title" jdbcType="VARCHAR" property="title"/>
+        <result column="isLeaf" jdbcType="VARCHAR" property="isLeaf"/>
+    </resultMap>
+
+    <delete id="delAreaByEid">
+		delete from `area` where enterpriseid = #{enterpriseid}
+	</delete>
+
+    <select id="findAreaNodesByEid" resultType="com.dotop.smartwater.project.module.core.auth.vo.AreaVo">
+		select * from `area` where enterpriseid = #{enterpriseid}
+	</select>
+
+    <select id="getAreaById" resultType="com.dotop.smartwater.project.module.core.auth.vo.AreaVo">
+		select * from `area` where id = #{id}
+	</select>
+
+    <insert id="addArea">
+        insert into area (enterpriseid, id, pId, name, code) values
+        <foreach collection="list" item="item1" index="index" separator=",">
+            (#{enterpriseid}, #{item1.id},#{item1.pId}, #{item1.name}, #{item1.code})
+        </foreach>
+    </insert>
+    
+    <insert id="insertAreaNode">
+        insert into area (enterpriseid, id, pId, name, code) values (#{enterpriseid}, #{id}, #{pId}, #{name}, #{code})
+    </insert>
+    
+    <update id="updateAreaNode">
+    	update area set name = #{name}
+    	<if test="code != null and code != ''">
+    		,code = #{code}
+    	</if>
+		where id = #{id} and enterpriseid = #{enterpriseid}
+    </update>
+    
+    <update id="deleteAreaNode">
+    	delete from area where id = #{id} and enterpriseid = #{enterpriseid}
+    </update>
+    
+    <select id="checkAreaChild" resultType="Integer">
+    	select count(*) from area where pId = #{id} and enterpriseid = #{enterpriseid}
+    </select>
+    
+    <select id="checkAreaCode" resultType="Integer">
+    	select count(*) from area where code = #{code} and enterpriseid = #{enterpriseid} and id != #{id}
+    </select>
+
+    <select id="findAreasByEidAndUseId"
+            resultType="com.dotop.smartwater.project.module.core.auth.vo.PermissionVo">
+		SELECT a.id, a.pId, CONCAT(a.`name` , '(' ,a.`code` , ')') , a.isTrue as `checked`,true as `open` from
+			(select id,name,code,false as isTrue,pId from `area` WHERE enterpriseid = #{enterpriseid}
+			and id not in (SELECT areaid from user_area where userid=#{userid}) UNION all
+			select id,name,true as isTrue,pId from `area` WHERE enterpriseid = #{enterpriseid}
+			and id in (SELECT areaid from user_area where userid=#{userid})) a ORDER BY a.id ASC
+	</select>
+
+    <select id="isUsedNode" resultType="java.lang.Long">
+		select count(*) as num from user_area a left join `user` b
+			on a.userid = b.userid where b.enterpriseid = #{enterpriseid} and a.areaid = #{id}
+	</select>
+	
+	<select id="hasBookReport" resultType="java.lang.Long">
+		select count(*) as num from device_book_management where enterpriseid = #{enterpriseid} and area_id = #{id}
+	</select>
+
+    <select id="getAreaMapByEid" resultMap="AreaNodeVoMap">
+		select id as `key`,CONCAT(`name` , '(' ,`code` , ')') as title , pId,`code` as code, true as isLeaf from `area` where enterpriseid = #{enterpriseid}
+	</select>
+
+    <select id="getAreaMapByUserid" resultType="com.dotop.smartwater.project.module.core.auth.vo.AreaNodeVo">
+		select a.id as `key`,CONCAT(a.`name` , '(' ,a.`code` , ')') as title,a.pId ,a.`code` as code,true as isLeaf from `area` a
+		INNER JOIN role_area b on a.id = b.area_id 
+		where role_id = (SELECT roleid FROM `user` where userid = #{userid})	
+	</select>
+
+</mapper>

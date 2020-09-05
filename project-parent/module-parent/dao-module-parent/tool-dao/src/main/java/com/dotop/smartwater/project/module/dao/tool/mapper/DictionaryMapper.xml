@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dotop.smartwater.project.module.dao.tool.IDictionaryDao">
+    <resultMap id="BaseResultMap" type="com.dotop.smartwater.project.module.core.water.vo.DictionaryVo">
+        <id column="dictionary_id" jdbcType="VARCHAR" property="dictionaryId"/>
+        <result column="dictionary_code" jdbcType="VARCHAR" property="dictionaryCode"/>
+        <result column="dictionary_type" jdbcType="VARCHAR" property="dictionaryType"/>
+        <result column="dictionary_name" jdbcType="VARCHAR" property="dictionaryName"/>
+        <result column="dictionary_value" jdbcType="VARCHAR" property="dictionaryValue"/>
+        <result column="enterpriseid" jdbcType="VARCHAR" property="enterpriseid"/>
+        <result column="remark" jdbcType="VARCHAR" property="remark"/>
+        <result column="create_by" jdbcType="VARCHAR" property="createBy"/>
+        <result column="create_date" jdbcType="TIMESTAMP" property="createDate"/>
+        <result column="last_by" jdbcType="VARCHAR" property="lastBy"/>
+        <result column="last_date" jdbcType="TIMESTAMP" property="lastDate"/>
+        <result column="is_del" jdbcType="TINYINT" property="isDel"/>
+        <collection property="children"
+                    ofType="com.dotop.smartwater.project.module.core.water.vo.DictionaryChildVo">
+            <result column="child_id" jdbcType="VARCHAR" property="childId"/>
+            <result column="dictionary_id" jdbcType="VARCHAR" property="dictionaryId"/>
+            <result column="child_name" jdbcType="VARCHAR" property="childName"/>
+            <result column="child_value" jdbcType="VARCHAR" property="childValue"/>
+            <result column="remark" jdbcType="VARCHAR" property="remark"/>
+        </collection>
+    </resultMap>
+
+    <select id="get" parameterType="com.dotop.smartwater.project.module.core.water.dto.DictionaryDto"
+            resultMap="BaseResultMap">
+    select
+    dictionary_id, dictionary_code, dictionary_type, dictionary_name, dictionary_value,
+    enterpriseid, remark, create_by, create_date, last_by, last_date, is_del
+    from dictionary
+    where dictionary_id = #{dictionaryId,jdbcType=VARCHAR}
+  </select>
+
+    <select id="list" parameterType="com.dotop.smartwater.project.module.core.water.dto.DictionaryDto"
+            resultMap="BaseResultMap">
+        select a.*, b.child_id, b.dictionary_id, b.child_name, b.child_value
+        from `dictionary` a left join `dictionary_child` b on a.dictionary_id = b.dictionary_id
+        <where>
+            ( a.dictionary_type = 'public'
+            <if test="enterpriseid != null and enterpriseid != ''">
+                or (a.dictionary_type = 'private' and a.enterpriseid = #{enterpriseid,jdbcType=VARCHAR} )
+            </if>
+            )
+            <if test="dictionaryType != null and dictionaryType != ''">
+                and a.dictionary_type = #{dictionaryType,jdbcType=VARCHAR}
+            </if>
+            <if test="dictionaryName != null and dictionaryName != ''">
+                and a.dictionary_name like CONCAT('%',#{dictionaryName,jdbcType=VARCHAR},'%')
+            </if>
+            <if test="dictionaryValue != null and dictionaryValue != ''">
+                and a.dictionary_value = #{dictionaryValue,jdbcType=VARCHAR}
+            </if>
+            <if test="dictionaryId != null and dictionaryId != ''">
+                and a.dictionary_id like CONCAT('%',#{dictionaryId,jdbcType=VARCHAR},'%')
+            </if>
+        </where>
+        order by a.dictionary_code asc
+    </select>
+
+    <select id="listByPage" parameterType="com.dotop.smartwater.project.module.core.water.dto.DictionaryDto"
+            resultMap="BaseResultMap">
+        select a.*
+        from `dictionary` a
+        <where>
+            ( a.dictionary_type = 'public'
+            <if test="enterpriseid != null and enterpriseid != ''">
+                or (a.dictionary_type = 'private' and a.enterpriseid = #{enterpriseid,jdbcType=VARCHAR} )
+            </if>
+            )
+            <if test="dictionaryType != null and dictionaryType != ''">
+                and a.dictionary_type = #{dictionaryType,jdbcType=VARCHAR}
+            </if>
+            <if test="dictionaryName != null and dictionaryName != ''">
+                and a.dictionary_name like CONCAT('%',#{dictionaryName,jdbcType=VARCHAR},'%')
+            </if>
+            <if test="dictionaryValue != null and dictionaryValue != ''">
+                and a.dictionary_value = #{dictionaryValue,jdbcType=VARCHAR}
+            </if>
+            <if test="dictionaryId != null and dictionaryId != ''">
+                and a.dictionary_id like CONCAT('%',#{dictionaryId,jdbcType=VARCHAR},'%')
+            </if>
+        </where>
+        order by a.dictionary_code asc
+    </select>
+
+    <select id="isExistDictionaryCode"
+            parameterType="com.dotop.smartwater.project.module.core.water.dto.DictionaryDto"
+            resultType="java.lang.Integer">
+            select count(*) from (
+            SELECT dictionary_id FROM `dictionary` where dictionary_code = #{dictionaryCode} and dictionary_type = 'public'
+            UNION
+            SELECT dictionary_id FROM `dictionary` where dictionary_code = #{dictionaryCode} and dictionary_type = 'private'
+            and enterpriseid = #{enterpriseid}
+            <if test="dictionaryType != null and dictionaryType == 'public'.toString()">
+                UNION
+                SELECT dictionary_id FROM `dictionary` where dictionary_code = #{dictionaryCode} and dictionary_type = 'private'
+            </if>
+            ) a
+  </select>
+
+    <select id="getByDictionaryCode"
+            parameterType="com.dotop.smartwater.project.module.core.water.dto.DictionaryDto"
+            resultMap="BaseResultMap">
+    select dictionary_id, dictionary_code, dictionary_type, dictionary_name, dictionary_value,
+    enterpriseid, remark, create_by, create_date, last_by, last_date, is_del from (
+    SELECT * FROM `dictionary` where dictionary_code = #{dictionaryCode} and dictionary_type = 'public'
+    UNION
+    SELECT * FROM `dictionary` where dictionary_code = #{dictionaryCode} and dictionary_type = 'private'
+    and enterpriseid = #{enterpriseid} ) a
+  </select>
+
+    <delete id="del" parameterType="com.dotop.smartwater.project.module.core.water.dto.DictionaryDto">
+    delete from dictionary
+    where dictionary_id = #{dictionaryId,jdbcType=VARCHAR}
+  </delete>
+
+    <insert id="add" parameterType="com.dotop.smartwater.project.module.core.water.dto.DictionaryDto">
+    insert into dictionary (dictionary_id, dictionary_code, dictionary_type,
+      dictionary_name, dictionary_value, enterpriseid,
+      remark, create_by, create_date,
+      last_by, last_date, is_del
+      )
+    values (#{dictionaryId,jdbcType=VARCHAR}, #{dictionaryCode,jdbcType=VARCHAR}, #{dictionaryType,jdbcType=VARCHAR},
+      #{dictionaryName,jdbcType=VARCHAR}, #{dictionaryValue,jdbcType=VARCHAR}, #{enterpriseid,jdbcType=VARCHAR},
+      #{remark,jdbcType=VARCHAR}, #{createBy,jdbcType=VARCHAR}, #{createDate,jdbcType=TIMESTAMP},
+      #{lastBy,jdbcType=VARCHAR}, #{lastDate,jdbcType=TIMESTAMP}, #{isDel,jdbcType=TINYINT}
+      )
+  </insert>
+
+    <update id="edit" parameterType="com.dotop.smartwater.project.module.core.water.dto.DictionaryDto">
+        update dictionary
+        <set>
+            <if test="dictionaryCode != null">
+                dictionary_code = #{dictionaryCode,jdbcType=VARCHAR},
+            </if>
+            <if test="dictionaryType != null">
+                dictionary_type = #{dictionaryType,jdbcType=VARCHAR},
+            </if>
+            <if test="dictionaryName != null">
+                dictionary_name = #{dictionaryName,jdbcType=VARCHAR},
+            </if>
+            <if test="dictionaryValue != null">
+                dictionary_value = #{dictionaryValue,jdbcType=VARCHAR},
+            </if>
+            <if test="enterpriseid != null">
+                enterpriseid = #{enterpriseid,jdbcType=VARCHAR},
+            </if>
+            <if test="remark != null">
+                remark = #{remark,jdbcType=VARCHAR},
+            </if>
+            <if test="createBy != null">
+                create_by = #{createBy,jdbcType=VARCHAR},
+            </if>
+            <if test="createDate != null">
+                create_date = #{createDate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="lastBy != null">
+                last_by = #{lastBy,jdbcType=VARCHAR},
+            </if>
+            <if test="lastDate != null">
+                last_date = #{lastDate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="isDel != null">
+                is_del = #{isDel,jdbcType=TINYINT},
+            </if>
+        </set>
+        where dictionary_id = #{dictionaryId,jdbcType=VARCHAR}
+    </update>
+
+</mapper>

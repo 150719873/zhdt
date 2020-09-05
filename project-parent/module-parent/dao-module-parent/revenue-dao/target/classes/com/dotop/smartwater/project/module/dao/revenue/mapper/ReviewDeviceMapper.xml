@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.dotop.smartwater.project.module.dao.revenue.IReviewDeviceDao">
+
+	<resultMap id="ReviewDeviceVo"
+		type="com.dotop.smartwater.project.module.core.water.vo.ReviewDeviceVo">
+		<!-- 主键 -->
+		<result column="id" jdbcType="VARCHAR" property="id" />
+		<result column="batch_no" jdbcType="VARCHAR" property="batchNo" />
+		<result column="title" jdbcType="VARCHAR" property="title" />
+		<result column="community_ids" jdbcType="VARCHAR" property="communityIds" />
+		<result column="community_names" jdbcType="VARCHAR" property="communityNames" />
+		<result column="user_ids" jdbcType="VARCHAR" property="userIds" />
+		<result column="user_names" jdbcType="VARCHAR" property="userNames" />
+		<result column="number" jdbcType="VARCHAR" property="number" />
+		<result column="start_time" jdbcType="VARCHAR" property="startTime" />
+		<result column="end_time" jdbcType="VARCHAR" property="endTime" />
+		<result column="status" jdbcType="VARCHAR" property="status" />
+		<result column="diff" jdbcType="VARCHAR" property="diff" />
+		<result column="dev_number" jdbcType="VARCHAR" property="devNumber" />
+		<result column="enterprise_id" jdbcType="VARCHAR" property="enterpriseid" />
+		<result column="create_by" jdbcType="VARCHAR" property="createBy" />
+		<result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
+		<result column="last_by" jdbcType="VARCHAR" property="lastBy" />
+		<result column="last_date" jdbcType="TIMESTAMP" property="lastDate" />
+		<result column="completeNumber" jdbcType="VARCHAR" property="completeNumber" />
+	</resultMap>
+
+	<select id="getList" resultMap="ReviewDeviceVo">
+		SELECT *, 
+			(SELECT count(id) FROM review_detail d WHERE r.batch_no = d.batch_no AND d.submit_status = 1) as completeNumber
+ 		FROM `review_device` r
+		<where>
+			r.enterprise_id = #{enterpriseid} 
+			<if test="title != null and title != ''">
+				and r.`title` like concat('%',#{title},'%')
+			</if>
+			<if test="batchNo != null and batchNo != ''">
+				and r.batch_no like concat('%',#{batchNo},'%')
+			</if>
+			<if test="communityIds != null and communityIds != ''">
+				and r.community_ids like concat('%',#{communityIds},'%')
+			</if>
+			<if test="status != null and status != ''">
+				and r.`status` = #{status}
+			</if>
+		</where>
+		order by r.create_date desc
+		<if test="limit!=null and offset!=null">
+			LIMIT #{limit} OFFSET #{offset}
+		</if>
+	</select>
+	
+	<select id="get" resultMap="ReviewDeviceVo">
+		SELECT a.* , (SELECT count(id) FROM review_detail b WHERE b.batch_no = a.batch_no AND submit_status = 1) AS completeNumber  
+		FROM review_device a where a.enterprise_id = #{enterpriseid} and a.batch_no = #{batchNo}
+	</select>
+
+	<update id="edit" parameterType="com.dotop.smartwater.project.module.core.water.vo.ReviewDeviceVo">
+		update review_device
+		<set>
+			<if test="batchNo != null and batchNo != '' ">
+				batch_no = #{batchNo,jdbcType=VARCHAR},
+			</if>
+			<if test="title != null and title != '' ">
+				title = #{title,jdbcType=VARCHAR},
+			</if>
+			<if test="number != null and number != '' ">
+				`number` = #{number,jdbcType=VARCHAR},
+			</if>
+			<if test="startTime != null and startTime != '' ">
+				start_time = #{startTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="endTime != null and endTime != '' ">
+				end_time = #{endTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="status != null and status != '' ">
+				status = #{status,jdbcType=VARCHAR},
+			</if>
+			<if test="diff != null and diff != '' ">
+				diff = #{diff,jdbcType=VARCHAR},
+			</if>
+			<if test="devNumber != null and devNumber != '' ">
+				dev_number = #{devNumber,jdbcType=VARCHAR},
+			</if>
+			<if test="enterpriseid != null and enterpriseid != '' ">
+				enterprise_id = #{enterpriseId,jdbcType=VARCHAR},
+			</if>
+			<if test="communityIds != null and communityIds != '' ">
+				community_ids = #{communityIds,jdbcType=LONGVARCHAR},
+			</if>
+			<if test="communityNames != null and communityNames != '' ">
+				community_names = #{communityNames,jdbcType=LONGVARCHAR},
+			</if>
+			<if test="userIds != null and userIds != '' ">
+				user_ids = #{userIds,jdbcType=LONGVARCHAR},
+			</if>
+			<if test="userNames != null and userNames != '' ">
+				user_names = #{userNames,jdbcType=LONGVARCHAR},
+			</if>
+		</set>
+		where id = #{id,jdbcType=VARCHAR}
+	</update>
+
+	<delete id="delByBatchNo">
+		delete from review_device where batch_no = #{batchNo}
+	</delete>
+
+    <insert id="generate">
+        INSERT INTO `review_device` (`id`,batch_no,`title`,community_ids,community_names,user_ids,user_names,number,start_time,end_time,
+        `status`,`diff`,dev_number,enterprise_id,create_by,create_date)
+		VALUES (#{id}, #{batchNo}, #{title}, #{communityIds}, #{communityNames}, #{userIds}, #{userNames}, #{number}, #{startTime}, #{endTime},
+		 #{status},#{diff}, #{devNumber} ,#{enterpriseid}, #{userBy}, #{curr})
+    </insert>
+
+    <select id="getRandomDevice"
+            resultType="com.dotop.smartwater.project.module.core.water.form.ReviewDetailForm">
+		SELECT b.userno as userNo,b.username as userName, b.communityid as communityId,b.userphone as userPhone,
+        c.name as communityName, b.useraddr as userAddr,a.devno,a.water,a.uplinktime as uplinkTime
+        FROM `device` a
+        INNER JOIN `owner` b on a.devid = b.devid
+        INNER JOIN `area` c on b.communityid = c.id
+        where communityid in
+        <foreach item="item" index="index" collection="communityIds.split(',')" open="(" separator=","
+                 close=")">
+            '${item}'
+        </foreach>
+        ORDER BY rand() LIMIT ${devNumber};
+	</select>
+</mapper>
