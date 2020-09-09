@@ -1,11 +1,5 @@
 package com.dotop.smartwater.project.server.water.rest.service.tool;
 
-import javax.annotation.Resource;
-
-import org.apache.commons.lang3.StringUtils;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
-
 import com.dotop.smartwater.dependence.core.common.BaseController;
 import com.dotop.smartwater.dependence.core.common.BaseForm;
 import com.dotop.smartwater.dependence.core.global.GlobalContext;
@@ -20,9 +14,13 @@ import com.dotop.smartwater.project.module.core.auth.vo.LogoVo;
 import com.dotop.smartwater.project.module.core.auth.vo.SettlementVo;
 import com.dotop.smartwater.project.module.core.auth.vo.UserLoraVo;
 import com.dotop.smartwater.project.module.core.water.constants.ResultCode;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
+import javax.annotation.Resource;
 
 @RestController
-@CrossOrigin(origins = "*")
 @RequestMapping("/tool/Setting")
 public class SettingController implements BaseController<BaseForm>, IAuthCasClient {
 

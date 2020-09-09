@@ -163,8 +163,10 @@ public class DataBackupFactoryImpl implements IDataBackupFactory {
                 FileOutputStream font = new FileOutputStream(filename);
                 OutputStreamWriter writer = new OutputStreamWriter(font, StandardCharsets.UTF_8)) {
             Runtime rt = Runtime.getRuntime();
-            String sqlCommand = String.format("%s -h %s -u%s -p%s -c --opt %s", mysqldump, host, username, password,
-                    dbname);
+//            String sqlCommand = String.format("%s -h %s -u%s -p%s -c --opt %s", mysqldump, host, username, password,
+//                    dbname);
+            //"cmd  /c \"E:\\Program Files\\Java\\mysql-5.7.25-winx64\\mysql-5.7.25-winx64\\bin\\mysqldump\" -uroot -p123456 --set-charset=utf8 1901"
+            String sqlCommand=String.format("cmd /c \"%s\" -u%s -p%s --set-charset=utf8 water",mysqldump,username,password);
             Process child = rt.exec(sqlCommand);
             InputStream in = child.getInputStream();
             InputStreamReader xx = new InputStreamReader(in, StandardCharsets.UTF_8);

@@ -18,10 +18,10 @@ redis:
 #    ports: 26379
 
 oss:
-  AccessKeyId:
-  AccessKeySecret:
-  endpoint:
-  bucketName:
+  AccessKeyId: LTAIDJlp3dfxuYv7
+  AccessKeySecret: pngzcNcsLwBtibN92tePKjanM5MlWL
+  endpoint: oss-cn-shanghai.aliyuncs.com
+  bucketName: resource-iot
   fileDir: water-cas/
 
 mybatis:
@@ -47,7 +47,7 @@ ajaxUpload:
 param:
   revenue:
     excelTempUrl: d:/logs/water/temp
-    uploadUrl: D:\\Java\\upload\\
+    uploadUrl: C:/opt/smartwater/water-upload/upload
   config:
     userinvalidtime: 7
     serverhost: #下发指令地址

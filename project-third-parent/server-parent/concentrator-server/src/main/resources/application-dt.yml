@@ -7,7 +7,7 @@ druid:
     host: localhost
     port: 3306
     dbname: water
-    mysqldump: d:\\mysql-5.7.22-winx64\\bin\\mysqldump
+    mysqldump: D:\\MySql\\mysql-8.0.17-winx64\\bin\\mysqldump
     outputpath: D:\\home\\meter\\
 
 redis:

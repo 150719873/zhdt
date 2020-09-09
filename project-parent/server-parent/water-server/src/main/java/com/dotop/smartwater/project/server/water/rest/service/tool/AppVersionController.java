@@ -1,33 +1,5 @@
 package com.dotop.smartwater.project.server.water.rest.service.tool;
 
-import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.net.URL;
-import java.net.URLConnection;
-import java.net.URLEncoder;
-import java.nio.charset.StandardCharsets;
-import java.util.List;
-import java.util.Map;
-
-import javax.servlet.ServletOutputStream;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import org.apache.commons.codec.digest.DigestUtils;
-import org.apache.commons.lang3.StringUtils;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.multipart.MultipartHttpServletRequest;
-
 import com.dotop.smartwater.dependence.core.common.BaseController;
 import com.dotop.smartwater.dependence.core.global.GlobalContext;
 import com.dotop.smartwater.dependence.core.log.LogMsg;
@@ -45,6 +17,26 @@ import com.dotop.smartwater.project.module.core.water.utils.QrCodeUtil;
 import com.dotop.smartwater.project.module.core.water.vo.AppVersionMd5Vo;
 import com.dotop.smartwater.project.module.core.water.vo.AppVersionVo;
 import com.dotop.smartwater.project.server.water.common.FoundationController;
+import org.apache.commons.codec.digest.DigestUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
+
+import javax.servlet.ServletOutputStream;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.*;
+import java.net.URL;
+import java.net.URLConnection;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
+import java.util.List;
+import java.util.Map;
 
 /**
  * App版本控制
@@ -54,7 +46,6 @@ import com.dotop.smartwater.project.server.water.common.FoundationController;
  *
  */
 @RestController
-@CrossOrigin(origins = "*")
 @RequestMapping("/appVersion")
 public class AppVersionController extends FoundationController implements BaseController<AppVersionForm> {
 

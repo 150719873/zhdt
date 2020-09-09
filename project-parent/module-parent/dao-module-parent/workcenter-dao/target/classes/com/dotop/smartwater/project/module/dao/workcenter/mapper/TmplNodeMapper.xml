@@ -43,7 +43,7 @@
 	<select id="list" resultMap="WorkCenterTmplNodeVoMap">
 		SELECT id,name,`desc`,type,sort,tmpl_id,parent_id,handlers,carbon_copyers,handler_roles,carbon_copyer_roles,
 		handle_dict_id,if_verify,verify_tmpl_node_id,no_verify_tmpl_node_id,
-		if_notice,noticers,noticer_roles,if_update,update_dict_child_id,if_photo,photo_num,if_ upload,upload_num,if_opinion,opinion_num
+		if_notice,noticers,noticer_roles,if_update,update_dict_child_id,if_photo,photo_num,if_upload,upload_num,if_opinion,opinion_num
 		,is_del,create_by,create_date,last_by,last_date,enterpriseid
         FROM wc_tmpl_node
 		<where>

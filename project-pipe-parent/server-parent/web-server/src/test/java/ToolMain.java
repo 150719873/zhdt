@@ -2,7 +2,6 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.dotop.smartwater.project.module.core.auth.bo.UserLoginBo;
 import com.dotop.smartwater.project.module.core.auth.config.WaterClientConfig;
-import com.dotop.smartwater.project.module.core.auth.constants.AuthDMACode;
 import com.dotop.smartwater.project.module.core.auth.vo.UserLoginVo;
 import com.dotop.water.tool.exception.BusinessException;
 import com.dotop.water.tool.service.BaseInf;
@@ -22,8 +21,8 @@ public class ToolMain {
         // 以下为例子
         try {
             //todo 在此修改账号、密码和域名
-            String PlatformUser = BaseInf.webLogin("zhangjiakou", "123456", "localhost:4600");
-//            String PlatformUser = BaseInf.webLogin("zhangjiakou", "123456", "localhost:4700");
+//            String PlatformUser = BaseInf.webLogin("zhangjiakou2", "123456", "localhost:4700");
+            String PlatformUser = BaseInf.webLogin("zhangjiakou", "123456", "localhost:4700");
 
             JSONObject parseObject = JSON.parseObject(PlatformUser);
             String userid = parseObject.getString("userid");
@@ -34,8 +33,9 @@ public class ToolMain {
             userLogin.setTicket(ticket);
 //             userLogin.setModelid(DmaCode.Platform_Dma);
             //todo 在此修改模块编号
-            userLogin.setModelid(AuthDMACode.Company_Dma);
+//            userLogin.setModelid(AuthDMACode.Company_Dma);
 //            userLogin.setModelid("60000000");
+            userLogin.setModelid("49000000");
             String generateCasKey = DataUtil.generateCasKey(userLogin);
             System.out.println("----");
             System.out.println(generateCasKey);

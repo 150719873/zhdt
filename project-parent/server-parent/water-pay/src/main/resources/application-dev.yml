@@ -20,10 +20,10 @@ redis:
     ports: 26379
 
 oss:
-  AccessKeyId:
-  AccessKeySecret:
-  endpoint:
-  bucketName:
+  AccessKeyId: LTAIDJlp3dfxuYv7
+  AccessKeySecret: pngzcNcsLwBtibN92tePKjanM5MlWL
+  endpoint: oss-cn-shanghai.aliyuncs.com
+  bucketName: resource-iot
   fileDir: water-cas/
 
 mybatis:

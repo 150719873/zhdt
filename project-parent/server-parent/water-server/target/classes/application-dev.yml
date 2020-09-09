@@ -7,10 +7,10 @@ druid:
     username: root
     password: 123456
   dbbackup:
-    host: 192.168.10.93
+    host: 222.20.83.207
     port: 3306
-    dbname: water_2.5
-    mysqldump: d:\\mysql-5.7.22-winx64\\bin\\mysqldump
+    dbname: water2
+    mysqldump: D:\\MySql\\mysql-8.0.17-winx64\\bin\\mysqldump
     outputpath: D:\\home\\meter\\
 
 redis:
@@ -25,10 +25,10 @@ redis:
 #    ports: 26379
 
 oss:
-  AccessKeyId:
-  AccessKeySecret:
-  endpoint:
-  bucketName:
+  AccessKeyId: LTAIDJlp3dfxuYv7
+  AccessKeySecret: pngzcNcsLwBtibN92tePKjanM5MlWL
+  endpoint: oss-cn-shanghai.aliyuncs.com
+  bucketName: resource-iot
   fileDir: water-cas/
 
 mybatis:
@@ -51,7 +51,7 @@ ajaxUpload:
 param:
   revenue:
     excelTempUrl: d:/logs/water/temp
-    uploadUrl: D:\\Java\\upload\\
+    uploadUrl: C:/opt/smartwater/water-upload/upload
   config:
     version: 2.5
     userinvalidtime: 7
