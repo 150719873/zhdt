@@ -21,8 +21,8 @@ public class ToolMain {
         // 以下为例子
         try {
             //todo 在此修改账号、密码和域名
-//            String PlatformUser = BaseInf.webLogin("zhangjiakou2", "123456", "localhost:4700");
             String PlatformUser = BaseInf.webLogin("zhangjiakou", "123456", "localhost:4700");
+//            String PlatformUser = BaseInf.webLogin("zhangjiakou", "123456", "localhost:4700");
 
             JSONObject parseObject = JSON.parseObject(PlatformUser);
             String userid = parseObject.getString("userid");

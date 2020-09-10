@@ -29,6 +29,7 @@ import java.util.List;
  *
  */
 @RestController
+//@CrossOrigin(origins = "*")
 @RequestMapping("/concentrator")
 public class ConcentratorController implements BaseController<ConcentratorForm> {
 

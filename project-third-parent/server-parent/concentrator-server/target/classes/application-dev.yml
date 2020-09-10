@@ -1,25 +1,31 @@
 druid:
   datasource:
-    url: jdbc:mysql://192.168.10.170:3306/water?useUnicode=true&characterEncoding=UTF8&useSSL=false&serverTimezone=Asia/Shanghai&allowMultiQueries=true
+    url: jdbc:mysql://localhost:3306/water?useUnicode=true&characterEncoding=UTF8&useSSL=false&serverTimezone=Asia/Shanghai&allowMultiQueries=true
     username: root
-    password: 123qweASD!@#
+    password: 123456
   dbbackup:
     host: localhost
     port: 3306
     dbname: water
-    mysqldump: d:\\mysql-5.7.22-winx64\\bin\\mysqldump
+    mysqldump: D:\\MySql\\mysql-8.0.17-winx64\\bin\\mysqldump
     outputpath: D:\\home\\meter\\
 
 redis:
   cache:
     database: 5
-    host: 192.168.10.170
-    password: 123456
+    host: 222.20.83.207
+    password:
     port: 6379
 
+#oss:
+#  AccessKeyId: xxxid
+#  AccessKeySecret: xxxsecret
+#  endpoint: oss-cn-shanghai.aliyuncs.com
+#  bucketName: resource-iot
+#  fileDir: water-cas/
 oss:
-  AccessKeyId: xxxid
-  AccessKeySecret: xxxsecret
+  AccessKeyId: LTAIDJlp3dfxuYv7
+  AccessKeySecret: pngzcNcsLwBtibN92tePKjanM5MlWL
   endpoint: oss-cn-shanghai.aliyuncs.com
   bucketName: resource-iot
   fileDir: water-cas/
