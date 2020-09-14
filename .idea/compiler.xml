@@ -24,6 +24,7 @@
         <module name="concentrator-dao" />
         <module name="concentrator-server" />
         <module name="concentrator-service" />
+        <module name="concentrator188-server" />
         <module name="data-receiver-cache" />
         <module name="data-receiver-core" />
         <module name="data-receiver-dao" />
@@ -133,6 +134,7 @@
       <module name="concentrator-dao" target="1.8" />
       <module name="concentrator-server" target="1.8" />
       <module name="concentrator-service" target="1.8" />
+      <module name="concentrator188-server" target="1.8" />
       <module name="core-module-parent" target="1.8" />
       <module name="core-module-parent (1) (com.dotop.smartwater.project.module.core)" target="1.8" />
       <module name="core-module-parent (2) (com.dotop.pipe)" target="1.8" />

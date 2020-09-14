@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.dotop.smartwater.project.third.concentrator.dao.IUpLinkLogDao">
+
+
+    <sql id="selectColumns">
+        u.id,
+        u.ori_data,
+        u.receive_date,
+        u.water,
+        u.result,
+        u.task_log_id,
+        u.enterprise_id
+	</sql>
+
+    <resultMap id="BaseResultMap" type="com.dotop.smartwater.project.third.concentrator.core.vo.UpLinkLogVo">
+        <result column="id" jdbcType="VARCHAR" property="id"/>
+        <result column="ori_data" jdbcType="INTEGER" property="oriData"/>
+        <result column="receive_date" jdbcType="VARCHAR" property="receiveDate"/>
+        <result column="water" jdbcType="VARCHAR" property="water"/>
+        <result column="result" jdbcType="VARCHAR" property="result"/>
+        <result column="task_log_id" jdbcType="VARCHAR" property="taskLogId"/>
+        <result column="enterprise_id" jdbcType="VARCHAR" property="enterpriseid"/>
+        <association property="concentrator"
+                     javaType="com.dotop.smartwater.project.third.concentrator.core.bo.ConcentratorBo"
+                     columnPrefix="con_">
+            <result column="id" property="id"/>
+            <result column="code" property="code"/>
+            <result column="install_address" property="installAddress"/>
+        </association>
+        <association property="collector"
+                     javaType="com.dotop.smartwater.project.third.concentrator.core.bo.CollectorBo"
+                     columnPrefix="coll_">
+            <result column="id" property="id"/>
+            <result column="code" property="code"/>
+            <result column="channel" property="channel"/>
+        </association>
+        <association property="concentratorDevice"
+                     javaType="com.dotop.smartwater.project.third.concentrator.core.bo.ConcentratorDeviceBo"
+                     columnPrefix="cd_">
+            <result column="id" property="id"/>
+            <result column="area_name" property="areaName"/>
+            <result column="devno" property="devno"/>
+            <result column="tapstatus" property="tapstatus"/>
+            <result column="taptype" property="taptype"/>
+            <result column="channel" property="channel"/>
+            <result column="no" property="no"/>
+        </association>
+    </resultMap>
+
+
+    <select id="list" resultMap="BaseResultMap">
+        select<include refid="selectColumns"/>,con.id as con_id, u.concentrator_code as con_code, con.install_address as
+        con_installAddress, u.concentrator_device_code as cd_devno, d.tapstatus as cd_tapstatus, d.taptype as cd_taptype, cd.no as
+        cd_no,cd.channel as cd_channel,
+        cd.id as cd_id, a.name as cd_area_name, coll.id as coll_id, coll.code as coll_code, coll.channel as coll_channel
+        from cd_device_uplink${thisMonth} u
+        left join cd_concentrator_device cd on cd.id = u.concentrator_device_id
+        left join device d on d.devid = cd.devid
+        left join owner ow on ow.devid = cd.devid
+        left join area a on a.id = ow.communityid
+        left join cd_concentrator con on u.concentrator_id = con.id
+        left join cd_collector coll on cd.collector_id = coll.id
+        <where>
+            u.enterprise_id = #{enterpriseid}
+            <if test="taskLogId != null and taskLogId != ''">
+                and u.task_log_id = #{taskLogId}
+            </if>
+            <if test="concentratorDevice != null and concentratorDevice.devno != null and concentratorDevice.devno != ''">
+                and d.devno = #{concentratorDevice.devno}
+            </if>
+            <if test="concentrator != null and concentrator.code != null and concentrator.code != ''">
+                and con.code = #{concentrator.code}
+            </if>
+            <if test="startDate != null">
+                and u.receive_date <![CDATA[>=]]> #{startDate}
+            </if>
+            <if test="endDate != null">
+                and u.receive_date <![CDATA[<=]]> #{endDate}
+            </if>
+            <if test="result != null and result != ''">
+                and u.result = #{result}
+            </if>
+        </where>
+        UNION All
+        select<include refid="selectColumns"/>,con.id as con_id, u.concentrator_code as con_code, con.install_address as
+        con_installAddress, u.concentrator_device_code as cd_devno, d.tapstatus as cd_tapstatus, d.taptype as cd_taptype, cd.no as
+        cd_no,cd.channel as cd_channel,
+        cd.id as cd_id, a.name as cd_area_name, coll.id as coll_id, coll.code as coll_code, coll.channel as coll_channel
+        from cd_device_uplink${preMonth} u
+        left join cd_concentrator_device cd on cd.id = u.concentrator_device_id
+        left join device d on d.devid = cd.devid
+        left join owner ow on ow.devid = cd.devid
+        left join area a on a.id = ow.communityid
+        left join cd_concentrator con on u.concentrator_id = con.id
+        left join cd_collector coll on cd.collector_id = coll.id
+        <where>
+            u.enterprise_id = #{enterpriseid}
+            <if test="taskLogId != null and taskLogId != ''">
+                and u.task_log_id = #{taskLogId}
+            </if>
+            <if test="concentratorDevice != null and concentratorDevice.devno != null and concentratorDevice.devno != ''">
+                and d.devno = #{concentratorDevice.devno}
+            </if>
+            <if test="concentrator != null and concentrator.code != null and concentrator.code != ''">
+                and con.code = #{concentrator.code}
+            </if>
+            <if test="startDate != null">
+                and u.receive_date <![CDATA[>=]]> #{startDate}
+            </if>
+            <if test="endDate != null">
+                and u.receive_date <![CDATA[<=]]> #{endDate}
+            </if>
+            <if test="result != null and result != ''">
+                and u.result = #{result}
+            </if>
+        </where>
+        order by receive_date desc
+    </select>
+
+
+    <insert id="insertBatch">
+        insert into cd_device_uplink${thisMonth} (id, concentrator_id, concentrator_code, concentrator_device_id,
+        concentrator_device_code, task_log_id, ori_data, receive_date, water, result, enterprise_id) values
+        <foreach collection="upLinkLogDtoList" item="item" index="index" separator=",">
+            (#{item.id},
+            #{item.concentrator.id},
+            #{item.concentrator.code},
+            #{item.concentratorDevice.id},
+            #{item.concentratorDevice.devno},
+            #{item.taskLogId},
+            #{item.oriData},
+            #{item.receiveDate},
+            #{item.water},
+            #{item.result},
+            #{item.enterpriseid})
+        </foreach>
+    </insert>
+
+    <select id="getUplinkLogDateList" resultMap="BaseResultMap">
+        SELECT
+        u.concentrator_device_id as cd_id,
+        MAX(u.water) as water,
+        DATE(u.receive_date) as receive_date
+        FROM
+        cd_device_uplink${thisMonth} u
+        <where>
+            u.result = #{result}
+            and u.enterprise_id = #{enterpriseid}
+            <if test="concentratorDevice != null and concentratorDevice.devno != null and concentratorDevice.devno != ''">
+                and u.concentrator_device_code = #{concentratorDevice.devno}
+            </if>
+        </where>
+        GROUP BY
+        DATE(receive_date), concentrator_device_id
+        order by receive_date asc
+    </select>
+
+    <select id="getUplinkLogMonthList" resultMap="BaseResultMap">
+        <trim prefixOverrides="UNION ALL">
+            <foreach collection="list" item="item">
+                UNION ALL
+                SELECT
+                MAX(u.water) as water,
+                u.concentrator_device_id as cd_id,
+                MAX(u.receive_date) as receive_date
+                FROM cd_device_uplink${item.thisMonth} u
+                <where>
+                    u.result = #{item.result}
+                    and u.enterprise_id = #{item.enterpriseid}
+                    <if test="item.concentratorDevice != null and item.concentratorDevice.id != null and item.concentratorDevice.id != ''">
+                        and u.concentrator_device_id = #{item.concentratorDevice.id}
+                    </if>
+                </where>
+                GROUP BY concentrator_device_id
+            </foreach>
+        </trim>
+    </select>
+
+</mapper>

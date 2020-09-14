@@ -10,6 +10,7 @@
         <option value="$PROJECT_DIR$/project-parent/pom.xml" />
         <option value="$PROJECT_DIR$/project-pipe-parent/pom.xml" />
         <option value="$PROJECT_DIR$/project-third-parent/pom.xml" />
+        <option value="$PROJECT_DIR$/project-third-parent/server-parent/concentrator188-server/pom.xml" />
       </list>
     </option>
   </component>

@@ -1,0 +1,242 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.dotop.smartwater.project.third.concentrator.dao.ICollectorDao">
+
+
+    <resultMap id="BaseResultMap"
+               type="com.dotop.smartwater.project.third.concentrator.core.vo.CollectorVo">
+
+        <result column="id" jdbcType="VARCHAR" property="id"/>
+        <result column="code" jdbcType="VARCHAR" property="code"/>
+        <result column="desc" jdbcType="VARCHAR" property="desc"/>
+        <result column="install_name" jdbcType="VARCHAR" property="installName"/>
+        <result column="install_address" jdbcType="VARCHAR" property="installAddress"/>
+        <result column="install_date" jdbcType="TIMESTAMP" property="installDate"/>
+        <result column="status" jdbcType="VARCHAR" property="status"/>
+        <result column="channel" jdbcType="VARCHAR" property="channel"/>
+        <result column="area_ids" jdbcType="VARCHAR" property="areaIds"/>
+        <association property="concentrator"
+                     javaType="com.dotop.smartwater.project.third.concentrator.core.vo.ConcentratorVo"
+                     columnPrefix="ct_">
+            <result column="id" property="id"/>
+            <result column="code" property="code"/>
+        </association>
+
+       <!-- <association property="area" javaType="com.dotop.smartwater.project.module.core.auth.vo.AreaVo"
+                     columnPrefix="a_">
+            <result column="id" property="id"/>
+            <result column="name" property="name"/>
+        </association>-->
+
+    </resultMap>
+
+    <sql id="selectColumns">
+        c.id,
+        c.`code`,
+        c.`desc`,
+        c.area_ids,
+        c.install_name,
+        c.install_address,
+        c.install_date,
+        c.`status`,
+        c.channel,
+        ct.id AS ct_id,
+        ct.`code` AS ct_code
+	</sql>
+
+    <select id="getByCode" resultMap="BaseResultMap">
+        SELECT
+        <include refid="selectColumns"/>
+        FROM
+        cd_collector c
+        LEFT JOIN cd_concentrator ct ON c.concentrator_id = ct.id
+        <where>
+            <if test="code != null and code != ''">
+                c.code = #{code}
+            </if>
+            <if test="enterpriseid != null and enterpriseid != ''">
+                and c.enterprise_id = #{enterpriseid}
+            </if>
+        </where>
+    </select>
+
+    <select id="isExist" resultType="java.lang.Boolean">
+        select
+        count(1)
+        FROM
+        cd_collector c
+        LEFT JOIN cd_concentrator ct ON c.concentrator_id = ct.id
+        <where>
+            <if test="id != null and id != ''">
+                c.id = #{id}
+            </if>
+            <if test="enterpriseid != null and enterpriseid != ''">
+                and c.enterprise_id = #{enterpriseid}
+            </if>
+        </where>
+    </select>
+
+    <update id="editStatus">
+         update cd_collector set status=#{status}
+      where id=#{id} and enterprise_id=#{enterpriseid}
+    </update>
+
+    <select id="list" resultMap="BaseResultMap">
+        SELECT
+        <include refid="selectColumns"/>
+        FROM
+        cd_collector c
+        JOIN cd_concentrator ct ON c.concentrator_id = ct.id
+        <where>
+            <if test="status != null and status != ''">
+                and c.status = #{status}
+            </if>
+            <if test="id != null and id != ''">
+                and c.id = #{id}
+            </if>
+            <if test="code != null and code != ''">
+                and c.code like CONCAT('%',#{code},'%')
+            </if>
+            <if test="concentrator != null and concentrator.id != null and concentrator.id != ''">
+                and c.concentrator_id = #{concentrator.id}
+            </if>
+            <if test="concentrator != null and concentrator.code != null and concentrator.code != ''">
+                and ct.code like CONCAT('%',#{concentrator.code},'%')
+            </if>
+          <!--  <if test="area != null and area.name != null and area.name != ''">
+                and a.name like CONCAT('%',#{area.name},'%')
+            </if>-->
+            <if test="enterpriseid != null and enterpriseid != ''">
+                and c.enterprise_id = #{enterpriseid}
+            </if>
+        </where>
+    </select>
+
+
+    <select id="get" resultMap="BaseResultMap">
+        SELECT
+        <include refid="selectColumns"/>
+        FROM
+        cd_collector c
+        JOIN cd_concentrator ct ON c.concentrator_id = ct.id
+        <where>
+            <if test="id != null and id != ''">
+                c.id = #{id}
+            </if>
+            <if test="code != null and code != ''">
+                c.`code` = #{code}
+            </if>
+            <if test="enterpriseid != null and enterpriseid != ''">
+                and c.enterprise_id = #{enterpriseid}
+            </if>
+            <if test="concentrator != null and concentrator.id != null and concentrator.id != ''">
+                and c.concentrator_id = #{concentrator.id}
+            </if>
+        </where>
+    </select>
+
+
+    <insert id="add">
+        insert into cd_collector(id, code, `desc`, area_ids, concentrator_id, install_name, install_address, install_date, status, channel,
+            enterprise_id, create_by, create_date, is_del, last_by, last_date)
+        values
+            (#{id}, #{code}, #{desc},
+            #{areaIds,javaType=java.util.List,jdbcType=VARCHAR},#{concentrator.id}, #{installName}, #{installAddress}, #{installDate}, #{status}, #{channel},
+            #{enterpriseid}, #{userBy}, #{curr}, #{isDel}, #{userBy}, #{curr})
+    </insert>
+
+    <update id="edit">
+        update cd_collector
+        <set>
+            <if test="code != null and code != ''">
+                code=#{code},
+            </if>
+            <if test="desc != null and desc != ''">
+                `desc`=#{desc},
+            </if>
+            <if test="areaIds != null">
+                area_ids=#{areaIds,javaType=java.util.List,jdbcType=VARCHAR},
+            </if>
+            <if test="concentrator != null and concentrator.id != null and concentrator.id != '' ">
+                concentrator_id=#{concentrator.id},
+            </if>
+            <if test="installName != null and installName != ''">
+                install_name=#{installName},
+            </if>
+            <if test="installAddress != null and installAddress != ''">
+                install_address=#{installAddress},
+            </if>
+            <if test="installDate != null">
+                install_date=#{installDate},
+            </if>
+            <if test="status != null and status != ''">
+                status=#{status},
+            </if>
+            <if test="channel != null and channel != '' ">
+                channel=#{channel},
+            </if>
+            <if test="userBy != null and userBy != '' ">
+                last_by=#{userBy},
+            </if>
+            <if test="curr != null">
+                last_date=#{curr}
+            </if>
+        </set>
+        where id=#{id} and enterprise_id=#{enterpriseid}
+    </update>
+
+    <delete id="del">
+        delete from cd_collector
+        where id = #{id} and enterprise_id=#{enterpriseid}
+    </delete>
+
+    <select id="countCollector" resultType="java.lang.Integer">
+        select count(1) from cd_collector
+        <where>
+            concentrator_id = #{id}
+            <if test="code">
+                and code like CONCAT('%',#{code},'%')
+            </if>
+        </where>
+    </select>
+
+    <select id="listArchive" resultMap="BaseResultMap">
+        SELECT
+        <include refid="selectColumns"/>
+        FROM
+        cd_collector c
+        JOIN cd_concentrator ct ON c.concentrator_id = ct.id
+        <!-- LEFT JOIN area a ON c.areaid = a.id-->
+        left join cd_concentrator_device cd on cd.collector_id = c.id
+        left join device d on d.devid = cd.devid
+        <where>
+            <if test="concentrator != null and concentrator.id != null and concentrator.id != ''">
+                and c.concentrator_id = #{concentrator.id}
+            </if>
+            <if test="code != null and code != ''">
+                and c.code like CONCAT('%',#{code},'%')
+            </if>
+            <if test="devno != null and devno != ''">
+                and d.devno like CONCAT('%',#{devno},'%')
+            </if>
+            <if test="enterpriseid != null and enterpriseid != ''">
+                and c.enterprise_id = #{enterpriseid}
+            </if>
+        </where>
+        group by c.id
+    </select>
+
+    <insert id="adds">
+        <foreach collection="list" item="item" separator=";">
+            insert into cd_collector(id, code, `desc`, concentrator_id, install_name, install_address, install_date,
+            status, channel,
+            enterprise_id, create_by, create_date, is_del, last_by, last_date)
+            values
+            (#{item.id}, #{item.code}, #{item.desc},
+            #{item.concentrator.id}, #{item.installName}, #{item.installAddress}, #{item.installDate}, #{item.status},
+            #{item.channel},
+            #{item.enterpriseid}, #{item.userBy}, #{item.curr}, #{item.isDel}, #{item.userBy}, #{item.curr})
+        </foreach>
+    </insert>
+
+</mapper>

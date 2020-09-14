@@ -1,0 +1,57 @@
+druid:
+  datasource:
+    url: jdbc:mysql://localhost:3306/water?useUnicode=true&characterEncoding=UTF8&useSSL=false&serverTimezone=Asia/Shanghai&allowMultiQueries=true
+    username: root
+    password: 123456
+  dbbackup:
+    host: localhost
+    port: 3306
+    dbname: water
+    mysqldump: D:\\MySql\\mysql-8.0.17-winx64\\bin\\mysqldump
+    outputpath: D:\\home\\meter\\
+
+redis:
+  cache:
+    database: 5
+    host: 222.20.83.207
+    password:
+    port: 6379
+
+#oss:
+#  AccessKeyId: xxxid
+#  AccessKeySecret: xxxsecret
+#  endpoint: oss-cn-shanghai.aliyuncs.com
+#  bucketName: resource-iot
+#  fileDir: water-cas/
+oss:
+  AccessKeyId: LTAIDJlp3dfxuYv7
+  AccessKeySecret: pngzcNcsLwBtibN92tePKjanM5MlWL
+  endpoint: oss-cn-shanghai.aliyuncs.com
+  bucketName: resource-iot
+  fileDir: water-cas/
+
+mybatis:
+  configLocation: classpath:mybatis-config.xml
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://localhost:8761/eureka/
+
+spring.servlet.multipart.location: D:\\Java\\upload_temp\\
+
+ajaxUpload:
+  tempUrl: D:\\Java\\upload_temp\\
+  MEMORY_THRESHOLD: 2097152
+  MAX_FILE_SIZE: 2097152
+  MAX_REQUEST_SIZE: 2097152
+
+param:
+  revenue:
+    excelTempUrl: d:/logs/water/temp
+  config:
+    version: 2.5
+    userinvalidtime: 7
+    serverhost: http://devinterface.dotop.com/iot-rf/rs/ws
+    weixindebug: true
+    authserverurl: http://localhost:39999/water-cas

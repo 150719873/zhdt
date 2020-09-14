@@ -1,0 +1,333 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.dotop.smartwater.project.third.concentrator.dao.IConcentratorDeviceDao">
+
+    <sql id="selectColumns">
+        cd.id,
+        cd.devid,
+        cd.no,
+        cd.channel,
+        cd.collector_id,
+        cd.concentrator_id,
+        <!-- d.name, -->
+        d.deveui,
+        d.explain,
+        d.devaddr,
+        d.devno,
+        d.typeid,
+        d.flag,
+        d.beginvalue,
+        d.status,
+        d.accesstime,
+        d.uplinktime,
+        d.water,
+        d.tapstatus,
+        d.taptype,
+        <!-- d.battery, -->
+        <!-- d.version, -->
+        <!-- d.rssi, -->
+        <!-- d.lsnr, -->
+        d.mode,
+        d.imsi,
+        <!-- d.tapcycle, -->
+        d.enterpriseid,
+        <!-- d.actdev_type, -->
+        <!-- d.abnormal_current, -->
+        <!-- d.time_sync, -->
+        d.active_status,
+        d.kind,
+        d.caliber
+	</sql>
+
+    <resultMap id="concentratorDeviceMap"
+               type="com.dotop.smartwater.project.third.concentrator.core.vo.ConcentratorDeviceVo">
+        <id property="id" column="id"/>
+        <id property="devid" column="devid"/>
+        <result property="name" column="name"/>
+        <result property="areaName" column="areaName"/>
+        <result property="username" column="username"/>
+        <result property="userno" column="userno"/>
+        <result property="useraddr" column="useraddr"/>
+        <result property="building" column="building"/>
+        <result property="unit" column="unit"/>
+        <result property="room" column="room"/>
+        <result property="box" column="box"/>
+        <result property="channel" column="channel"/>
+        <result property="no" column="no"/>
+        <result property="kind" column="kind"/>
+        <result property="deveui" column="deveui"/>
+        <result property="explain" column="explain"/>
+        <result property="devaddr" column="devaddr"/>
+        <result property="devno" column="devno"/>
+        <result property="typeid" column="typeid"/>
+        <result property="flag" column="flag"/>
+        <result property="beginvalue" column="beginvalue"/>
+        <result property="status" column="status"/>
+        <result property="accesstime" column="accesstime"/>
+        <result property="uplinktime" column="uplinktime"/>
+        <result property="water" column="water"/>
+        <result property="tapstatus" column="tapstatus"/>
+        <result property="taptype" column="taptype"/>
+        <result property="battery" column="battery"/>
+        <result property="version" column="version"/>
+        <result property="rssi" column="rssi"/>
+        <result property="lsnr" column="lsnr"/>
+        <result property="mode" column="mode"/>
+        <result property="imsi" column="imsi"/>
+        <result property="tapcycle" column="tapcycle"/>
+        <result property="enterpriseid" column="enterprise_id"/>
+        <result column="actdev_type" property="actdevType" jdbcType="VARCHAR"/>
+        <result column="abnormal_current" property="abnormalCurrent" jdbcType="INTEGER"/>
+        <result column="time_sync" property="timeSync" jdbcType="INTEGER"/>
+        <result column="active_status" property="activeStatus" jdbcType="INTEGER"/>
+        <result column="interval" property="interval" jdbcType="INTEGER"/>
+        <result column="purposename" property="purposename"/>
+        <result column="caliber" property="caliber"/>
+        <association property="concentrator"
+                     javaType="com.dotop.smartwater.project.third.concentrator.core.vo.ConcentratorVo"
+                     columnPrefix="con_">
+            <result column="id" property="id"/>
+            <result column="code" property="code"/>
+        </association>
+        <association property="collector"
+                     javaType="com.dotop.smartwater.project.third.concentrator.core.vo.CollectorVo"
+                     columnPrefix="coll_">
+            <result column="id" property="id"/>
+            <result column="code" property="code"/>
+            <result column="channel" property="channel"/>
+        </association>
+    </resultMap>
+
+    <select id="list" resultMap="concentratorDeviceMap">
+        select
+        <include refid="selectColumns"/>,con.id as con_id, con.code as con_code,coll.id as coll_id,
+        coll.code as coll_code,ow.userno,ow.username,ow.useraddr,ow.building,ow.unit,ow.room,ow.box,ar.name as areaName,coll.channel as coll_channel
+        from cd_concentrator_device cd
+        left join device d on cd.devid = d.devid
+        left join cd_collector coll on coll.id = cd.collector_id
+        left join cd_concentrator con on con.id = cd.concentrator_id
+        left join owner ow on ow.devid = cd.devid
+        left join area ar on ar.id = ow.communityid
+        <where>
+            cd.enterprise_id = #{enterpriseid}
+            <if test="devno != null and devno != ''">
+                and d.devno like CONCAT('%',#{devno},'%')
+            </if>
+            <if test="tapstatus != null">
+                and d.tapstatus = #{tapstatus}
+            </if>
+            <if test="taptype != null">
+                and d.taptype = #{taptype}
+            </if>
+            <if test="collector != null and collector.code != null and collector.code != ''">
+                and coll.code like CONCAT('%',#{collector.code},'%')
+            </if>
+            <if test="collector != null and collector.id != null and collector.id != ''">
+                and cd.collector_id = #{collector.id}
+            </if>
+            <if test="concentrator != null and concentrator.id != null and concentrator.id != ''">
+                and cd.concentrator_id = #{concentrator.id}
+            </if>
+            <if test="concentrator != null and concentrator.code != null and concentrator.code != ''">
+                and con.code like CONCAT('%',#{concentrator.code},'%')
+            </if>
+            <if test="collector != null and collector.status != null and collector.status != ''">
+                and coll.status = #{collector.status}
+            </if>
+            <if test="concentrator != null and concentrator.status != null and concentrator.status != ''">
+                and con.status = #{concentrator.status}
+            </if>
+            <if test="areaName != null and areaName != ''">
+                and ar.name like CONCAT('%',#{areaName},'%')
+            </if>
+            <if test="concentrator != null and concentrator.areaIds != null and concentrator.areaIds.size > 0 ">
+                and (
+                <foreach collection="concentrator.areaIds" index="index" item="item" open="(" separator=" OR "
+                         close=")">
+                    con.area_ids LIKE CONCAT(CONCAT('%',#{item},'%'))
+                </foreach>
+                )
+            </if>
+        </where>
+        order by coll.channel asc, cd.channel asc, cd.create_date asc
+    </select>
+
+    <insert id="addConcentratorDevice">
+        insert into cd_concentrator_device(id,`no`,channel,devid,collector_id,concentrator_id,enterprise_id,create_by,create_date,is_del,last_by,last_date)
+        values(#{id},#{no},#{channel},#{devid},#{collector.id},#{concentrator.id},#{enterpriseid},#{userBy},#{curr},#{isDel},#{userBy},#{curr})
+    </insert>
+
+    <update id="updateConcentratorDevice">
+        update cd_concentrator_device
+        <set>
+            `devid` = #{devid},
+            <if test="no != null and no != ''">
+                `no` = #{no},
+            </if>
+            <if test="channel != null and channel != ''">
+                `channel` = #{channel},
+            </if>
+            <if test="collector != null and collector.id != null and collector.id != ''">
+                `collector_id` = #{collector.id},
+            </if>
+            <if test="concentrator != null and concentrator.id != null and concentrator.id != ''">
+                `concentrator_id` = #{concentrator.id},
+            </if>
+            last_by = #{userBy},
+            last_date = #{curr}
+        </set>
+        <where>
+            `devid` = #{devid} and enterprise_id = #{enterpriseid}
+        </where>
+    </update>
+
+    <select id="get" resultMap="concentratorDeviceMap">
+        select
+        <include refid="selectColumns"/>,con.id as con_id, con.code as con_code,coll.id as coll_id,
+        coll.code as coll_code,ow.userno,ow.username
+        from cd_concentrator_device cd
+        inner join device d on cd.devid = d.devid
+        left join cd_collector coll on coll.id = cd.collector_id
+        left join cd_concentrator con on con.id = cd.concentrator_id
+        left join owner ow on ow.devid = cd.devid
+        <where>
+            cd.enterprise_id = #{enterpriseid}
+            <if test="devid != null and devid != ''">
+                and d.devid = #{devid}
+            </if>
+            <if test="concentrator != null and concentrator.code != null and concentrator.code != ''">
+                and con.code = #{concentrator.code}
+            </if>
+            <if test="concentrator != null and concentrator.id != null and concentrator.id != ''">
+                and con.id = #{concentrator.id}
+            </if>
+            <if test="no != null and no != ''">
+                and cd.no = #{no}
+            </if>
+            <if test="devno != null and devno != ''">
+                and d.devno = #{devno}
+            </if>
+            <if test="id != null and id != ''">
+                and cd.id = #{id}
+            </if>
+            <if test="collector != null and collector.code != null and collector.code != ''">
+                and coll.code = #{collector.code}
+            </if>
+            <if test="collector != null and collector.id != null and collector.id != ''">
+                and coll.id = #{collector.id}
+            </if>
+        </where>
+    </select>
+
+    <delete id="delete">
+        delete from cd_concentrator_device  where devid = #{devid} and enterprise_id  = #{enterpriseid}
+    </delete>
+
+    <select id="countConcentratorDevice" resultType="java.lang.Integer">
+        select count(1) from cd_concentrator_device cd
+        inner join device d on d.devid = cd.devid
+        <where>
+            cd.concentrator_id = #{id}
+            and cd.enterprise_id = #{enterpriseid}
+            <if test="devno != null and devno != ''">
+                and d.devno = #{devno}
+            </if>
+        </where>
+    </select>
+
+    <select id="countCollectorChannel" resultType="java.lang.Integer">
+        select count(1) from(select cd.* from cd_concentrator_device cd
+        inner join cd_collector coll on cd.collector_id = coll.id
+        <where>
+            cd.concentrator_id = #{id}
+            <if test="code != null and code!= ''">
+                and coll.code = #{code}
+            </if>
+            group by cd.collector_id, cd.channel
+        </where>
+        )param1
+    </select>
+
+    <select id="countCollectorDevice" resultType="java.lang.Integer">
+        select count(1) from cd_concentrator_device cd
+        inner join device d on d.devid = cd.devid
+        <where>
+            cd.collector_id = #{id}
+            and cd.enterprise_id = #{enterpriseid}
+            <if test="devno != null and devno != ''">
+                and d.devno = #{devno}
+            </if>
+        </where>
+    </select>
+
+    <select id="findByCodeAndNo" resultMap="concentratorDeviceMap">
+
+        select
+        <include refid="selectColumns"/>,con.id as con_id, con.code as con_code,coll.id as coll_id,
+        coll.code as coll_code,ow.userno,ow.username,ar.name as areaName
+        from cd_concentrator_device cd
+        left join device d on cd.devid = d.devid
+        left join cd_collector coll on coll.id = cd.collector_id
+        left join cd_concentrator con on con.id = cd.concentrator_id
+        left join owner ow on ow.devid = cd.devid
+        left join area ar on ar.id = ow.communityid
+        where cd.no in
+        <foreach collection="terminalMeterReadBos" item="item" open="(" separator="," close=")">
+            #{item.no}
+        </foreach>
+        and con.code = #{concentratorCode}
+        and cd.enterprise_id = #{enterpriseid}
+    </select>
+
+    <select id="findByConcentratorCode" resultMap="concentratorDeviceMap">
+
+        select
+        <include refid="selectColumns"/>,con.id as con_id, con.code as con_code,coll.id as coll_id,
+        coll.code as coll_code,ow.userno,ow.username,ar.name as areaName
+        from cd_concentrator_device cd
+        left join device d on cd.devid = d.devid
+        left join cd_collector coll on coll.id = cd.collector_id
+        left join cd_concentrator con on con.id = cd.concentrator_id
+        left join owner ow on ow.devid = cd.devid
+        left join area ar on ar.id = ow.communityid
+        where con.code = #{concentratorCode}
+        and cd.enterprise_id = #{enterpriseid}
+    </select>
+
+
+    <update id="updateNo">
+        <foreach collection="list" item="item" separator=";">
+            update cd_concentrator_device
+            set `no` = #{item.no},
+            last_by = #{item.userBy},
+            last_date = #{item.curr}
+            where id = #{item.id} and enterprise_id = #{item.enterpriseid}
+        </foreach>
+    </update>
+
+    <update id="setTapstatus">
+        update device
+        set tapstatus = #{tapstatus}
+        where devid = #{devid} and enterpriseid = #{enterpriseid}
+
+    </update>
+
+    <!--<select id="findByCodeAndNo">
+        <foreach collection="remoteDataBos" item="remoteDataBo">
+            update tRemote_Data
+            set FactoryId =#{remoteDataBo.factoryId}, MeterAddr= #{remoteDataBo.meterAddr},ReadNumber=
+            #{remoteDataBo.readNumber},ReadDate = #{remoteDataBo.readDate},LastUpdateTime =
+            #{remoteDataBo.lastUpdateTime}
+            where FactoryId = #{remoteDataBo.factoryId} and MeterAddr = #{remoteDataBo.meterAddr}
+        </foreach>
+    </select>-->
+
+    <insert id="adds">
+        <foreach collection="list" item="item" separator=";">
+            insert into
+            cd_concentrator_device(id,`no`,channel,devid,collector_id,concentrator_id,enterprise_id,create_by,create_date,is_del,last_by,last_date)
+            values(#{item.id},#{item.no},#{item.channel},#{item.devid},#{item.collector.id},#{item.concentrator.id},#{item.enterpriseid},#{item.userBy},#{item.curr},#{item.isDel},#{item.userBy},#{item.curr})
+        </foreach>
+    </insert>
+
+</mapper>

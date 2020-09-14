@@ -1,6 +1,0 @@
-param.config.enterpriseName: 绥宁收费系统
-param.config.serverHost: http://admin.dotop.com/meter-server/
-
-druid.datasource-third.url: jdbc:sqlserver://localhost:1433; DatabaseName=dotop
-druid.datasource-third.username: sa
-druid.datasource-third.password: 12345678

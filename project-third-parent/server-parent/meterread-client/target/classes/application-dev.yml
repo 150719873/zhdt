@@ -1,8 +1,0 @@
-param.config.factoryId: 4
-param.config.enterpriseid: 44
-param.config.enterpriseName: 收费系统
-param.config.serverHost: http://localhost:35555/meterread-server/
-
-druid.datasource-third.url: jdbc:sqlserver://localhost:1433; DatabaseName=dotop
-druid.datasource-third.username: sa
-druid.datasource-third.password: 12345678

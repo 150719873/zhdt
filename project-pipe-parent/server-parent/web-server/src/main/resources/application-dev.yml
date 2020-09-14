@@ -10,7 +10,7 @@ redis:
     password:
     port: 6379
     
-cas.auth.path: http://localhost:39000/water-cas
+cas.auth.path: http://localhost:39999/water-cas
 
 eureka:
   client:

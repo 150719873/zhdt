@@ -1,0 +1,116 @@
+debug: true
+spring.profiles.active: dev
+
+logging:
+  config: classpath:log4j2-prod.xml
+
+server:
+  port: 34445
+  servlet:
+    context-path: /concentrator188-server
+  undertow:
+    io-threads: 2
+    worker-threads: 256
+    buffer-size: 1024
+    direct-buffers: true
+
+spring.servlet.multipart.max-file-size: 50MB
+spring.servlet.multipart.max-request-size: 50MB
+
+druid:
+  datasource:
+    name: concentrator-server
+    type: com.alibaba.druid.pool.DruidDataSource
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    filters: stat
+    maxActive: 200
+    initialSize: 1
+    maxWait: 30000
+    minIdle: 1
+    timeBetweenEvictionRunsMillis: 30000
+    minEvictableIdleTimeMillis: 300000
+    validationQuery: select 'x'
+    testWhileIdle: true
+    testOnBorrow: false
+    testOnReturn: false
+    poolPreparedStatements: true
+    maxOpenPreparedStatements: 20
+
+spring:
+  application:
+    name: concentrator188-server
+  cache:
+    type: redis
+    redis:
+      time-to-live: 3600
+
+mybatis:
+  mapperLocations: classpath*:com/dotop/smartwater/project/module/dao/**/*.xml,classpath*:com/dotop/smartwater/project/third/concentrator/dao/**/*.xml
+  configLocation: classpath:mybatis-config.xml
+
+param.config.version: 2.5
+
+eureka:
+  instance:
+    prefer-ip-address: true
+    lease-expiration-duration-in-seconds: 30
+    lease-renewal-interval-in-seconds: 10
+  client:
+    registry-fetch-interval-seconds: 30
+    registerWithEureka: true
+    fetchRegistry: true
+
+feign:
+  httpclient:
+    enabled: false
+  okhttp:
+    enabled: true
+  hystrix:
+    enabled: true
+
+ribbon:
+  httpclient:
+    enabled: false
+  okhttp:
+    enabled: true
+  eureka:
+    enabled: true
+  ReadTimeout: 10000
+  ConnectTimeout: 10000
+  MaxAutoRetries: 0
+  MaxAutoRetriesNextServer: 0
+  OkToRetryOnAllOperations: false
+
+
+hystrix:
+  threadpool:
+    default:
+      coreSize: 1000
+      maxQueueSize: 1000
+      queueSizeRejectionThreshold: 500
+  command:
+    default:
+      execution:
+        isolation:
+          thread:
+            timeoutInMilliseconds: 10000
+
+
+netty:
+  timeout: 900
+  #不能用localhost,否则启动报异常:Unresolved address
+  #tcp监听的端口
+  tcp:
+    port: 4567
+  # bossGroup的线程数
+  boss:
+    thread:
+      count: 4
+  # worker的线程数
+  worker:
+    thread:
+      count: 8
+  #是否使用长连接
+  socket:
+    keepalive:  true
+    backlog: 1024

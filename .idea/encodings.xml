@@ -120,6 +120,7 @@
     <file url="file://$PROJECT_DIR$/project-third-parent/module-parent/service-module-parent/meter-service" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/project-third-parent/server-parent" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/project-third-parent/server-parent/concentrator-server" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/project-third-parent/server-parent/concentrator188-server" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/project-third-parent/server-parent/meter-server" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/project-third-parent/server-parent/meterread-client" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/project-third-parent/server-parent/meterread-client2" charset="UTF-8" />
